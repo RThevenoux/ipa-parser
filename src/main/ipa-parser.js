@@ -18,13 +18,7 @@ module.exports = class IpaParser {
     // Replace character by the standards ones, like ligatures, diacrtics, etc.
     let normalized = this._normalize(ipaString);
 
-    // Alter some IPA information not yet managed
-    let simplification = {
-      '\u02B2': 'j' // Palatalisation : MODIFIER LETTER SMALL J > Letter 'j'
-    };
-    let simplified = this._replaceAll(normalized, simplification);
-
-    return this._parse(simplified);
+    return this._parse(normalized);
   }
 
   /**

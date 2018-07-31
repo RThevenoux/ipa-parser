@@ -59,9 +59,7 @@ function testParsePhonemes(parser) {
         ["a\u0303", [['a', true]], " a + tilde"],
         ["ab", [['a', false], ['b', false]], " a + b"],
         ["a\u00E3a\u0303a", [['a', false], ['a', true], ['a', true], ['a', false]], " a | a-tilde (1 unicode) | a + tilde (2 unicode) "],
-        ["ʦ", [['ts', false]], 'ligature'],
-        ["kʲ", [['k', false], ['j', false]], 'petit j'],
-        ["kʷ", [['k', false], ['w', false]], 'petit w']
+        ["ʦ", [['ts', false]], 'ligature']
     ];
 
     let errorCount = 0;
