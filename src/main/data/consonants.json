@@ -1,0 +1,101 @@
+{
+  "nasal":{
+    "m":{"place":"bilabial",        "voiced":true},
+    "ɱ":{"place":"labiodental",     "voiced":true},
+    "n":{"place":"dental, alveolar, postalveolar","voiced":true},
+    "ɳ":{"place":"retroflex",       "voiced":true},
+    "ɲ":{"place":"palatal",         "voiced":true},
+    "ŋ":{"place":"velar",           "voiced":true},
+    "ɴ":{"place":"uvular",          "voiced":true}
+  },
+  "stop":{
+    "p":{"place":"bilabial",        "voiced":false},
+    "b":{"place":"bilabial",        "voiced":true},
+    "t":{"place":"dental, alveolar","voiced":false},
+    "d":{"place":"dental, alveolar","voiced":true},
+    "ʈ":{"place":"retroflex",       "voiced":false},
+    "ɖ":{"place":"retroflex",       "voiced":true},
+    "c":{"place":"palatal",         "voiced":false},
+    "ɟ":{"place":"palatal",         "voiced":true},
+    "k":{"place":"velar",           "voiced":false},
+    "ɡ":{"place":"velar",           "voiced":true},
+    "q":{"place":"uvular",          "voiced":false},
+    "ɢ":{"place":"uvular",          "voiced":true},
+    "ʡ":{"place":"epiglotal",       "voiced":false},
+    "ʔ":{"place":"glotal",          "voiced":false}
+  },
+  "sibiliant":{
+    "s":{"place":"alveolar",        "voiced":false},
+    "z":{"place":"alveolar",        "voiced":true},
+    "ʃ":{"place":"palatoalveolar",  "voiced":false},
+    "ʒ":{"place":"palatoalveolar",  "voiced":true},
+    "ʂ":{"place":"retroflex",       "voiced":false},
+    "ʐ":{"place":"retroflex",       "voiced":true},
+    "ɕ":{"place":"alveopalatal",    "voiced":false},
+    "ʑ":{"place":"alveopalatal",    "voiced":true}
+  },
+  "fricative":{
+    "ɸ":{"place":"bilabial",        "voiced":false},
+    "β":{"place":"bilabial",        "voiced":true},
+    "f":{"place":"labiodental",     "voiced":false},
+    "v":{"place":"labiodental",     "voiced":true},
+    "θ":{"place":"dental",          "voiced":false},
+    "ð":{"place":"dental",          "voiced":true},
+    "ɬ":{"place":"alveolar",        "voiced":false, "lateral":true},
+    "ɮ":{"place":"alveolar",        "voiced":true,  "lateral":true},
+    "ɧ":{"place":"postalveolar",    "voiced":true,  "co-articulation":"velarized"},
+    "ç":{"place":"palatal",         "voiced":false},
+    "ʝ":{"place":"palatal",         "voiced":true},
+    "x":{"place":"velar",           "voiced":false},
+    "ɣ":{"place":"velar",           "voiced":true},
+    "χ":{"place":"uvular",          "voiced":false},
+    "ʁ":{"place":"uvular",          "voiced":true},
+    "ħ":{"place":"pharyngal",       "voiced":false},
+    "ʕ":{"place":"pharyngal",       "voiced":true},
+    "h":{"place":"glottal",         "voiced":true},
+    "ɦ":{"place":"glottal",         "voiced":false}
+  },
+  "approximant":{
+    "ʋ":{"place":"labiodental",     "voiced":true},
+    "ɹ":{"place":"alveolar",        "voiced":true},
+    "l":{"place":"alveolar",        "voiced":true,  "lateral":true},
+    "ɫ":{"place":"alveolar",        "voiced":true,  "lateral":true, "co-articulation":"velarized"},
+    "ɻ":{"place":"retroflex",       "voiced":true},
+    "ɭ":{"place":"retroflex",       "voiced":true,  "lateral":true},
+    "j":{"place":"palatal",         "voiced":true},
+    "ʎ":{"place":"palatal",         "voiced":true,  "lateral":true},
+    "ɰ":{"place":"velar",           "voiced":true},
+    "ʟ":{"place":"velar",           "voiced":true,  "lateral":true},
+    "ʍ":{"place":"velar",           "voiced":false, "co-articulation":"labialized"},
+    "w":{"place":"velar",           "voiced":true,  "co-articulation":"labialized"},
+    "ɥ":{"place":"palatal",         "voiced":true,  "co-articulation":"labialized"}
+  },
+  "flap":{
+    "ⱱ":{"place":"labiodental",     "voiced":true},
+    "ɾ":{"place":"alveolar",        "voiced":true},
+    "ɺ":{"place":"alveolar",        "voiced":true, "lateral":"true"},
+    "ɽ":{"place":"retroflex",       "voiced":true}
+  },
+  "trill":{
+    "ʙ":{"place":"bilabial",        "voiced":true},
+    "r":{"place":"alveolar",        "voiced":true},
+    "ʀ":{"place":"uvular",          "voiced":true},
+    "ʜ":{"place":"epiglotal",       "voiced":false},
+    "ʢ":{"place":"epiglotal",       "voiced":true}
+  },
+  "implosive":{
+    "ɓ":{"place":"bilabial",       "voiced":true},
+    "ɗ":{"place":"alveolar",       "voiced":true},
+    "ᶑ":{"place":"retroflex",      "voiced":true},
+    "ʄ":{"place":"palatal",        "voiced":true},
+    "ɠ":{"place":"velar",          "voiced":true},
+    "ʛ":{"place":"uvular",         "voiced":true}
+  },
+  "click":{
+    "ʘ":{"place":"bilabial",       "voiced":false},
+    "ǀ":{"place":"dental",         "voiced":false},
+    "ǃ":{"place":"alveolar",       "voiced":false},
+    "ǁ":{"place":"alveolar",       "voiced":false, "lateral":true},
+    "ǂ":{"place":"palatal",        "voiced":false}
+  }
+}

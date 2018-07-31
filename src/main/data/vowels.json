@@ -1,0 +1,32 @@
+{
+  "CLOSE":{
+    "FRONT":["i","y"],
+    "CENTRAL":["ɨ","ʉ"],
+    "BACK":["ɯ","u"]
+  },
+  "NEAR_CLOSE":{
+    "NEAR_FRONT":["ɪ","ʏ"],
+    "NEAR_BACK": [null,"ʊ"]
+  },
+  "CLOSE_MID":{
+    "FRONT":["e","ø"],
+    "CENTRAL":["ɘ","ɵ"],
+    "BACK":["ɤ","o"]
+  },
+  "MID":{
+    "CENTRAL":["ə",null]
+  },  
+  "OPEN_MID":{
+    "FRONT":["ɛ","œ"],
+    "CENTRAL":["ɜ","ɞ"],
+    "BACK":["ʌ","ɔ"]
+  },
+  "NEAR_OPEN":{
+    "FRONT":["æ",null],
+    "CENTRAL":["ɐ",null]
+  },
+  "OPEN":{
+    "FRONT":["a","ɶ"],
+    "BACK":["ɑ","ɒ"]
+  }      
+}

@@ -1,0 +1,28 @@
+{
+  "combining":["\u0361","\u035C"],   
+  
+  "normalization": {
+    "\u02A6": { "target": "t͡s",           "unicode": "LATIN SMALL LETTER TS DIGRAPH" },
+    "\u02A3": { "target": "d͡z",           "unicode": "LATIN SMALL LETTER DZ DIGRAPH" },
+    "\u02A7": { "target": "t͡ʃ",           "unicode": "LATIN SMALL LETTER TESH DIGRAPH" },
+    "\u02A4": { "target": "d͡ʒ",           "unicode": "LATIN SMALL LETTER DEZH DIGRAPH" },
+    "\u02A8": { "target": "t͡ɕ",           "unicode": "LATIN SMALL LETTER TC DIGRAPH WITH CURL" },
+    "\u02A5": { "target": "d͡ʑ",           "unicode": "LATIN SMALL LETTER DZ DIGRAPH WITH CURL" },
+    "\u025A": { "target": "\u0259\u02DE", "unicode": "LATIN SMALL LETTER SCHWA WITH HOOK" },
+    "\u025D": { "target": "\u025C\u02DE", "unicode": "LATIN SMALL LETTER REVERSED OPEN E WITH HOOK" },
+    
+    "\u035C": { "target": "\u0361", "unicode": "COMBINING DOUBLE BREVE BELOW",  "target-unicode": "COMBINING DOUBLE INVERTED BREVE" },
+    "\u030D": { "target": "\u0329", "unicode": "COMBINING VERTICAL LINE ABOVE", "target-unicode": "COMBINING VERTICAL LINE BELOW" },
+    "\u0311": { "target": "\u032F", "unicode": "COMBINING INVERTED BREVE",      "target-unicode": "COMBINING INVERTED BREVE BELOW" },
+    "\u030A": { "target": "\u0325", "unicode": "COMBINING RING ABOVE",          "target-unicode": "COMBINING RING BELOW" },
+    "\u02D7": { "target": "\u0320", "unicode": "MODIFIER LETTER MINUS SIGN",    "target-unicode": "COMBINING MINUS SIGN BELOW" },
+    "\u02D6": { "target": "\u031F", "unicode": "MODIFIER LETTER PLUS SIGN",     "target-unicode": "COMBINING PLUS SIGN BELOW" },
+    "\u02D4": { "target": "\u031D", "unicode": "MODIFIER LETTER UP TACK",       "target-unicode": "COMBINING UP TACK BELOW" },
+    "\u02D5": { "target": "\u031E", "unicode": "MODIFIER LETTER DOWN TACK",     "target-unicode": "COMBINING DOWN TACK BELOW"},
+    
+    "\u0067": { "target": "\u0261", "unicode": "LATIN SMALL LETTER G",          "target-unicode": "LATIN SMALL LETTER SCRIPT G" },
+    "\u003A": { "target": "\u02D0", "unicode": "COLON",                         "target-unicode": "MODIFIER LETTER TRIANGULAR COLON" },
+    
+    "\u02C1": { "target": "\u02E4", "unicode": "Modifier Letter Reversed Glottal Stop", "target-unicode": "Modifier Letter Small Reversed Glottal Stop" }
+  }
+}
