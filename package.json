@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/RThevenoux/ipa-parser/issues"
   },
-  "homepage": "https://github.com/RThevenoux/ipa-parser#readme"
+  "homepage": "https://github.com/RThevenoux/ipa-parser#readme",
+  "browserify": {
+    "transform": [ "brfs" ]
+  }
 }
