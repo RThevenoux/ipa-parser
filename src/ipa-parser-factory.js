@@ -7,7 +7,7 @@ var IpaParser = require('./ipa-parser');
 module.exports = class IpaParserFactory {
   get() {
     // -- Normalization
-    var miscellaneous = JSON.parse(fs.readFileSync(__dirname + "/data/miscellaneous.json"));
+    var miscellaneous = JSON.parse(fs.readFileSync(__dirname + "/data/miscellaneous.json", "utf8"));
     let normalization = {};
     for (let key in miscellaneous.normalization) {
       normalization[key] = miscellaneous.normalization[key].target;
@@ -20,7 +20,7 @@ module.exports = class IpaParserFactory {
     miscellaneous.combining.forEach(key => mapping[key] = IpaSymbol.combining(key));
 
     // Diacritics
-    let diacritics = JSON.parse(fs.readFileSync(__dirname + "/data/diacritics.json"));
+    let diacritics = JSON.parse(fs.readFileSync(__dirname + "/data/diacritics.json", "utf8"));
     for (let type in diacritics) {
       let typeBundle = diacritics[type];
       for (let key in typeBundle) {
@@ -30,7 +30,7 @@ module.exports = class IpaParserFactory {
     }
 
     // Vowels
-    let vowels = JSON.parse(fs.readFileSync(__dirname + "/data/vowels.json"));
+    let vowels = JSON.parse(fs.readFileSync(__dirname + "/data/vowels.json", "utf8"));
     for (let heightLabel in vowels) {
       let heightBundle = vowels[heightLabel];
       for (let backnessLabel in heightBundle) {
@@ -51,7 +51,7 @@ module.exports = class IpaParserFactory {
     }
 
     // Consonants
-    let consonants = JSON.parse(fs.readFileSync(__dirname + "/data/consonants.json"));
+    let consonants = JSON.parse(fs.readFileSync(__dirname + "/data/consonants.json", "utf8"));
     for (let manner in consonants) {
       let mannerBundle = consonants[manner];
       for (let key in mannerBundle) {
