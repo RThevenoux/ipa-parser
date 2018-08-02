@@ -4,7 +4,7 @@
   "description": "A parser for International Phonetic Alphabet (IPA)",
   "main": "src/ipa.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,15 @@
     "url": "https://github.com/RThevenoux/ipa-parser/issues"
   },
   "homepage": "https://github.com/RThevenoux/ipa-parser#readme",
+  "files": [
+    "src/*"
+  ],
   "browserify": {
     "transform": [
       "brfs"
     ]
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }
