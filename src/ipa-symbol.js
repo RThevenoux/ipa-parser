@@ -11,7 +11,7 @@ module.exports = class IpaSymbol {
         symbol.rounded = rounded;
         return symbol;
     }
-
+ 
     static consonant(unicode, manner, place, voiced, lateral) {
         let symbol = new IpaSymbol("consonant", unicode);
         symbol.manner = manner;

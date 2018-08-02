@@ -22,11 +22,9 @@ class IpaQuantity {
   }
 
   /**
-   * @param {IpaSymbol} symbol 
-   */
-  update(symbol) {
-    let label = symbol.diacritic.label;
-
+  * @param {String} label 
+  */
+  update(label) {
     switch (this.value) {
       case IpaQuantityValue.EXTRASHORT:
       case IpaQuantityValue.HALFLONG:
@@ -35,7 +33,6 @@ class IpaQuantity {
       case IpaQuantityValue.LONG:
         if (label === "Long") {
           this.value = IpaQuantityValue.EXTRALONG;
-          
         } else {
           _exception(label);
         }

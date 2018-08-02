@@ -1,6 +1,9 @@
 var assert = require('assert');
 
 var Ipa = require("../src/ipa");
+var Height = require("../src/phoneme/vowel-phoneme").Height;
+var Backness = require("../src/phoneme/vowel-phoneme").Backness;
+
 var parser = new Ipa().getParser();
 
 describe('ipa-parser', function () {
@@ -33,17 +36,26 @@ describe('ipa-parser', function () {
 
   describe('# parsePhonemes()', function () {
 
-    describe('- input = "a"', function () {
+    describe('- Vowel input = "a"', function () {
       let result = parser.parsePhonemes("a");
       it('should be 1 phoneme', function () {
         assert.equal(result.length, 1);
       });
       let phoneme = result[0];
+      it('should be base "a"', function () {
+        assert.equal(phoneme.base, "a");
+      });
       it('should be vowel', function () {
         assert.equal(phoneme.type, "vowel");
       });
-      it('should be base "a"', function () {
-        assert.equal(phoneme.base, "a");
+      it('should height be "Open"', function () {
+        assert.equal(phoneme.height, Height.OPEN);
+      });
+      it('should backness be "Front"', function () {
+        assert.equal(phoneme.backness, Backness.FRONT);
+      });
+      it('should not be "round"', function () {
+        assert.equal(phoneme.rounded, false);
       });
     });
 

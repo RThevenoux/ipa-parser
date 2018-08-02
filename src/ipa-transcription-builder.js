@@ -54,20 +54,30 @@ module.exports = class IpaTranscriptionBuilder {
   }
 
   _diacritic(symbol) {
-   if (!this.pendingPhoneme) {
+    if (!this.pendingPhoneme) {
       throw this._unexpectedSymbol(symbol);
     }
 
+    let label = symbol.diacritic.label;
     switch (symbol.diacritic.type) {
       case "co-articulation":
-        this.pendingPhoneme.updateCoarticulation(symbol);
+        this.pendingPhoneme.addCoarticulation(label);
         break;
       case "length":
-        this.pendingPhoneme.quantity.update(symbol);
+        this.pendingPhoneme.quantity.update(label);
         break;
       case "articulation":
-        this.pendingPhoneme.updateArticulation(symbol);
+        this.pendingPhoneme.updateArticulation(label);
         break;
+      case "syllabicity": {
+        this.pendingPhoneme.updateSyllabicity(label);
+        break;
+      }
+      case "phonation":{
+        this.pendingPhoneme.updatePhonation(label);
+      }
+      // TODO-1 : release 
+      // TODO-2 : prosody
     }
   }
 

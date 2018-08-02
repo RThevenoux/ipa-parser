@@ -20,6 +20,7 @@ module.exports = class IpaParserFactory {
     miscellaneous.combining.forEach(key => mapping[key] = IpaSymbol.combining(key));
 
     // Diacritics
+    // TODO some prosody symbol separate phoneme and do not decorate them
     let diacritics = JSON.parse(fs.readFileSync(__dirname + "/data/diacritics.json", "utf8"));
     for (let type in diacritics) {
       let typeBundle = diacritics[type];

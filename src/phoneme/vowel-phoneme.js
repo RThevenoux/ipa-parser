@@ -24,20 +24,30 @@ class VowelPhoneme extends AbstractPhoneme {
    * @param {IpaSymbol} symbol 
    */
   constructor(symbol) {
-    super(symbol.base, "vowel");
+    super(symbol.base, "vowel", true, true);
     this.height = symbol.height;
     this.backness = symbol.backness;
-    this.rounded = symbol.rounded
+    this.rounded = symbol.rounded;
   }
 
-  updateArticulation(symbol) {
-    switch (symbol.diacritic.label) {
+  /**
+  * @param {String} label 
+  */
+  updateArticulation(label) {
+    switch (label) {
       case "Advanced": this._advance(); break;
       case "Retracted": this._retracte(); break;
       case "Centralized": this._centralize(); break;
       case "Mid-centralized": this._midCendtralize(); break;
       case "Raised": this._raise(); break;
       case "Lowered": this._lower(); break;
+
+      // Consonnant only
+      case "Dental":
+      case "Apical":
+      case "Linguolabial":
+      case "Laminal":
+      default: /* TODO erreur */; break;
     }
   }
 
@@ -60,19 +70,27 @@ class VowelPhoneme extends AbstractPhoneme {
   }
 
   _lower() {
-    this.height += -1;
+    if (this.height > VowelHeight.OPEN) {
+      this.height += -1;
+    }
   }
 
   _raise() {
-    this.height += +1;
+    if (this.height < VowelHeight.CLOSE) {
+      this.height += +1;
+    }
   }
 
   _advance() {
-    this.backness += +1;
+    if (this.backness < VowelBackness.FRONT) {
+      this.backness += +1;
+    }
   }
 
   _retracte() {
-    this.backness += -1;
+    if (this.backness > VowelBackness.BACK) {
+      this.backness += -1;
+    }
   }
 }
 
