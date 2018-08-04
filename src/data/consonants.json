@@ -43,7 +43,7 @@
     "ð":{"place":"dental",          "voiced":true},
     "ɬ":{"place":"alveolar",        "voiced":false, "lateral":true},
     "ɮ":{"place":"alveolar",        "voiced":true,  "lateral":true},
-    "ɧ":{"place":"postalveolar",    "voiced":true,  "co-articulation":"velarized"},
+    "ɧ":{"place":"postalveolar",    "voiced":false,  "co-articulation":"velarized"},
     "ç":{"place":"palatal",         "voiced":false},
     "ʝ":{"place":"palatal",         "voiced":true},
     "x":{"place":"velar",           "voiced":false},
@@ -52,8 +52,8 @@
     "ʁ":{"place":"uvular",          "voiced":true},
     "ħ":{"place":"pharyngal",       "voiced":false},
     "ʕ":{"place":"pharyngal",       "voiced":true},
-    "h":{"place":"glottal",         "voiced":true},
-    "ɦ":{"place":"glottal",         "voiced":false}
+    "h":{"place":"glottal",         "voiced":false},
+    "ɦ":{"place":"glottal",         "voiced":true}
   },
   "approximant":{
     "ʋ":{"place":"labiodental",     "voiced":true},
