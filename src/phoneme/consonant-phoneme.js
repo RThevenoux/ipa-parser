@@ -13,13 +13,6 @@ module.exports = class ConsonantPhoneme extends AbstractPhoneme {
   }
 
   /**
-  * @param {String} char 
-  */
-  combineBase(char) {
-    this.base += char;
-  }
-
-  /**
   * @param {String} label 
   */
   updateArticulation(label) {

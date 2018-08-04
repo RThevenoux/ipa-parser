@@ -75,5 +75,19 @@ describe('ipa-parser', function () {
         assert.equal(a2.coarticulation.includes("Nasalized"), true);
       });
     });
+
+    describe("Combining symbole", () => {
+      it("should parse affricate like t͡s", () => {
+        let result = parser.parsePhonemes("t͡s");
+        assert(result.length, 1);
+        assert(result[0].base, "ts");
+      });
+
+      it("should parse diphtong like a͡ɪ", () => {
+        let result = parser.parsePhonemes("a͡ɪ");
+        assert(result.length, 1);
+        assert(result[0].base, "aɪ");
+      });
+    });
   });
 });
