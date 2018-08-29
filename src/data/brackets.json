@@ -1,0 +1,27 @@
+[
+    {
+        "type": "phonetic",
+        "start": "[",
+        "end": "]"
+    },
+    {
+        "type": "phonemic",
+        "start": "/",
+        "end": "/"
+    },
+    {
+        "type": "indistinguishable ",
+        "start": "(",
+        "end": ")"
+    },
+    {
+        "type": "obscured ",
+        "start": "⸨",
+        "end": "⸩"
+    },
+    {
+        "type": "prosodic ",
+        "start": "{",
+        "end": "}"
+    }
+]

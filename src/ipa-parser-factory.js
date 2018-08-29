@@ -1,5 +1,5 @@
 var fs = require('fs');
-var IpaSymbol = require('./ipa-symbol');
+var Mapper = require('./mapper');
 var VowelHeight = require('./phoneme/vowel-phoneme').Height;
 var VowelBackness = require('./phoneme/vowel-phoneme').Backness;
 var IpaParser = require('./ipa-parser');
@@ -14,10 +14,10 @@ module.exports = class IpaParserFactory {
     }
 
     // -- Symbol mapping
-    let mapping = {};
+    let mapper = new Mapper();
 
     // Combining
-    miscellaneous.combining.forEach(key => mapping[key] = IpaSymbol.combining(key));
+    miscellaneous.combining.forEach(key => mapper.addCombining(key));
 
     // Diacritics
     // TODO some prosody symbol separate phoneme and do not decorate them
@@ -26,7 +26,7 @@ module.exports = class IpaParserFactory {
       let typeBundle = diacritics[type];
       for (let key in typeBundle) {
         let diacritic = typeBundle[key];
-        mapping[key] = IpaSymbol.diacritic(key, diacritic.ipa, type);
+        mapper.addDiacritic(key, diacritic.ipa, type);
       }
     }
 
@@ -42,11 +42,11 @@ module.exports = class IpaParserFactory {
 
         let unroundedVowel = couple[0];
         if (unroundedVowel) {
-          mapping[unroundedVowel] = IpaSymbol.vowel(unroundedVowel, height, backness, false);
+          mapper.addVowel(unroundedVowel, height, backness, false);
         }
         let roundedVowel = couple[1];
         if (roundedVowel) {
-          mapping[roundedVowel] = IpaSymbol.vowel(roundedVowel, height, backness, true);
+          mapper.addVowel(roundedVowel, height, backness, true);
         }
       }
     }
@@ -58,10 +58,14 @@ module.exports = class IpaParserFactory {
       for (let key in mannerBundle) {
         let consonant = mannerBundle[key];
         let lateral = (consonant.lateral ? true : false);
-        mapping[key] = IpaSymbol.consonant(key, manner, consonant.place, consonant.voiced, lateral);
+        mapper.addConsonant(key, manner, consonant.place, consonant.voiced, lateral);
       }
     }
 
-    return new IpaParser(mapping, normalization);
+    // Brackets
+    let brackets = JSON.parse(fs.readFileSync(__dirname + "/data/brackets.json", "utf8"));
+    brackets.forEach(info => mapper.addBrackets(info.type, info.start, info.end));
+
+    return new IpaParser(mapper, normalization);
   }
 }

@@ -1,0 +1,35 @@
+{
+    "stress": {
+        "ˈ": "primary",
+        "ˌ": "secondary"
+    },
+    "separator": {
+        "|": "minor",
+        "‖": "major",
+        ".": "syllable",
+        "‿": "Linking"
+    },
+    "tone-letter": {
+        "˥": "extra-high",
+        "˦": "high",
+        "˧": "mid",
+        "˨": "low",
+        "˩": "extra-low",
+        "ꜜ": "downstep",
+        "ꜛ": "upstep",
+        "↗︎": "global-rise",
+        "↘": "global-fall"
+    },
+    "tone-mark": {
+        "\u030B": "extra-high",
+        "\u0301": "high",
+        "\u0304": "mid",
+        "\u0300": "low",
+        "\u030F": "extra-low",
+        "\u030C": "rising",
+        "\u0302": "falling",
+        "\u1DC4": "high-rising",
+        "\u1DC5": "low-rising",
+        "\u1DC8": "rising-falling"
+    }
+}

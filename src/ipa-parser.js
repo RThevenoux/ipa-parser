@@ -2,8 +2,8 @@ var IpaTranscriptionBuilder = require('./ipa-transcription-builder');
 
 module.exports = class IpaParser {
 
-  constructor(mapping, normalization) {
-    this.mapping = mapping;
+  constructor(mapper, normalization) {
+    this.mapper = mapper;
     this.normalization = normalization;
   }
 
@@ -11,10 +11,13 @@ module.exports = class IpaParser {
   * @param {String} ipaString
   * @returns {AbstractPhoneme[]} 
   */
-  parsePhonemes(ipaString) {
-    if (!ipaString || ipaString.length === 0) {
-      return [];
+  parse(ipaString) {
+
+
+    if (typeof ipaString != 'string' && !(ipaString instanceof String)) {
+      throw new TypeError("Input is not a string");
     }
+
     // Replace character by the standards ones, like ligatures, diacrtics, etc.
     let normalized = this._normalize(ipaString);
 
@@ -43,25 +46,73 @@ module.exports = class IpaParser {
    */
   _parse(normalized) {
     let builder = new IpaTranscriptionBuilder();
+
+    let transcriptionType = "none";
+    let state = "INIT";
     for (let i = 0; i < normalized.length; i++) {
-      let symbol = this._getSymbol(normalized[i]);
+      let char = normalized[i];
+      let symbol = this.mapper.get(char);
       if (!symbol) {
-        console.log("Invalid IPA character: " + normalized[i]);
-      } else {
-        builder.add(symbol);
+        throw new Error("Invalid IPA character: " + char);
       }
+
+      switch (symbol.type) {
+        // BRACKET MANAGEMENT
+        case "bracket": {
+          switch (state) {
+            
+            case "INIT": {
+              if (!symbol.start) {
+                throw new Error("Unexpected close bracket without open bracket. Close bracket: " + char);
+              }
+              transcriptionType = symbol.start;
+              state = "OPEN";
+            }; break;
+            
+            case "OPEN": {
+              if (!symbol.end) {
+                throw new Error("Unexpected open bracket after an other one. Second bracket: " + char);
+              }
+              if (symbol.end !== transcriptionType) {
+                throw new Error("Opening bracket do not match ending bracket. Ending bracket: " + char);
+              }
+              state = "CLOSE";
+            }; break;
+            
+            case "CLOSE":
+              throw new Error("Unexpected bracket: " + char);
+          }
+        }; break;
+
+        // SPACING MANAGEMENT
+        case "spacing": {
+          builder.add(symbol);
+        }; break;
+
+        // DATA MANAGEMENT
+        default: {
+          
+          if (state == "CLOSE") {
+            throw new Error("Data after closing bracket. Data: " + char);
+          } else if (state == "INIT") {
+            state = "OPEN";
+          }
+
+          builder.add(symbol);
+        }
+      }
+
+    }
+    // End of input
+    if (transcriptionType !== "none" && state == "OPEN") {
+      throw new Error("Closing bracket is mising");
     }
     let phonemes = builder.end();
-    return phonemes;
-  }
 
-  /**
-   * @param {String} char
-   * @returns {IpaSymbol} 
-   */
-  _getSymbol(char) {
-    let symbol = this.mapping[char];
-    return symbol;
+    return {
+      "type": transcriptionType,
+      "units": phonemes
+    };
   }
 
   _replaceAll(input, actions) {
