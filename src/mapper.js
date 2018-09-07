@@ -1,3 +1,5 @@
+var IpaCharacterError = require("./error/ipa-character-error");
+
 module.exports = class Mapper {
 
     constructor() {
@@ -5,8 +7,9 @@ module.exports = class Mapper {
     }
 
     _add(unicode, ipa) {
-        if (this.map[unicode]) {
-            throw new Error("duplicate data for character " + unicode + " .");
+        let previous = this.map[unicode];
+        if (previous) {
+            throw new Error("duplicate data for character " + unicode + " . Previous " + JSON.stringify(previous));
         }
         this.map[unicode] = ipa;
     }
@@ -61,11 +64,24 @@ module.exports = class Mapper {
         }
     }
 
+    addSupra(unicode, supraType, label) {
+        let data = {
+            "type": "supra",
+            "supraType": supraType,
+            "label": label
+        };
+        this._add(unicode, data);
+    }
+
     get(unicode) {
         if (/\s/.test(unicode)) {
             return { "type": "spacing" };
         }
 
-        return this.map[unicode];
+        let data = this.map[unicode];
+        if (!data) {
+            throw new IpaCharacterError(unicode);
+        }
+        return data;
     }
 }

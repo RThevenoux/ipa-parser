@@ -1,4 +1,5 @@
 var IpaTranscriptionBuilder = require('./ipa-transcription-builder');
+var IpaSyntaxError = require("./error/ipa-syntax-error");
 
 module.exports = class IpaParser {
 
@@ -52,9 +53,6 @@ module.exports = class IpaParser {
     for (let i = 0; i < normalized.length; i++) {
       let char = normalized[i];
       let symbol = this.mapper.get(char);
-      if (!symbol) {
-        throw new Error("Invalid IPA character: " + char);
-      }
 
       switch (symbol.type) {
         // BRACKET MANAGEMENT
@@ -63,7 +61,7 @@ module.exports = class IpaParser {
             
             case "INIT": {
               if (!symbol.start) {
-                throw new Error("Unexpected close bracket without open bracket. Close bracket: " + char);
+                throw new IpaSyntaxError("Unexpected close bracket without open bracket. Close bracket: " + char);
               }
               transcriptionType = symbol.start;
               state = "OPEN";
@@ -71,16 +69,16 @@ module.exports = class IpaParser {
             
             case "OPEN": {
               if (!symbol.end) {
-                throw new Error("Unexpected open bracket after an other one. Second bracket: " + char);
+                throw new IpaSyntaxError("Unexpected open bracket after an other one. Second bracket: " + char);
               }
               if (symbol.end !== transcriptionType) {
-                throw new Error("Opening bracket do not match ending bracket. Ending bracket: " + char);
+                throw new IpaSyntaxError("Opening bracket do not match ending bracket. Ending bracket: " + char);
               }
               state = "CLOSE";
             }; break;
             
             case "CLOSE":
-              throw new Error("Unexpected bracket: " + char);
+              throw new IpaSyntaxError("Unexpected bracket: " + char);
           }
         }; break;
 
@@ -93,7 +91,7 @@ module.exports = class IpaParser {
         default: {
           
           if (state == "CLOSE") {
-            throw new Error("Data after closing bracket. Data: " + char);
+            throw new IpaSyntaxError("Data after closing bracket. Data: " + char);
           } else if (state == "INIT") {
             state = "OPEN";
           }
@@ -105,7 +103,7 @@ module.exports = class IpaParser {
     }
     // End of input
     if (transcriptionType !== "none" && state == "OPEN") {
-      throw new Error("Closing bracket is mising");
+      throw new IpaSyntaxError("Closing bracket is mising");
     }
     let phonemes = builder.end();
 

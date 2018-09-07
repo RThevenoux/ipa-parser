@@ -7,7 +7,7 @@
         "|": "minor",
         "‖": "major",
         ".": "syllable",
-        "‿": "Linking"
+        "‿": "linking"
     },
     "tone-letter": {
         "˥": "extra-high",

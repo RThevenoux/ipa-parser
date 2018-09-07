@@ -50,13 +50,5 @@
     "\u02D0": { "ipa": "Long",                     "unicode": "MODIFIER LETTER TRIANGULAR COLON"},
     "\u02D1": { "ipa": "Half-long",                "unicode": "MODIFIER LETTER HALF TRIANGULAR COLON" },
     "\u0306": { "ipa": "Extra-short",              "unicode": "COMBINING BREVE" }
-  },
-  "prosody":{
-    "\u002E": { "ipa": "Syllable break",           "unicode": "FULL STOP"},
-    "\u203F": { "ipa": "Linking",                  "unicode": "UNDERTIE"},
-    "\u02C8": { "ipa": "Primary stress",           "unicode": "MODIFIER LETTER VERTICAL LINE"},
-    "\u02CC": { "ipa": "Secondary stress",         "unicode": "MODIFIER LETTER LOW VERTICAL LINE" },
-    "\u007C": { "ipa": "Minor (foot) break",       "unicode": "VERTICAL LINE"},
-    "\u2016": { "ipa": "Major (intonation) break", "unicode": "DOUBLE VERTICAL LINE"}
   }
 }

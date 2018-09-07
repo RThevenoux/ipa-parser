@@ -67,12 +67,12 @@ List of *Category* for unit :
 | ---        | ---       | ---       |
 |`vowel`     | `true`    |           |
 |`consonnant`| `true`    |           |
-|`stress`    | `false`   | value = `primary`, `secondary`, `extra`|
-|`separator` | `false`   | value = `major group`, `minor group`, `syllabe break`, `linking`|
-|`intonation`| `false`   | value = `rise`, `fall`|
+|`stress`    | `false`   | `value` = `primary`, `secondary`|
+|`separator` | `false`   | `value` = `major group`, `minor group`, `syllabe break`, `linking`|
+|`intonation`| `false`   | `value` = `rise`, `fall`|
 |`tone`      | `false`   | See below |
 
-*Nota* : Quantity (also called length) information are not separate unit but contain in segmental unit (vowel or consonnat) 
+*Nota* : Quantity (also called length) information is not a separate unit but contain in segmental unit (vowel or consonnat) 
 
 ## Graphem
 
@@ -149,6 +149,12 @@ Tone are returned either as :
 
 If tone is mark on a segment. It will be returned after this segment `á` will be return as "segment-a" + "high-tone".
 *Warning* : the tone is added just after the segment and not at the end of the syllabe or word.
+
+## Stress
+
+Stress are represent with the vertical line `ˈ` (primary) and `ˌ` (secondary).
+The unit contain the field `value` that can be `primary`or `secondary`.
+"Extra-stress", sometimes write with double line (`ˈˈ`), is not supported and will be return as two primary stress.  
 
 # Invalid input
 

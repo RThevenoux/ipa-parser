@@ -66,6 +66,15 @@ module.exports = class IpaParserFactory {
     let brackets = JSON.parse(fs.readFileSync(__dirname + "/data/brackets.json", "utf8"));
     brackets.forEach(info => mapper.addBrackets(info.type, info.start, info.end));
 
+    // Supra
+    let supra = JSON.parse(fs.readFileSync(__dirname + "/data/supra.json", "utf8"));
+    for (let supraType in supra) {
+      let bundle = supra[supraType];
+      for (let key in bundle) {
+        mapper.addSupra(key, supraType, bundle[key]);
+      }
+    }
+
     return new IpaParser(mapper, normalization);
   }
 }
