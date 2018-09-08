@@ -7,17 +7,17 @@ Return a list of *semantic units* either segmental (*vowel* or *consonnant*) or 
 Also return the decomposition of the string into *graphical unit*, called **graphem**. IPA is design in such way that usually, 1 *graphem* = 1 *unit*. But with tone mark 1 *graphem* can carry 2 *units*.
 
 # Install and Use
-```
+``` 
 npm install ipa-parser --save
 ```
 
-
-```
+``` js
 const parser = require("ipa-parser");
 let result = parser.parse("hɛˈləʊ");
 ```
+
 Result format :
-```
+``` js
 {
   'type': string // the transcription type
   'units': [] // an array of IPA unit 
@@ -25,7 +25,7 @@ Result format :
 ```
 
 For decomposition of a string into *graphem* only :
-```
+``` js
 const parser = require("ipa-parser");
 let array = parser.decompose("[t͡sa:mɯ̟ᵝ");
 // array = ["t͡s","a:","m","ɯ̟ᵝ"]
@@ -65,12 +65,13 @@ List of *Category* for unit :
 
 |`category`  |`segmental`|description|
 | ---        | ---       | ---       |
-|`vowel`     | `true`    |           |
-|`consonnant`| `true`    |           |
-|`stress`    | `false`   | `value` = `primary`, `secondary`|
-|`separator` | `false`   | `value` = `major group`, `minor group`, `syllabe break`, `linking`|
-|`intonation`| `false`   | `value` = `rise`, `fall`|
-|`tone`      | `false`   | See below |
+|`vowel`     | `true`    | /1        |
+|`consonnant`| `true`    | /2        |
+|`tone`      | `false`   | /3 |
+|`tone-step` | `false`   | /4 |
+|`intonation`| `false`   | /4 |
+|`stress`    | `false`   | /4 |
+|`separator` | `false`   | /4 |
 
 *Nota* : Quantity (also called length) information is not a separate unit but contain in segmental unit (vowel or consonnat) 
 
@@ -136,29 +137,83 @@ Not define in IPA chart, not supported by this parser.
 Combinaison with a tie bar (`a͡ɪ`) or a with a superscript (`aᶦ`) will be reject.
 
 ## Tone
-Tone are returned either as :
- - an array of number from `1` to `5` like : `[1]` or `[5,3]`
- - a string : `downstep`, `upstep`, `failling`, `rising`
 
-```
-{
-  'type'  : 'tone',
-  'value' : [5, 3]  
-}
-```
+Tone are returned with :
+ - an array of number from `1` to `5` like : `[1]` or `[5,3]`
+ - a string : `failling`, `rising`, `other`
 
 If tone is mark on a segment. It will be returned after this segment `á` will be return as "segment-a" + "high-tone".
 *Warning* : the tone is added just after the segment and not at the end of the syllabe or word.
 
-## Stress
+__Examples__
 
-Stress are represent with the vertical line `ˈ` (primary) and `ˌ` (secondary).
-The unit contain the field `value` that can be `primary`or `secondary`.
-"Extra-stress", sometimes write with double line (`ˈˈ`), is not supported and will be return as two primary stress.  
+_Example 1_ : `̌ ` or `˩˥`
+``` json
+{
+    "category": "tone",
+    "segment": false,
+    "type": "local",
+    "name":"rising",
+    "highs":[1,5]
+}
+```
+_Example 2_ : `˧˦˩` 
+``` json 
+{
+    "category": "tone",
+    "segment": false,
+    "type": "local",
+    "name":"other",
+    "highs":[3,4,1]
+}
+```
+
+## Intonation, Tone-Step, Stress and Separator
+
+Execpt *tone* and *quantity*, all other supra-segmental information will be returned with the same format :
+- `category`: identifie the category of the supra-segmental 
+- `value`   : a string describing the information in the category 
+
+| character | IPA                           | `category`  | `value`           |
+| ---       | ---                           | ---         | ---               |
+| `.`       | Syllable break                | `separator` | `syllable-break`  |
+| `‿`       | Linking (absence of a break) | `separator` | `linking`         |  
+| `|`       | Minor (foot) group            | `separator` | `minor-group`     |
+| `‖`       | Major (intonation) group      | `separator` | `major-group`     |
+| `ˈ`       | Primary stress                | `stress`    | `primary-stress`  |
+| `ˌ`       | Secondary stress              | `stress`    | `secondary-stress`|
+| `ꜜ`       | Downstep                      | `tone-step` | `downstep`        |
+| `ꜛ`       | Upstep                        | `tone-step` | `upstep`          |
+| `↗`       | Global rise                   | `intonation`| `global-rise`     |
+| `↘`       | Global fall                   | `intonation`| `global-fall`     |
+
+*Nota* : "Extra-stress", sometimes write with double line (`ˈˈ`), is not supported and will be return as two *primary stress*.
+
+__Example__
+``` json
+{
+    "category": "separator",
+    "segment": false,
+    "value": "syllable"
+}
+```
 
 # Invalid input
 
 If the input is not a valid IPA string, throw an error.
+
+- `IpaCharacterError`
+- `IpaSyntaxError`
+
+Customize ?? :
+``` json
+{
+ "invalid-character" : "ignore",
+ "invalid-bracket"   : "ignore",
+ "invalid-diacritic" : "ignore",
+ "invalid-tie-bar"   : "ignore"
+}
+```
 
 # Discussion
 

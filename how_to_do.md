@@ -1,3 +1,8 @@
+#TODO
+- ESLint
+- Migrate to ES6 module
+- Github page
+
 # Normalize
 
 - separate diacritic. Example : `ã` => `a` + `~`
@@ -8,27 +13,39 @@
   - `g` => `ɡ`
   - `:` => `ː`
 
-# Pseudo Syntax
-
-IPA = s* ( wType | woType )
-s = any spacing or line break
-wType = OB unitSeq CB s* // OB and CB should match
-woType = unitSeq
-unitSeq = (unit s* )*
-OB = open bracket CB = close bracket
-unit = vowel | consonnant | stress | separator | intonation | tone
-seq = unit+
-unit = (pre-seg)? segment (post-seg)? (separator)? //NON certain supra-seg sont ni pre-seg, ni post-seg
-vowel = v (_ v)*
-v = A (d)*
-consonnant = c_simple | c_composed
-c_simple = T (d)*
-c_composed = T1 (d)* _ (d)* T2 (d)*
-tone 
-
 # Multi layer event based
 1 - unicode to concept
 2 - manage bracket
 3 - graphem  
 
 ? spacing
+
+# Event matrix / State machine
+
+Event :
+- s : space
+- tl : tone letter
+- tm : tone mark
+- tg : general tone
+- st : stress
+- sp : separator
+- d : diacritic
+- v : vowel
+- c : consonne
+- tb : tie bar
+
+- `<` : open unit
+- `-` : continue unit
+- `>` : close unit
+- `!` : open & close unit
+
+| State | s   | tl  | tm  | tg  | st  | sp  |  d  |  v  |  c  | tb  |
+| ---   | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0     | 0   | <TL | Err | !0  | !0  | !0  | Err | <V  | <C  | Err |
+| TL    | > 0 | -TL | Err | >!0 | >!0 | >!0 | Err | ><V | ><C | Err |
+| V     | > 0 | ><TL| -V  | >!0 | >!0 | >!0 | -V  | ><V | ><C | Err |
+| C     | > 0 | ><TL| -C  | >!0 | >!0 | >!0 | -C  | ><V | ><C |PT(C)|
+| PT    | Err | Err | -PT | Err | Err | Err | -PT | Err | -C  | Err |
+
+=>
+ - s, tl, [tm/d], [tg,st,sp], v, c, tb

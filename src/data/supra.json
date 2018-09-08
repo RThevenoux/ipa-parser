@@ -14,11 +14,7 @@
         "˦": "high",
         "˧": "mid",
         "˨": "low",
-        "˩": "extra-low",
-        "ꜜ": "downstep",
-        "ꜛ": "upstep",
-        "↗︎": "global-rise",
-        "↘": "global-fall"
+        "˩": "extra-low"
     },
     "tone-mark": {
         "\u030B": "extra-high",
@@ -31,5 +27,13 @@
         "\u1DC4": "high-rising",
         "\u1DC5": "low-rising",
         "\u1DC8": "rising-falling"
+    },
+    "tone-step": {
+        "ꜜ": "downstep",
+        "ꜛ": "upstep"
+    },
+    "intonation": {
+        "↗︎": "global-rise",
+        "↘": "global-fall"
     }
 }

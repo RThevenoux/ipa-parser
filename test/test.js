@@ -10,9 +10,13 @@ function expectUnitsOf(string) {
   return expect(parser.parse(string).units);
 }
 
+function supra(category, value) {
+  return { "segment": false, "category": category, "value": value };
+}
+
 describe('ipa-parser', () => {
 
-  describe('transcription type', () => {
+  describe('Transcription type', () => {
     it("should be 'none' if there is no bracket", () => {
       expect(parser.parse("")).to.have.property('type', 'none');
       expect(parser.parse("a")).to.have.property('type', 'none');
@@ -49,26 +53,49 @@ describe('ipa-parser', () => {
     });
   });
 
-  describe('stress', () => {
-    let primary = { "segment": false, "category": "stress", "value": "primary" };
-    let secondary = { "segment": false, "category": "stress", "value": "secondary" };
-
-    // Warning primary stress used \u02C8 and not apostrophe \u0027
-    it("should a single high vertical line be parsed as one primary stress", () => {
-      expectUnitsOf("ˈ").to.eql([primary]);
+  describe('Single-character supra-segmental', () => {
+    describe('Stress', () => {
+      // Warning primary stress used \u02C8 and not apostrophe \u0027
+      it("should parse 'Primary stress'", () => {
+        expectUnitsOf("ˈ").to.eql([supra("stress", "primary-stress")]);
+      });
+      it("should parse 'Secondary stress'", () => {
+        expectUnitsOf("ˌ").to.eql([supra("stress", "secondary-stress")]);
+      })
     });
-    it("should a single low vertical line be parsed as one secondary stress", () => {
-      expectUnitsOf("ˌ").to.eql([secondary]);
+    describe('Separator', () => {
+      it("should parse 'Syllable break'", () => {
+        expectUnitsOf(".").to.eql([supra("separator", "syllable-break")]);
+      });
+      it("should parse 'Minor group'", () => {
+        expectUnitsOf("|").to.eql([supra("separator", "minor-group")]);
+      });
+      it("should parse 'Major group'", () => {
+        expectUnitsOf("‖").to.eql([supra("separator", "major-group")]);
+      });
+      it("should parse 'Linking'", () => {
+        expectUnitsOf("‿").to.eql([supra("separator", "linking")]);
+      });
     });
-    it("should parse a two high vertical line separate as two primary stress", () => {
-      expectUnitsOf("ˈˈ").to.eql([primary, primary]);
-      expectUnitsOf("ˈˌ").to.eql([primary, secondary]);
-      expectUnitsOf("ˌˌ").to.eql([secondary, secondary]);
-      expectUnitsOf("ˈ ˈ").to.eql([primary, primary]);
+    describe('Tone-step', () => {
+      it("should parse 'Downstep'", () => {
+        expectUnitsOf("ꜜ").to.eql([supra(`tone-step`, `downstep`)]);
+      });
+      it("should parse 'Upstep'", () => {
+        expectUnitsOf("ꜛ").to.eql([supra(`tone-step`, `upstep`)]);
+      });
+    });
+    describe('Intornation', () => {
+      it("should parse 'Global Rise'", () => {
+        expectUnitsOf("↗").to.eql([supra(`intonation`, `global-rise`)]);
+      });
+      it("should parse 'Global Fall'", () => {
+        expectUnitsOf("↘").to.eql([supra(`intonation`, `global-fall`)]);
+      });
     });
   });
 
-  describe('invalid string', () => {
+  describe('Invalid string', () => {
     it("should throw exception if not IPA character", () => {
       expect(() => parser.parse("€")).to.throw(IpaCharacterError);
       expect(() => parser.parse("#")).to.throw(IpaCharacterError);
@@ -76,7 +103,7 @@ describe('ipa-parser', () => {
     });
   });
 
-  describe('invalid argument type', () => {
+  describe('Invalid argument type', () => {
     it("should throw exception if no argument", () => {
       expect(() => parser.parse()).to.throw(TypeError);
     });
