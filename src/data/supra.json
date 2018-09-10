@@ -1,39 +1,42 @@
 {
-    "stress": {
-        "ˈ": "primary",
-        "ˌ": "secondary"
-    },
-    "separator": {
-        "|": "minor",
-        "‖": "major",
-        ".": "syllable",
-        "‿": "linking"
-    },
-    "tone-letter": {
-        "˥": "extra-high",
-        "˦": "high",
-        "˧": "mid",
-        "˨": "low",
-        "˩": "extra-low"
-    },
-    "tone-mark": {
-        "\u030B": "extra-high",
-        "\u0301": "high",
-        "\u0304": "mid",
-        "\u0300": "low",
-        "\u030F": "extra-low",
-        "\u030C": "rising",
-        "\u0302": "falling",
-        "\u1DC4": "high-rising",
-        "\u1DC5": "low-rising",
-        "\u1DC8": "rising-falling"
-    },
-    "tone-step": {
-        "ꜜ": "downstep",
-        "ꜛ": "upstep"
-    },
-    "intonation": {
-        "↗︎": "global-rise",
-        "↘": "global-fall"
-    }
+  "stress": {
+    "ˈ": "primary",
+    "ˌ": "secondary"
+  },
+  "separator": {
+    "|": "minor",
+    "‖": "major",
+    ".": "syllable",
+    "‿": "linking"
+  },
+  "tone-letter": {
+    "˥": "extra-high",
+    "˦": "high",
+    "˧": "mid",
+    "˨": "low",
+    "˩": "extra-low"
+  },
+  "tone-mark": {
+    "\u030B": "extra-high",
+    "\u0301": "high",
+    "\u0304": "mid",
+    "\u0300": "low",
+    "\u030F": "extra-low",
+    "\u030C": "rising",
+    "\u0302": "falling",
+    "\u1DC4": "high-rising",
+    "\u1DC5": "low-rising",
+    "\u1DC6": "low-falling",
+    "\u1DC7": "high-falling",
+    "\u1DC8": "rising-falling",
+    "\u1DC9": "falling-rising"
+  },
+  "tone-step": {
+    "ꜜ": "downstep",
+    "ꜛ": "upstep"
+  },
+  "intonation": {
+    "↗︎": "global-rise",
+    "↘": "global-fall"
+  }
 }
