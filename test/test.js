@@ -6,12 +6,20 @@ var IpaSyntaxError = require("../src/error/ipa-syntax-error");
 
 var parser = ipaParser.parser;
 
+function unitsOf(string) {
+  return parser.parse(string).units;
+}
+
 function expectUnitsOf(string) {
-  return expect(parser.parse(string).units);
+  return expect(unitsOf(string));
 }
 
 function supra(category, value) {
   return { "segment": false, "category": category, "value": value };
+}
+
+function tone(label, ...heighs) {
+  return { "segment": false, "category": "tone", "label": label, "heighs": heighs };
 }
 
 describe('ipa-parser', () => {
@@ -53,6 +61,93 @@ describe('ipa-parser', () => {
     });
   });
 
+  describe('Tone', () => {
+    describe('Tone-mark', () => {
+
+    });
+    describe('Tone-letter', () => {
+      describe('Single tone-letter', () => {
+        it("should parse extra-low", () => {
+          expectUnitsOf("˩").to.eql([tone("extra-low", 1)]);
+        });
+        it("should parse low", () => {
+          expectUnitsOf("˨").to.eql([tone("low", 2)]);
+        });
+        it("should parse mid", () => {
+          expectUnitsOf("˧").to.eql([tone("mid", 3)]);
+        });
+        it("should parse high", () => {
+          expectUnitsOf("˦").to.eql([tone("high", 4)]);
+        });
+        it("should parse extra-high", () => {
+          expectUnitsOf("˥").to.eql([tone("extra-high", 5)]);
+        });
+      });
+      describe('Multiple tone-letter', () => {
+        it("should parse multiple tone with same heighs to the single heigh equivalent", () => {
+          expectUnitsOf("˩˩").to.eql([tone("extra-low", 1)]);
+          expectUnitsOf("˦˦˦").to.eql([tone("high", 4)]);
+          expectUnitsOf("˥˥˥˥").to.eql([tone("extra-high", 5)]);
+        });
+        it("should parse rising", () => {
+          expectUnitsOf("˩˥").to.eql([tone("rising", 1,5)]);
+          expectUnitsOf("˨˦").to.eql([tone("rising", 2,4)]);
+          expectUnitsOf("˩˧˥").to.eql([tone("rising", 1,3,5)]);
+        });
+        it("should parse rising + equal as rising", () => {
+          expectUnitsOf("˩˩˥").to.eql([tone("rising", 1,1,5)]);
+          expectUnitsOf("˨˦˦").to.eql([tone("rising", 2,4,4)]);
+          expectUnitsOf("˩˧˧˥").to.eql([tone("rising", 1,3,3,5)]);
+          expectUnitsOf("˩˩˥˥").to.eql([tone("rising", 1,1,5,5)]);
+        });
+        it("should parse falling", () => {
+          expectUnitsOf("˥˩").to.eql([tone("falling", 5,1)]);
+          expectUnitsOf("˦˨").to.eql([tone("falling", 4,2)]);
+          expectUnitsOf("˥˧˩").to.eql([tone("falling", 5,3,1)]);
+          expectUnitsOf("˥˩˩").to.eql([tone("falling", 5,1,1)]);
+          expectUnitsOf("˦˦˨").to.eql([tone("falling", 4,4,2)]);
+          expectUnitsOf("˥˧˧˩").to.eql([tone("falling", 5,3,3,1)]);
+          expectUnitsOf("˥˥˩˩").to.eql([tone("falling", 5,5,1,1)]);
+        });
+        it("should parse low-rising", () => {
+          expectUnitsOf("˩˧").to.eql([tone("low-rising", 1,3)]);
+          expectUnitsOf("˩˨˨").to.eql([tone("low-rising", 1,2,2)]);
+          expectUnitsOf("˩˩˨").to.eql([tone("low-rising", 1,1,2)]);
+        });
+        it("should parse high-rising", () => {
+          expectUnitsOf("˧˥").to.eql([tone("high-rising", 3,5)]);
+          expectUnitsOf("˧˥˥").to.eql([tone("high-rising", 3,5,5)]);
+          expectUnitsOf("˧˧˥").to.eql([tone("high-rising", 3,3,5)]);
+        });
+        it("should parse low-falling", () => {
+          expectUnitsOf("˧˩").to.eql([tone("low-falling", 3,1)]);
+          expectUnitsOf("˧˧˨").to.eql([tone("low-falling", 3,3,2)]);
+          expectUnitsOf("˨˩˩").to.eql([tone("low-falling", 2,1,1)]);
+        });
+        it("should parse high-falling", () => {
+          expectUnitsOf("˥˧").to.eql([tone("high-falling", 5,3)]);
+          expectUnitsOf("˥˦˦").to.eql([tone("high-falling", 5,4,4)]);
+          expectUnitsOf("˦˦˧").to.eql([tone("high-falling", 4,4,3)]);
+        });
+        it("should parse rising-falling", () => {
+          expectUnitsOf("˧˥˩").to.eql([tone("rising-falling", 3,5,1)]);
+          expectUnitsOf("˨˦˧").to.eql([tone("rising-falling", 2,4,3)]);
+          expectUnitsOf("˦˥˦").to.eql([tone("rising-falling", 4,5,4)]);
+          expectUnitsOf("˦˥˥˦").to.eql([tone("rising-falling", 4,5,5,4)]);
+        });
+        it("should parse falling-rising", () => {
+          expectUnitsOf("˧˩˥").to.eql([tone("falling-rising", 3,1,5)]);
+          expectUnitsOf("˨˦˦").to.eql([tone("falling-rising", 2,4,4)]);
+          expectUnitsOf("˥˧˥").to.eql([tone("falling-rising", 5,3,5)]);
+          expectUnitsOf("˥˧˦˥").to.eql([tone("falling-rising", 5,3,4,5)]);
+        });
+        it("should parse other", () => {
+          expectUnitsOf("˩˥˩˥").to.eql([tone("other", 1,5,1,5)]);
+          expectUnitsOf("˦˨˦˨").to.eql([tone("other", 4,2,4,2)]);
+        });
+      });
+    });
+  });
   describe('Single-character supra-segmental', () => {
     describe('Stress', () => {
       // Warning primary stress used \u02C8 and not apostrophe \u0027
