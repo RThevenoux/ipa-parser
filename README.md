@@ -113,14 +113,14 @@ If a mark and tones letters describe the same accent, they will arrive return th
 
 |Mark|Letters|`name`      |`heights`|Mark|Letters|`name`           |`heights`  |
 |:--:|:---:  | ---        |---      |:--:|:---:  | ---             | ---       |
-| e̋  | ˥     |`extra-high`|`[5]`    | ̌e  | ˩˥     | `rising`        |`[1,5]`    |
-| é  | ˦     |`high`      |`[4]`    | ̂e  | ˥˩     | `falling`       |`[5,1]`    |
-| ē  | ˧     |`mid`       |`[3]`    | ᷄e  | ˦˥     | `high-rising`   |`[4,5]`    |
-| è  | ˨     |`low`       |`[2]`    | ᷅e  | ˩˨     | `low-rising`    |`[1,2]`    |
-| ȅ  | ˩     |`extra-low` |`[1]`    | ᷇e  | ˥˦     | `high-falling`  |`[5,4]`    |
+| e̋  | ˥     |`extra-high`|`[5]`    | ě  | ˩˥     | `rising`        |`[1,5]`    |
+| é  | ˦     |`high`      |`[4]`    | ê  | ˥˩     | `falling`       |`[5,1]`    |
+| ē  | ˧     |`mid`       |`[3]`    | e᷄  | ˦˥     | `high-rising`   |`[4,5]`    |
+| è  | ˨     |`low`       |`[2]`    | e᷅  | ˩˨     | `low-rising`    |`[1,2]`    |
+| ȅ  | ˩     |`extra-low` |`[1]`    | e᷇  | ˥˦     | `high-falling`  |`[5,4]`    |
 |    |       |            |         | e᷆  | ˧˨     | `low-falling`   |`[2,1]`    |
-|    |       |            |         | ᷈e  | ˧˦˧     | `rising-falling`|`[3,4,3]`  |
-|    |       |            |         | ᷉e  | ˧˨˧     | `falling-rising`|`[3,2,3]`  |
+|    |       |            |         | e᷈  | ˧˦˧     | `rising-falling`|`[3,4,3]`  |
+|    |       |            |         | e᷉  | ˧˨˧     | `falling-rising`|`[3,2,3]`  |
 
 __Examples__
 
