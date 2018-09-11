@@ -6,20 +6,16 @@ var IpaSyntaxError = require("../src/error/ipa-syntax-error");
 
 var parser = ipaParser.parser;
 
-function unitsOf(string) {
-  return parser.parse(string).units;
-}
-
 function expectUnitsOf(string) {
-  return expect(unitsOf(string));
+  return expect(parser.parse(string).units);
 }
 
 function supra(category, value) {
   return { "segment": false, "category": category, "value": value };
 }
 
-function tone(label, ...heighs) {
-  return { "segment": false, "category": "tone", "label": label, "heighs": heighs };
+function tone(label, ...heights) {
+  return { "segment": false, "category": "tone", "label": label, "heights": heights };
 }
 
 describe('ipa-parser', () => {
@@ -64,47 +60,47 @@ describe('ipa-parser', () => {
   describe('Tone', () => {
     describe('Tone-mark', () => {
       it("should parse extra-low", () => {
-        expectUnitsOf("ȅ").to.include.members([tone("extra-low", 1)]);
+        expectUnitsOf("ȅ").to.deep.include(tone("extra-low", 1));
       });
       it("should parse low", () => {
-        expectUnitsOf("è").to.include.members([tone("low", 2)]);
+        expectUnitsOf("è").to.deep.include(tone("low", 2));
       });
       it("should parse mid", () => {
-        expectUnitsOf("ē").to.include.members([tone("mid", 3)]);
+        expectUnitsOf("ē").to.deep.include(tone("mid", 3));
       });
       it("should parse high", () => {
-        expectUnitsOf("é").to.include.members([tone("high", 4)]);
+        expectUnitsOf("é").to.deep.include(tone("high", 4));
       });
       it("should parse extra-high", () => {
-        expectUnitsOf("e̋").to.include.members([tone("extra-high", 5)]);
+        expectUnitsOf("e̋").to.deep.include(tone("extra-high", 5));
       });
       // Contour
       it("should parse rising", () => {
-        expectUnitsOf("e\u030C").to.include.members([tone("rising", 1, 5)]);
+        expectUnitsOf("e\u030C").to.deep.include(tone("rising", 1, 5));
       });
       it("should parse falling", () => {
-        expectUnitsOf("e\u0302").to.include.members([tone("falling", 5, 1)]);
+        expectUnitsOf("e\u0302").to.deep.include(tone("falling", 5, 1));
       });
       it("should parse high-rising", () => {
-        expectUnitsOf("e\u1DC4").to.include.members([tone("high-rising", 4, 5)]);
+        expectUnitsOf("e\u1DC4").to.deep.include(tone("high-rising", 4, 5));
       });
       it("should parse low-rising", () => {
-        expectUnitsOf("e\u1DC5").to.include.members([tone("low-rising", 1, 2)]);
+        expectUnitsOf("e\u1DC5").to.deep.include(tone("low-rising", 1, 2));
       });
       it("should parse low-falling", () => {
-        expectUnitsOf("e\u1DC6").to.include.members([tone("low-falling", 2, 1)]);
+        expectUnitsOf("e\u1DC6").to.deep.include(tone("low-falling", 2, 1));
       });
       it("should parse high-falling", () => {
-        expectUnitsOf("e\u1DC7").to.include.members([tone("high-falling", 5, 4)]);
+        expectUnitsOf("e\u1DC7").to.deep.include(tone("high-falling", 5, 4));
       });
       it("should parse rising-falling", () => {
-        expectUnitsOf("e\u1DC8").to.include.members([tone("rising-falling", 3, 4, 3)]);
+        expectUnitsOf("e\u1DC8").to.deep.include(tone("rising-falling", 3, 4, 3));
       });
       it("should parse falling-rising", () => {
-        expectUnitsOf("e\u1DC9").to.include.members([tone("falling-rising", 3, 2, 3)]);
+        expectUnitsOf("e\u1DC9").to.deep.include(tone("falling-rising", 3, 2, 3));
       });
     });
-
+    
     describe('Tone-letter', () => {
       describe('Single tone-letter', () => {
         it("should parse extra-low", () => {
@@ -125,9 +121,9 @@ describe('ipa-parser', () => {
       });
       describe('Multiple tone-letter', () => {
         it("should parse multiple tone with same heighs to the single heigh equivalent", () => {
-          expectUnitsOf("˩˩").to.eql([tone("extra-low", 1)]);
-          expectUnitsOf("˦˦˦").to.eql([tone("high", 4)]);
-          expectUnitsOf("˥˥˥˥").to.eql([tone("extra-high", 5)]);
+          expectUnitsOf("˩˩").to.eql([tone("extra-low", 1,1)]);
+          expectUnitsOf("˦˦˦").to.eql([tone("high", 4,4,4)]);
+          expectUnitsOf("˥˥˥˥").to.eql([tone("extra-high", 5,5,5,5)]);
         });
         it("should parse rising", () => {
           expectUnitsOf("˩˥").to.eql([tone("rising", 1, 5)]);
@@ -177,7 +173,7 @@ describe('ipa-parser', () => {
         });
         it("should parse falling-rising", () => {
           expectUnitsOf("˧˩˥").to.eql([tone("falling-rising", 3, 1, 5)]);
-          expectUnitsOf("˨˦˦").to.eql([tone("falling-rising", 2, 4, 4)]);
+          expectUnitsOf("˧˨˦").to.eql([tone("falling-rising", 3, 2, 4)]);
           expectUnitsOf("˥˧˥").to.eql([tone("falling-rising", 5, 3, 5)]);
           expectUnitsOf("˥˧˦˥").to.eql([tone("falling-rising", 5, 3, 4, 5)]);
         });

@@ -45,10 +45,5 @@
     "\u02DE": { "ipa": "Rhotacized",            "unicode": "MODIFIER LETTER RHOTIC HOOK"},
     "\u0303": { "ipa": "Nasalized",             "unicode": "COMBINING TILDE"},
     "\u034D": { "ipa": "labial spreading",      "standard":false, "unicode": "COMBINING LEFT RIGHT ARROW BELOW"}
-  },
-  "length":{
-    "\u02D0": { "ipa": "Long",                     "unicode": "MODIFIER LETTER TRIANGULAR COLON"},
-    "\u02D1": { "ipa": "Half-long",                "unicode": "MODIFIER LETTER HALF TRIANGULAR COLON" },
-    "\u0306": { "ipa": "Extra-short",              "unicode": "COMBINING BREVE" }
   }
 }

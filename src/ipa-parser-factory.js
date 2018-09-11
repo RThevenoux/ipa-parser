@@ -1,7 +1,7 @@
 var fs = require('fs');
 var Mapper = require('./mapper');
-var VowelHeight = require('./phoneme/vowel-phoneme').Height;
-var VowelBackness = require('./phoneme/vowel-phoneme').Backness;
+var VowelHeight = require('./constants').Height;
+var VowelBackness = require('./constants').Backness;
 var IpaParser = require('./ipa-parser');
 
 module.exports = class IpaParserFactory {
@@ -25,7 +25,7 @@ module.exports = class IpaParserFactory {
       let typeBundle = diacritics[type];
       for (let key in typeBundle) {
         let diacritic = typeBundle[key];
-        mapper.addDiacritic(key, diacritic.ipa, type);
+        mapper.addDiacritic(key, type, diacritic.ipa);
       }
     }
 
@@ -67,13 +67,21 @@ module.exports = class IpaParserFactory {
 
     // Supra
     let supra = JSON.parse(fs.readFileSync(__dirname + "/data/supra.json", "utf8"));
-    for (let supraType in supra) {
-      let bundle = supra[supraType];
+    for (let type in supra["diacritic"]) {
+      let bundle = supra["diacritic"][type];
+      for (let key in bundle) {
+        mapper.addDiacritic(key, type, bundle[key]);
+      }
+    }
+    for (let key in supra["tone-letter"]) {
+      mapper.addToneLetter(key, supra["tone-letter"][key]);
+    }
+    for (let supraType in supra["single-char"]) {
+      let bundle = supra["single-char"][supraType];
       for (let key in bundle) {
         mapper.addSupra(key, supraType, bundle[key]);
       }
     }
-
     return new IpaParser(mapper, normalization);
   }
 }

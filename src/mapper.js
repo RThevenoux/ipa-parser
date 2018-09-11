@@ -39,7 +39,7 @@ module.exports = class Mapper {
         this._add(unicode, data);
     }
 
-    addDiacritic(unicode, label, type) {
+    addDiacritic(unicode, type, label) {
         let data = {
             "type": "diacritic",
             "diacritic": {
@@ -67,7 +67,15 @@ module.exports = class Mapper {
     addSupra(unicode, supraType, label) {
         let data = {
             "type": "supra",
-            "supraType": supraType,
+            "category": supraType,
+            "value": label
+        };
+        this._add(unicode, data);
+    }
+
+    addToneLetter(unicode,label){
+        let data = {
+            "type": "tone-letter",
             "label": label
         };
         this._add(unicode, data);

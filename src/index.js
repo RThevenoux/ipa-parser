@@ -1,6 +1,6 @@
 const IpaParserFactory = require("./ipa-parser-factory");
-const height = require("./phoneme/vowel-phoneme").Height;
-const backness = require("./phoneme/vowel-phoneme").Backness;
+const height = require("./constants").Height;
+const backness = require("./constants").Backness;
 
 module.exports = {
   parser: new IpaParserFactory().get(),

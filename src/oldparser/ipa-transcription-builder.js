@@ -1,5 +1,5 @@
-var VowelPhoneme = require('./phoneme/vowel-phoneme');
-var ConsonantPhoneme = require('./phoneme/consonant-phoneme');
+var VowelPhoneme = require('./vowel-phoneme');
+var ConsonantPhoneme = require('./consonant-phoneme');
 
 module.exports = class IpaTranscriptionBuilder {
   constructor() {

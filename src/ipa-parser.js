@@ -1,5 +1,5 @@
-var IpaTranscriptionBuilder = require('./ipa-transcription-builder');
 var IpaSyntaxError = require("./error/ipa-syntax-error");
+let UnitsBuilder = require("./builder/units-builder");
 
 module.exports = class IpaParser {
 
@@ -13,7 +13,6 @@ module.exports = class IpaParser {
   * @returns {AbstractPhoneme[]} 
   */
   parse(ipaString) {
-
 
     if (typeof ipaString != 'string' && !(ipaString instanceof String)) {
       throw new TypeError("Input is not a string");
@@ -46,7 +45,7 @@ module.exports = class IpaParser {
    * @returns {AbstractPhoneme[]}
    */
   _parse(normalized) {
-    let builder = new IpaTranscriptionBuilder();
+    let builder = new UnitsBuilder();
 
     let transcriptionType = "none";
     let state = "INIT";
@@ -58,7 +57,7 @@ module.exports = class IpaParser {
         // BRACKET MANAGEMENT
         case "bracket": {
           switch (state) {
-            
+
             case "INIT": {
               if (!symbol.start) {
                 throw new IpaSyntaxError("Unexpected close bracket without open bracket. Close bracket: " + char);
@@ -66,7 +65,7 @@ module.exports = class IpaParser {
               transcriptionType = symbol.start;
               state = "OPEN";
             }; break;
-            
+
             case "OPEN": {
               if (!symbol.end) {
                 throw new IpaSyntaxError("Unexpected open bracket after an other one. Second bracket: " + char);
@@ -76,7 +75,7 @@ module.exports = class IpaParser {
               }
               state = "CLOSE";
             }; break;
-            
+
             case "CLOSE":
               throw new IpaSyntaxError("Unexpected bracket: " + char);
           }
@@ -84,12 +83,12 @@ module.exports = class IpaParser {
 
         // SPACING MANAGEMENT
         case "spacing": {
-          builder.add(symbol);
+          builder.spacing();
         }; break;
 
         // DATA MANAGEMENT
         default: {
-          
+
           if (state == "CLOSE") {
             throw new IpaSyntaxError("Data after closing bracket. Data: " + char);
           } else if (state == "INIT") {
