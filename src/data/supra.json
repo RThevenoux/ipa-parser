@@ -1,9 +1,9 @@
 {
   "diacritic": {
-    "length": {
-      "\u02D0": "Long",
-      "\u02D1": "Half-long",
-      "\u0306": "Extra-short"
+    "quantity": {
+      "\u02D0": "long",
+      "\u02D1": "half-long",
+      "\u0306": "extra-short"
     },
     "tone": {
       "\u030B": "extra-high",

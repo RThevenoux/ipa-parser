@@ -15,10 +15,10 @@ module.exports = class UnitsBuilder {
         this._endCurrentBuilder();
         this.currentBuilder = new VowelBuilder(data);
         this.state = "vowel";
-
       }; break;
+
       case "consonnant": {
-        if (this.state == "consonnant" && this.currentBuilder.expectConsonnant()) {
+        if (this.state == "consonnant" && this.currentBuilder.isExpectingConsonnant()) {
           this.currentBuilder.addConsonnant(data);
         } else {
           this._endCurrentBuilder();
@@ -26,6 +26,7 @@ module.exports = class UnitsBuilder {
           this.state = "consonnant";
         }
       }; break;
+
       case "tone-letter": {
         if (this.state == "tone-letter") {
           this.currentBuilder.addTone(data);
@@ -35,18 +36,21 @@ module.exports = class UnitsBuilder {
           this.state = "tone-letter";
         }
       }; break;
+
       case "diacritic": {
         if (this.state === "vowel" || this.state === "consonnant") {
-          this.currentBuilder.addDiacritic(data);
+          this.currentBuilder.addDiacritic(data.diacritic);
         } else {
           // ERR
         }
       }; break;
+
       case "supra": {
         this._endCurrentBuilder();
         this.units.push(this._buildSupra(data));
         this.state = "init";
       }; break;
+      
       case "tie-bar": {
         if (this.state === "consonnant") {
           this.currentBuilder.addTieBar();

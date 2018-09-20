@@ -7,13 +7,13 @@ const map = {
 };
 
 module.exports = class ToneLettersBuilder {
-  constructor(data) {
-    this.heights = [map[data.label]];
-    this.firstLabel = data.label;
+  constructor(tone) {
+    this.heights = [map[tone.label]];
+    this.firstLabel = tone.label;
   }
 
-  addTone(data) {
-    this.heights.push(map[data.label])
+  addTone(tone) {
+    this.heights.push(map[tone.label])
   }
 
   end() {
