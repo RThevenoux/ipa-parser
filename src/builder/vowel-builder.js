@@ -9,7 +9,10 @@ module.exports = class VowelBuilder {
     this.height = vowel.height;
     this.backness = vowel.backness;
     this.rounded = vowel.rounded;
+    this.roundednessModifier = "none";
     this.nasalized = false;
+    this.rhotacized = false;
+    this.tongueRoot = "neutral";
   }
 
   _centralize() {
@@ -60,7 +63,6 @@ module.exports = class VowelBuilder {
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
       case "phonation": this.segmentHelper.updatePhonation(diacritic.label); break;
-      case "release": /*Err*/; break;
       case "articulation": {
         switch (diacritic.label) {
           case "Advanced": this._advance(); break;
@@ -78,23 +80,24 @@ module.exports = class VowelBuilder {
       }; break;
       case "co-articulation": {
         switch (diacritic.label) {
-          case "More rounded": break;
-          case "Less rounded": break;
-          case "Labialized": break;
-          case "Palatalized": break;
-          case "Labio-palatalized": break;
-          case "Labialized without protrusion of the lips or velarization": break;
-          case "Velarized": break;
-          case "Pharyngealized": break;
-          case "Velarized, uvularized or pharyngealized": break;
-          case "Advanced tongue root": break;
-          case "Retracted tongue root": break;
-          case "Rhotacized": break;
-          case "Nasalized": break;
-          case "labial spreading": break;
-          default: ;
+          case "More rounded": this.roundednessModifier = "more"; break;
+          case "Less rounded": this.roundednessModifier = "less"; break;
+          case "Advanced tongue root": this.tongueRoot = "advanced"; break;
+          case "Retracted tongue root": this.tongueRoot = "retracted"; break;
+          case "Rhotacized": this.rhotacized = true; break;
+          case "Nasalized": this.nasalized = true; break;
+
+          case "Velarized or pharyngealized": //
+          case "Labio-palatalized": //
+          case "Labialized": //
+          case "Palatalized": //
+          case "Velarized": //
+          case "Pharyngealized": //
+          default: /*Err*/; break;
         }
       }; break;
+
+      case "release": /*Err*/; break;
       default: // Err
     }
   }
@@ -104,7 +107,10 @@ module.exports = class VowelBuilder {
       "height": this.height,
       "backness": this.backness,
       "rounded": this.rounded,
-      "nasalized": this.nasalized
+      "roundednessModifier": this.roundednessModifier,
+      "nasalized": this.nasalized,
+      "rhotacized": this.rhotacized,
+      "tongueRoot": this.tongueRoot
     });
   }
 }

@@ -1,32 +1,29 @@
 {
   "syllabicity":{
-    "\u0329": { "visual":"◌̩",  "ipa": "Syllabic",                   "target":"consonant", "unicode": "COMBINING VERTICAL LINE BELOW"},
-    "\u032F": { "visual":"◌̯",  "ipa": "Non-syllabic",               "target":"vowel",     "unicode": "COMBINING INVERTED BREVE BELOW"}
+    "\u0329": { "visual":"◌̩",  "ipa": "Syllabic",     "unicode": "COMBINING VERTICAL LINE BELOW"},
+    "\u032F": { "visual":"◌̯",  "ipa": "Non-syllabic", "unicode": "COMBINING INVERTED BREVE BELOW"}
   },
   "release":{
-    "\u02B0": { "visual":"◌ʰ", "ipa": "Aspirated",                  "target":"consonant", "unicode": "MODIFIER LETTER SMALL H"},
-    "\u207F": { "visual":"◌ⁿ", "ipa": "Nasal",                      "target":"consonant", "unicode": "SUPERSCRIPT LATIN SMALL LETTER N"},
-    "\u1DBF": { "visual":"◌ᶿ", "ipa": "Voiceless dental fricative", "target":"consonant", "unicode": "MODIFIER LETTER SMALL THETA"},
-    "\u1D4A": { "visual":"◌ᵊ", "ipa": "Mid central vowel",          "target":"consonant", "unicode": "MODIFIER LETTER SMALL SCHWA"},
-    "\u031A": { "visual":"◌̚",  "ipa": "Unreleased",                 "target":"stop",      "unicode": "COMBINING LEFT ANGLE ABOVE"},
-    "\u02E1": { "visual":"◌ˡ", "ipa": "Lateral",                    "target":"consonant", "unicode": "MODIFIER LETTER SMALL L"},
-    "\u02E3": { "visual":"◌ˣ", "ipa": "Voiceless velar fricative",  "target":"consonant", "unicode": "MODIFIER LETTER SMALL X"}
+    "\u02B0": { "visual":"◌ʰ", "ipa": "Aspirated",    "unicode": "MODIFIER LETTER SMALL H"},
+    "\u207F": { "visual":"◌ⁿ", "ipa": "Nasal",        "unicode": "SUPERSCRIPT LATIN SMALL LETTER N"},
+    "\u031A": { "visual":"◌̚",  "ipa": "No audible",   "unicode": "COMBINING LEFT ANGLE ABOVE"},
+    "\u02E1": { "visual":"◌ˡ", "ipa": "Lateral",      "unicode": "MODIFIER LETTER SMALL L"}
   },
   "phonation":{
-    "\u0325": { "visual":"◌̥", "ipa": "Voiceless",    "unicode": "COMBINING RING BELOW"},
-    "\u032C": { "visual":"◌̬", "ipa": "Voiced",       "unicode": "COMBINING CARON BELOW"},
-    "\u0324": { "visual":"◌̤", "ipa": "Murmured",     "unicode": "COMBINING DIAERESIS BELOW"},
-    "\u0330": { "visual":"◌̰", "ipa": "Creaky voice", "unicode": "COMBINING TILDE BELOW"}
+    "\u0325": { "visual":"◌̥", "ipa": "Voiceless",     "unicode": "COMBINING RING BELOW"},
+    "\u032C": { "visual":"◌̬", "ipa": "Voiced",        "unicode": "COMBINING CARON BELOW"},
+    "\u0324": { "visual":"◌̤", "ipa": "Breathy voice", "unicode": "COMBINING DIAERESIS BELOW"},
+    "\u0330": { "visual":"◌̰", "ipa": "Creaky voice",  "unicode": "COMBINING TILDE BELOW"}
   },
   "articulation":{
-    "\u032A": { "ipa": "Dental",          "target":"consonant", "unicode": "COMBINING BRIDGE BELOW" }, 
-    "\u033A": { "ipa": "Apical",          "target":"consonant", "unicode": "COMBINING INVERTED BRIDGE BELOW" },
-    "\u033C": { "ipa": "Linguolabial",    "target":"consonant", "unicode": "COMBINING SEAGULL BELOW" },
-    "\u033B": { "ipa": "Laminal",         "target":"consonant", "unicode": "COMBINING SQUARE BELOW" },
+    "\u032A": { "ipa": "Dental",          "unicode": "COMBINING BRIDGE BELOW" }, 
+    "\u033A": { "ipa": "Apical",          "unicode": "COMBINING INVERTED BRIDGE BELOW" },
+    "\u033C": { "ipa": "Linguolabial",    "unicode": "COMBINING SEAGULL BELOW" },
+    "\u033B": { "ipa": "Laminal",         "unicode": "COMBINING SQUARE BELOW" },
     "\u031F": { "ipa": "Advanced",        "unicode": "COMBINING PLUS SIGN BELOW" },
     "\u0320": { "ipa": "Retracted",       "unicode": "COMBINING MINUS SIGN BELOW" },
-    "\u0308": { "ipa": "Centralized",     "target":"vowel", "unicode": "COMBINING DIAERESIS" },
-    "\u033D": { "ipa": "Mid-centralized", "target":"vowel", "unicode": "COMBINING X ABOVE" },
+    "\u0308": { "ipa": "Centralized",     "unicode": "COMBINING DIAERESIS" },
+    "\u033D": { "ipa": "Mid-centralized", "unicode": "COMBINING X ABOVE" },
     "\u031D": { "ipa": "Raised",          "unicode": "COMBINING UP TACK BELOW" },
     "\u031E": { "ipa": "Lowered",         "unicode": "COMBINING DOWN TACK BELOW" }
   },
@@ -36,14 +33,12 @@
     "\u02B7": { "ipa": "Labialized",            "unicode": "MODIFIER LETTER SMALL W"},
     "\u02B2": { "ipa": "Palatalized",           "unicode": "MODIFIER LETTER SMALL J"},
     "\u1DA3": { "ipa": "Labio-palatalized",     "unicode": "MODIFIER LETTER SMALL TURNED H"},
-    "\u1DB9": { "ipa": "Labialized without protrusion of the lips or velarization", "unicode": "MODIFIER LETTER SMALL V WITH HOOK" },
     "\u02E0": { "ipa": "Velarized",             "unicode": "MODIFIER LETTER SMALL GAMMA"},
     "\u02E4": { "ipa": "Pharyngealized",        "unicode": "MODIFIER LETTER SMALL REVERSED GLOTTAL STOP"},
-    "\u0334": { "ipa": "Velarized, uvularized or pharyngealized", "unicode": "COMBINING TILDE OVERLAY" },
+    "\u0334": { "ipa": "Velarized or pharyngealized", "unicode": "COMBINING TILDE OVERLAY" },
     "\u0318": { "ipa": "Advanced tongue root",  "unicode": "COMBINING LEFT TACK BELOW"          },
     "\u0319": { "ipa": "Retracted tongue root", "unicode": "COMBINING RIGHT TACK BELOW"},
     "\u02DE": { "ipa": "Rhotacized",            "unicode": "MODIFIER LETTER RHOTIC HOOK"},
-    "\u0303": { "ipa": "Nasalized",             "unicode": "COMBINING TILDE"},
-    "\u034D": { "ipa": "labial spreading",      "standard":false, "unicode": "COMBINING LEFT RIGHT ARROW BELOW"}
+    "\u0303": { "ipa": "Nasalized",             "unicode": "COMBINING TILDE"}
   }
 }

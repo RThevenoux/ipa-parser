@@ -10,8 +10,8 @@ function expectUnitsOf(string) {
   return expect(parser.parse(string).units);
 }
 
-function vowel(heigh, backness, round) {
-  return {
+function vowel(heigh, backness, round, map) {
+  let vowel = {
     "segment": true,
     "category": "vowel",
     "syllabic": true,
@@ -20,8 +20,19 @@ function vowel(heigh, backness, round) {
     "height": heigh,
     "backness": backness,
     "rounded": round,
-    "nasalized": false
+    "roundednessModifier": "none",
+    "nasalized": false,
+    "rhotacized": false,
+    "tongueRoot": "neutral"
   };
+
+  if (map) {
+    for (let key in map) {
+      vowel[key] = map[key];
+    }
+  }
+
+  return vowel;
 }
 
 describe("ipa-parser : vowel", () => {
@@ -89,6 +100,27 @@ describe("ipa-parser : vowel", () => {
       expectUnitsOf("i" + `\u031F`).to.eql([vowel(3, 2, false)]);
       expectUnitsOf("ɒ" + `\u031E`).to.eql([vowel(-3, -2, true)]);
       expectUnitsOf("ɒ" + `\u0320`).to.eql([vowel(-3, -2, true)]);
+    });
+  });
+
+  describe("co-articulation diacritics", () => {
+    it("should advance tongue root if 'Left Tack' is present", () => {
+      expectUnitsOf("a" + `\u0318`).to.eql([vowel(-3, 2, false, { tongueRoot: "advanced" })]);
+    });
+    it("should retracte tongue root if 'Right Tack' is present", () => {
+      expectUnitsOf("a" + `\u0319`).to.eql([vowel(-3, 2, false, { tongueRoot: "retracted" })]);
+    });
+    it("should be more round if 'Left Half Ring' is present", () => {
+      expectUnitsOf("a" + `\u031C`).to.eql([vowel(-3, 2, false, { roundednessModifier: "less" })]);
+    });
+    it("should be less round if 'Right Half Ring' is present", () => {
+      expectUnitsOf("a" + `\u0339`).to.eql([vowel(-3, 2, false, { roundednessModifier: "more" })]);
+    });
+    it("should be nasalized if 'Tilde' is present", () => {
+      expectUnitsOf("a" + `\u0303`).to.eql([vowel(-3, 2, false, { nasalized: true })]);
+    });
+    it("should be rhoticazed if 'Hook' is present", () => {
+      expectUnitsOf("a" + `\u02DE`).to.eql([vowel(-3, 2, false, { rhotacized: true })]);
     });
   });
 });
