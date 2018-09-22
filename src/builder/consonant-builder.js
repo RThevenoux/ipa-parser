@@ -1,24 +1,26 @@
-const ToneMarkHelper = require("./tone-mark-helper");
 const SegmentHelper = require("./segment-helper");
 
 module.exports = class ConsonnantBuilder {
   constructor(consonnant) {
-    this.toneHelper = new ToneMarkHelper();
-    this.segmentHelper = new SegmentHelper(false, consonnant.voiced);
+    this.segmentHelper = SegmentHelper.createConsonnant(consonnant);
 
     this.state = "single-char";
 
-    /*
-    this.manner = symbol.manner;
-    this.place = symbol.place;
-    this.lateral = symbol.lateral;
-    */
+    this.manner = consonnant.manner;
+    this.place = consonnant.place;
+    this.lateral = consonnant.lateral;
   }
 
   addDiacritic(diacritic) {
     switch (diacritic.type) {
-      case "tone": this.toneHelper.set(diacritic.label); break;
+      case "tone": this.segmentHelper.addTone(diacritic.label); break;
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
+      case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
+      case "phonation": this.segmentHelper.updatePhonation(diacritic.label); break;
+      case "release": /*TODO*/; break;
+      case "articulation": /*TODO*/; break;
+      case "co-articulation": /*TODO*/; break;
+      default: // Err
     }
   }
 
@@ -48,19 +50,10 @@ module.exports = class ConsonnantBuilder {
       // Err
     }
 
-    let segment = {
-      "segment": true,
-      "category": "consonnant",
-      "quantity": this.segmentHelper.getQuantity(),
-      "voiced": this.segmentHelper.getVoiced(),
-      "syllabic": this.segmentHelper.getSyllabic(),
-    };
-
-    let result = [segment];
-    if (this.toneHelper.isTone()) {
-      result.push(this.toneHelper.buildTone());
-    }
-    
-    return result;
+    return this.segmentHelper.buildWithValues(
+      {
+        // no values yet
+      }
+    );
   }
 }

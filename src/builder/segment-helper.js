@@ -1,10 +1,17 @@
 const IpaSyntaxError = require("../error/ipa-syntax-error");
+const ToneMarkHelper = require("./tone-mark-helper");
 
-module.exports = class SegmentHelper {
-  constructor(syllabic, voiced) {
+class SegmentHelper {
+  constructor(category, syllabic, voiced) {
+    this.category = category;
     this.quantity = "short";
     this.syllabic = syllabic;
     this.voiced = voiced;
+    this.toneMarkHelper = new ToneMarkHelper();
+  }
+
+  addTone(toneLabel){
+    this.toneMarkHelper.addTone(toneLabel);
   }
 
   updateQuantity(label) {
@@ -48,10 +55,6 @@ module.exports = class SegmentHelper {
     throw new IpaSyntaxError("Unexpected quantity symbol: " + label + " current quantity: " + this.quantity);
   }
 
-  getQuantity() {
-    return this.quantity;
-  }
-
   getVoiced() {
     return this.voiced;
   }
@@ -60,4 +63,31 @@ module.exports = class SegmentHelper {
     return this.syllabic;
   }
 
+  buildWithValues(values) {
+    let segment = {
+      "segment": true,
+      "category": this.category,
+      "quantity": this.quantity,
+      "voiced": this.voiced,
+      "syllabic": this.syllabic
+    }
+
+    for (let key in values) {
+      segment[key] = values[key];
+    }
+
+    let result = [segment];
+
+    if (this.toneMarkHelper.isTone()) {
+      result.push(this.toneMarkHelper.buildTone());
+    }
+
+    return result;
+  }
+}
+
+// Export two Factory method
+module.exports = {
+  createVowel: () => new SegmentHelper("vowel", true, true),
+  createConsonnant: (consonnant) => new SegmentHelper("consonnant", true, consonnant.voiced)
 }

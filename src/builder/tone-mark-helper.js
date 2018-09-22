@@ -1,4 +1,4 @@
-const map = {
+const toneHeights = {
     "extra-high": [5],
     "high": [4],
     "mid": [3],
@@ -19,7 +19,7 @@ module.exports = class ToneMarkHelper {
         this.label = null;
     };
 
-    set(label) {
+    addTone(label) {
         if (this.label == null) {
             this.label = label;
         } else {
@@ -32,6 +32,11 @@ module.exports = class ToneMarkHelper {
     }
 
     buildTone() {
-        return { "segment": false, "category": "tone", "label": this.label, "heights": map[this.label] };
+        return {
+            "segment": false,
+            "category": "tone",
+            "label": this.label,
+            "heights": toneHeights[this.label]
+        };
     }
 };
