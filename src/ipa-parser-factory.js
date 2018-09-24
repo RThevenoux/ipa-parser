@@ -57,7 +57,12 @@ module.exports = class IpaParserFactory {
       for (let key in mannerBundle) {
         let consonant = mannerBundle[key];
         let lateral = (consonant.lateral ? true : false);
-        mapper.addConsonant(key, manner, consonant.place, consonant.voiced, lateral);
+        let place = consonant.place;
+        if (typeof (place) == "string") {
+          place = [place];
+        }
+
+        mapper.addConsonant(key, manner, place, consonant.voiced, lateral);
       }
     }
 

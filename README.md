@@ -2,7 +2,7 @@
 
 A parser for International Phonetic Alphabet (IPA) string as described in [IPA chart][chart].
 
-Return a list of *semantic units* either segmental (*vowel* or *consonnant*) or suprasegmental (tone, prosody, ...). These *semantic units* are simply called hereafter **unit**.
+Return a list of *semantic units* either segmental (*vowel* or *consonant*) or suprasegmental (tone, prosody, ...). These *semantic units* are simply called hereafter **unit**.
 
 # Install and Use
 ``` 
@@ -40,7 +40,7 @@ Transcription type can be `phonetic`, `phonemic`, `prosodic`, `indistinguishable
 
 # IPA units
 The parser return a list of "IPA-unit". These units can be either "segment" or "supra-segmental".
-Segment represent the finest sound decomposition and can be either vowel or consonnant. 
+Segment represent the finest sound decomposition and can be either vowel or consonant. 
 Supra-segmental represent information applying on more than one segment like tone or prosody.
 
 *Unit* properties :
@@ -55,7 +55,7 @@ List of *Category* for unit :
 |`category`  |`segmental`|description|
 | ---        | ---       | ---       |
 |`vowel`     | `true`    | /1        |
-|`consonnant`| `true`    | /2        |
+|`consonant` | `true`    | /2        |
 |`tone`      | `false`   | /3        |
 |`tone-step` | `false`   | /4        |
 |`intonation`| `false`   | /4        |
@@ -64,7 +64,7 @@ List of *Category* for unit :
 
 *Nota* : Quantity (also called length) information is not a separate unit but contain in segmental unit (vowel or consonnat) 
 
-## Segment : Vowel and Consonnant
+## Segment : Vowel and Consonant
 Vowel and consonant have common properties :
 
 | name     | type    |           |
@@ -81,7 +81,7 @@ Vowel and consonant have common properties :
 |`backness`| number  | -2 (back) ... 2 (front) |
 |`round`   | boolean | |
 
-*Consonnant* specifics properties :
+*Consonant* specifics properties :
 
 | name     | type    |           |
 | ---      | ---     | ---       |

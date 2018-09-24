@@ -1,14 +1,14 @@
 const SegmentHelper = require("./segment-helper");
 
-module.exports = class ConsonnantBuilder {
-  constructor(consonnant) {
-    this.segmentHelper = SegmentHelper.createConsonnant(consonnant);
+module.exports = class ConsonantBuilder {
+  constructor(consonant) {
+    this.segmentHelper = SegmentHelper.createConsonant(consonant);
 
     this.state = "single-char";
 
-    this.manner = consonnant.manner;
-    this.place = consonnant.place;
-    this.lateral = consonnant.lateral;
+    this.manner = consonant.manner;
+    this.place = consonant.place;
+    this.lateral = consonant.lateral;
   }
 
   addDiacritic(diacritic) {
@@ -20,7 +20,7 @@ module.exports = class ConsonnantBuilder {
       case "release": /*TODO*/; break;
       case "articulation": /*TODO*/; break;
       case "co-articulation": /*TODO*/; break;
-      default: // Err
+      default: // InternErr
     }
   }
 
@@ -28,31 +28,33 @@ module.exports = class ConsonnantBuilder {
     if (this.state === "single-char") {
       this.state = "expecting";
     } else {
-      // Err
+      // SyntErr
     }
 
   }
 
-  isExpectingConsonnant() {
+  isExpectingConsonant() {
     return this.state === "expecting";
   }
 
-  addConsonnant(consonnant) {
-    if (this.isExpectingConsonnant()) {
+  addConsonant(consonant) {
+    if (this.isExpectingConsonant()) {
       this.state = "double-char";
     } else {
-      // Err
+      // SyntErr
     }
   }
 
   end() {
-    if (this.isExpectingConsonnant()) {
-      // Err
+    if (this.isExpectingConsonant()) {
+      // SyntErr
     }
 
     return this.segmentHelper.buildWithValues(
       {
-        // no values yet
+        "manner": this.manner,
+        "place": this.place,
+        "lateral": this.lateral
       }
     );
   }

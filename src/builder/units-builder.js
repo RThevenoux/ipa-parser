@@ -1,6 +1,8 @@
 const VowelBuilder = require("./vowel-builder");
-const ConsonnantBuilder = require("./consonant-builder");
+const ConsonantBuilder = require("./consonant-builder");
 const ToneLettersBuilder = require("./tone-letters-builder");
+
+const IpaInternalError = require("./../error/ipa-internal-error");
 
 module.exports = class UnitsBuilder {
   constructor() {
@@ -17,13 +19,13 @@ module.exports = class UnitsBuilder {
         this.state = "vowel";
       }; break;
 
-      case "consonnant": {
-        if (this.state == "consonnant" && this.currentBuilder.isExpectingConsonnant()) {
-          this.currentBuilder.addConsonnant(data);
+      case "consonant": {
+        if (this.state == "consonant" && this.currentBuilder.isExpectingConsonant()) {
+          this.currentBuilder.addConsonant(data);
         } else {
           this._endCurrentBuilder();
-          this.currentBuilder = new ConsonnantBuilder(data);
-          this.state = "consonnant";
+          this.currentBuilder = new ConsonantBuilder(data);
+          this.state = "consonant";
         }
       }; break;
 
@@ -38,7 +40,7 @@ module.exports = class UnitsBuilder {
       }; break;
 
       case "diacritic": {
-        if (this.state === "vowel" || this.state === "consonnant") {
+        if (this.state === "vowel" || this.state === "consonant") {
           this.currentBuilder.addDiacritic(data.diacritic);
         } else {
           // ERR
@@ -50,18 +52,22 @@ module.exports = class UnitsBuilder {
         this.units.push(this._buildSupra(data));
         this.state = "init";
       }; break;
-      
+
       case "tie-bar": {
-        if (this.state === "consonnant") {
+        if (this.state === "consonant") {
           this.currentBuilder.addTieBar();
         } else {
           //ERR
         }
       }; break;
+
+      default: {
+        throw new IpaInternalError("Invalid data type : '" + data.type + "'");
+      }
     }
   }
 
-  spacing(){
+  spacing() {
     this._endCurrentBuilder();
     this.state = "init";
   }

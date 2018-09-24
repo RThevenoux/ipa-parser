@@ -89,5 +89,5 @@ class SegmentHelper {
 // Export two Factory method
 module.exports = {
   createVowel: () => new SegmentHelper("vowel", true, true),
-  createConsonnant: (consonnant) => new SegmentHelper("consonnant", true, consonnant.voiced)
+  createConsonant: (consonant) => new SegmentHelper("consonant", false, consonant.voiced)
 }
