@@ -15,7 +15,11 @@ function vowel(heigh, backness, round, map) {
     "segment": true,
     "category": "vowel",
     "syllabic": true,
-    "voiced": true,
+    "voicing": {
+      "voiced": true,
+      "phonation": "modal",
+      "aspirated": false
+    },
     "quantity": "short",
     "height": heigh,
     "backness": backness,
@@ -121,6 +125,27 @@ describe("ipa-parser : vowel", () => {
     });
     it("should be rhoticazed if 'Hook' is present", () => {
       expectUnitsOf("a" + `\u02DE`).to.eql([vowel(-3, 2, false, { rhotacized: true })]);
+    });
+  });
+  describe("phonation diacritics", () => {
+    it("should unvoiced if 'ring below' is present", () => {
+      let segment = parser.parse("a" + "\u0325").units[0];
+      expect(segment.voicing).to.have.property("voiced", false);
+    });
+    it("should be breathy voiced if 'Diaerisis Below' is present", () => {
+      let segment = parser.parse("a" + "\u0324").units[0];
+      expect(segment.voicing).to.have.property("phonation", "breathy");
+    });
+    it("should be creay voiced if 'Tilde Below' is present", () => {
+      let segment = parser.parse("a" + "\u0330").units[0];
+      expect(segment.voicing).to.have.property("phonation", "creaky");
+    });
+  });
+
+  describe("other diacritics", () => {
+    it("should be non-syllabic if 'inverted breve below' is present", () => {
+      let segment = parser.parse("a" + "\u032F").units[0];
+      expect(segment).to.have.property("syllabic", false);
     });
   });
 });

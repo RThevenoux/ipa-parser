@@ -4,7 +4,6 @@
     "\u032F": { "visual":"◌̯",  "ipa": "Non-syllabic", "unicode": "COMBINING INVERTED BREVE BELOW"}
   },
   "release":{
-    "\u02B0": { "visual":"◌ʰ", "ipa": "Aspirated",    "unicode": "MODIFIER LETTER SMALL H"},
     "\u207F": { "visual":"◌ⁿ", "ipa": "Nasal",        "unicode": "SUPERSCRIPT LATIN SMALL LETTER N"},
     "\u031A": { "visual":"◌̚",  "ipa": "No audible",   "unicode": "COMBINING LEFT ANGLE ABOVE"},
     "\u02E1": { "visual":"◌ˡ", "ipa": "Lateral",      "unicode": "MODIFIER LETTER SMALL L"}
@@ -13,7 +12,8 @@
     "\u0325": { "visual":"◌̥", "ipa": "Voiceless",     "unicode": "COMBINING RING BELOW"},
     "\u032C": { "visual":"◌̬", "ipa": "Voiced",        "unicode": "COMBINING CARON BELOW"},
     "\u0324": { "visual":"◌̤", "ipa": "Breathy voice", "unicode": "COMBINING DIAERESIS BELOW"},
-    "\u0330": { "visual":"◌̰", "ipa": "Creaky voice",  "unicode": "COMBINING TILDE BELOW"}
+    "\u0330": { "visual":"◌̰", "ipa": "Creaky voice",  "unicode": "COMBINING TILDE BELOW"},
+    "\u02B0": { "visual":"◌ʰ", "ipa": "Aspirated",    "unicode": "MODIFIER LETTER SMALL H"}
   },
   "articulation":{
     "\u032A": { "ipa": "Dental",          "unicode": "COMBINING BRIDGE BELOW" }, 

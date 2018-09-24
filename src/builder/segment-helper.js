@@ -1,16 +1,17 @@
 const IpaSyntaxError = require("../error/ipa-syntax-error");
 const ToneMarkHelper = require("./tone-mark-helper");
+const VoicingHelper = require("./voicing-helper");
 
 class SegmentHelper {
   constructor(category, syllabic, voiced) {
     this.category = category;
     this.quantity = "short";
     this.syllabic = syllabic;
-    this.voiced = voiced;
+    this.voicingHelper = new VoicingHelper(voiced);
     this.toneMarkHelper = new ToneMarkHelper();
   }
 
-  addTone(toneLabel){
+  addTone(toneLabel) {
     this.toneMarkHelper.addTone(toneLabel);
   }
 
@@ -19,17 +20,18 @@ class SegmentHelper {
       case "extra-short":
       case "half-long":
       case "extra-long":
-        this._exception(label);
+        throw new IpaSyntaxError("Unexpected quantity symbol: " + label + " current quantity: " + this.quantity);;
       case "long":
         if (label === "long") {
           this.quantity = "extra-long";
         } else {
-          this._exception(label);
+          throw new IpaSyntaxError("Unexpected quantity symbol: " + label + " current quantity: " + this.quantity);
         }
         break;
       case "short": {
         this.quantity = label;
       }
+      default: // InternErr
     }
   }
 
@@ -37,30 +39,12 @@ class SegmentHelper {
     switch (label) {
       case "Syllabic": this.syllabic = true; break;
       case "Non-syllabic": this.syllabic = false; break;
+      default: // InternErr
     }
   }
 
   updatePhonation(label) {
-    switch (label) {
-      case "Voiceless": this.voiced = false; break;
-      case "Voiced": this.voiced = true; break;
-      case "Murmured": //TODO;
-        break;
-      case "Creaky voice": //TODO;
-        break;
-    }
-  }
-
-  _exception(label) {
-    throw new IpaSyntaxError("Unexpected quantity symbol: " + label + " current quantity: " + this.quantity);
-  }
-
-  getVoiced() {
-    return this.voiced;
-  }
-
-  getSyllabic() {
-    return this.syllabic;
+    this.voicingHelper.addDiacritic(label);
   }
 
   buildWithValues(values) {
@@ -68,7 +52,7 @@ class SegmentHelper {
       "segment": true,
       "category": this.category,
       "quantity": this.quantity,
-      "voiced": this.voiced,
+      "voicing": this.voicingHelper.build(),
       "syllabic": this.syllabic
     }
 
