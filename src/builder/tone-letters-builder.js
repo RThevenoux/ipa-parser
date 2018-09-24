@@ -62,6 +62,8 @@ module.exports = class ToneLettersBuilder {
           case "falling-rising":
             // do nothing
             break;
+          default:
+          // InternErr
         }
       } else {
         // fall
@@ -95,6 +97,7 @@ module.exports = class ToneLettersBuilder {
           case "rising-falling":
             // do nothing
             break;
+          default: // InternErr
         }
       }
     }

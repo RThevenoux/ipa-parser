@@ -10,12 +10,12 @@ module.exports = class IpaParser {
 
   /**
   * @param {String} ipaString
-  * @returns {AbstractPhoneme[]} 
+  * @returns 
   */
   parse(ipaString) {
 
     if (typeof ipaString != 'string' && !(ipaString instanceof String)) {
-      throw new TypeError("Input is not a string");
+      throw new TypeError("Input is not a string : " + ipaString);
     }
 
     // Replace character by the standards ones, like ligatures, diacrtics, etc.
@@ -42,7 +42,7 @@ module.exports = class IpaParser {
 
   /**
    * @param {String} normalized a 'IPA' normalized String 
-   * @returns {AbstractPhoneme[]}
+   * @returns
    */
   _parse(normalized) {
     let builder = new UnitsBuilder();
