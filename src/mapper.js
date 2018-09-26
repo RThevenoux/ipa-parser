@@ -14,8 +14,8 @@ module.exports = class Mapper {
         this.map[unicode] = ipa;
     }
 
-    addCombining(unicode) {
-        this._add(unicode, { "type": "combining" });
+    addTieBar(unicode) {
+        this._add(unicode, { "type": "tie-bar" });
     }
 
     addVowel(unicode, height, backness, rounded) {

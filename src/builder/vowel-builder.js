@@ -99,6 +99,7 @@ module.exports = class VowelBuilder {
       }; break;
 
       case "release": /*SyntErr*/; break;
+      case "ejective": /*SyntErr*/; break;
       default: // InternErr
     }
   }

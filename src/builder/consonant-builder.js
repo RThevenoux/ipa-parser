@@ -7,6 +7,8 @@ module.exports = class ConsonantBuilder {
     this.state = "single-char";
 
     this.manner = consonant.manner;
+    this.ejective = false;
+
     this.place = consonant.place;
     this.lateral = consonant.lateral;
   }
@@ -17,6 +19,7 @@ module.exports = class ConsonantBuilder {
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
       case "phonation": this.segmentHelper.updatePhonation(diacritic.label); break;
+      case "ejective": this.ejective = true; break;
       case "release": /*TODO*/; break;
       case "articulation": /*TODO*/; break;
       case "co-articulation": /*TODO*/; break;
@@ -53,6 +56,7 @@ module.exports = class ConsonantBuilder {
     return this.segmentHelper.buildWithValues(
       {
         "manner": this.manner,
+        "ejective": this.ejective,
         "place": this.place,
         "lateral": this.lateral
       }

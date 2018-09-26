@@ -8,7 +8,7 @@ function expectUnitsOf(string) {
   return expect(parser.parse(string).units);
 }
 
-function consonant(place, manner, lateral, voiced) {
+function consonant(place, manner, lateral, voiced, ejective) {
   if (typeof (place) == "string") {
     place = [place];
   }
@@ -25,23 +25,25 @@ function consonant(place, manner, lateral, voiced) {
     "quantity": "short",
     "place": place,
     "manner": manner,
-    "lateral": (lateral ? lateral : false),
+    "ejective": (ejective ? true : false),
+    "lateral": (lateral ? true : false),
   };
 
   return segment;
 }
 
-plosive = (place, voiced) => consonant(place, "plosive", false, voiced);
-nasal = (place) => consonant(place, "nasal", false, true);
-trill = (place) => consonant(place, "trill", false, true);
-flap = (place, lateral) => consonant(place, "flap", lateral, true);
-fricative = (place, voiced, lateral) => consonant(place, "fricative", lateral, voiced);
-approximant = (place, lateral) => consonant(place, "approximant", lateral, true);
+plosive = (place, voiced, ejective) => consonant(place, "plosive", false, voiced, ejective);
+nasal = (place, ejective) => consonant(place, "nasal", false, true, ejective);
+trill = (place, ejective) => consonant(place, "trill", false, true, ejective);
+flap = (place, lateral, ejective) => consonant(place, "flap", lateral, true, ejective);
+fricative = (place, voiced, lateral, ejective) => consonant(place, "fricative", lateral, voiced, ejective);
+approximant = (place, lateral, ejective) => consonant(place, "approximant", lateral, true, ejective);
 implosive = (place) => consonant(place, "implosive", false, true);
-click = (place, lateral) => consonant(place, "click", lateral, false);
+click = (place, lateral, ejective) => consonant(place, "click", lateral, false, ejective);
+affricate = (place, lateral, ejective) => consonant(place, "affricate", lateral, false, ejective);
 
 describe("ipa-parser : consonant", () => {
-  describe("single character consonant", () => {
+  describe("pulmonic consonant", () => {
     it("should parse plosive", () => {
       expectUnitsOf("p").to.eql([plosive("bilabial", false)]);
       expectUnitsOf("b").to.eql([plosive("bilabial", true)]);
@@ -131,6 +133,24 @@ describe("ipa-parser : consonant", () => {
       expectUnitsOf("ʎ").to.eql([approximant("palatal", true)]);
       expectUnitsOf("ʟ").to.eql([approximant("velar", true)]);
     });
+  });
+  describe("non-pulmonic consonant", () => {
+    describe("ejective consonant", () => {
+      it("should parse plosive ejective", () => {
+        expectUnitsOf("pʼ").to.eql([plosive("bilabial", false, true)]);
+        expectUnitsOf("kʼ").to.eql([plosive("velar", false, true)]);
+      });
+      it("should parse fricative ejective", () => {
+        expectUnitsOf("sʼ").to.eql([fricative("alveolar", false, false, true)]);
+        expectUnitsOf("ʂʼ").to.eql([fricative("retroflex", false, false, true)]);
+        expectUnitsOf("ɬʼ").to.eql([fricative("alveolar", false, true, true)]);
+      });
+      it("should parse afficate ejective", () => {
+        expectUnitsOf("t\u0361sʼ").to.eql([affricate("alveolar", false, true)]);
+        expectUnitsOf("k\u0361xʼ").to.eql([affricate("velar", false, true)]);
+        expectUnitsOf("t\u0361ɬʼ").to.eql([affricate("alveolar", false, true)]);
+      });
+    });
     it("should parse click", () => {
       expectUnitsOf("ʘ").to.eql([click("bilabial")]);
       expectUnitsOf("ǀ").to.eql([click("dental")]);
@@ -148,12 +168,7 @@ describe("ipa-parser : consonant", () => {
       expectUnitsOf("ʛ").to.eql([implosive("uvular")]);
     });
   });
-  describe("other diacritics", () => {
-    it("should be syllabic if 'vertical line' is present", () => {
-      let segment = parser.parse("n" + "\u0329").units[0];
-      expect(segment).to.have.property("syllabic", true);
-    });
-  });
+
   describe("phonation diacritics", () => {
     it("should unvoiced if 'ring below' is present", () => {
       let segment = parser.parse("n" + "\u0325").units[0];
@@ -174,6 +189,12 @@ describe("ipa-parser : consonant", () => {
     it("should be creay voiced if 'Tilde Below' is present", () => {
       let segment = parser.parse("t" + "\u0330").units[0];
       expect(segment.voicing).to.have.property("phonation", "creaky");
+    });
+  });
+  describe("other diacritics", () => {
+    it("should be syllabic if 'vertical line' is present", () => {
+      let segment = parser.parse("n" + "\u0329").units[0];
+      expect(segment).to.have.property("syllabic", true);
     });
   });
 }); 

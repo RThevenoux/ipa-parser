@@ -7,17 +7,14 @@ var IpaParser = require('./ipa-parser');
 module.exports = class IpaParserFactory {
   get() {
     // -- Normalization
-    var miscellaneous = JSON.parse(fs.readFileSync(__dirname + "/data/miscellaneous.json", "utf8"));
+    var alternatives = JSON.parse(fs.readFileSync(__dirname + "/data/alternatives.json", "utf8"));
     let normalization = {};
-    for (let key in miscellaneous.normalization) {
-      normalization[key] = miscellaneous.normalization[key].target;
+    for (let key in alternatives) {
+      normalization[key] = alternatives[key].target;
     }
 
     // -- Symbol mapping
     let mapper = new Mapper();
-
-    // Combining
-    miscellaneous.combining.forEach(key => mapper.addCombining(key));
 
     // Diacritics
     let diacritics = JSON.parse(fs.readFileSync(__dirname + "/data/diacritics.json", "utf8"));
@@ -52,8 +49,12 @@ module.exports = class IpaParserFactory {
 
     // Consonants
     let consonants = JSON.parse(fs.readFileSync(__dirname + "/data/consonants.json", "utf8"));
-    for (let manner in consonants) {
-      let mannerBundle = consonants[manner];
+    // Combining
+    consonants.combining.forEach(key => mapper.addTieBar(key));
+    consonants.ejective.forEach(key => mapper.addDiacritic(key, "ejective", "ejective"));
+
+    for (let manner in consonants.symbol) {
+      let mannerBundle = consonants.symbol[manner];
       for (let key in mannerBundle) {
         let consonant = mannerBundle[key];
         let lateral = (consonant.lateral ? true : false);
