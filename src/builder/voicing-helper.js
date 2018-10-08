@@ -8,7 +8,10 @@ module.exports = class VoicingHelper {
   addDiacritic(label) {
     switch (label) {
       case "Voiceless": this.voiced = false; break;
-      case "Voiced": this.voiced = true; break;
+      case "Voiced": {
+        this.voiced = true;
+        if (this.phonation == "voiceless") { this.phonation = "modal" };
+      } break;
       case "Breathy voice": this.phonation = "breathy"; break;
       case "Creaky voice": this.phonation = "creaky"; break;
       case "Aspirated": this.aspirated = true; break;

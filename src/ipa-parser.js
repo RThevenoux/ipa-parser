@@ -94,7 +94,6 @@ module.exports = class IpaParser {
           } else if (state == "INIT") {
             state = "OPEN";
           }
-
           builder.add(symbol);
         }
       }

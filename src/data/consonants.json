@@ -43,8 +43,8 @@
       "ɧ":{"place":["postalveolar","velar"], "voiced":false},
       "ʂ":{"place":"retroflex",       "voiced":false},
       "ʐ":{"place":"retroflex",       "voiced":true},
-      "ɕ":{"place":["alveolar","palatal"],   "voiced":false},
-      "ʑ":{"place":["alveolar","palatal"],   "voiced":true},
+      "ɕ":{"place":"alveopalatal",    "voiced":false},
+      "ʑ":{"place":"alveopalatal",    "voiced":true},
       "ç":{"place":"palatal",         "voiced":false},
       "ʝ":{"place":"palatal",         "voiced":true},
       "x":{"place":"velar",           "voiced":false},
@@ -52,8 +52,8 @@
       "ʍ":{"place":["bilabial","velar"],  "voiced":false},
       "χ":{"place":"uvular",          "voiced":false},
       "ʁ":{"place":"uvular",          "voiced":true},
-      "ħ":{"place":"pharyngal",       "voiced":false},
-      "ʕ":{"place":"pharyngal",       "voiced":true},
+      "ħ":{"place":"pharyngeal",       "voiced":false},
+      "ʕ":{"place":"pharyngeal",       "voiced":true},
       "h":{"place":"glottal",         "voiced":false},
       "ɦ":{"place":"glottal",         "voiced":true},
       "ʜ":{"place":"epiglottal",      "voiced":false},
@@ -97,7 +97,7 @@
       "ǀ":{"place":"dental",         "voiced":false},
       "ǃ":{"place":"alveolar",       "voiced":false},
       "ǁ":{"place":"alveolar",       "voiced":false, "lateral":true},
-      "ǂ":{"place":["alveolar","palatal"], "voiced":false}
+      "ǂ":{"place":"postalveolar",   "voiced":false}
     }
   }
 }

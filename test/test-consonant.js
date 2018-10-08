@@ -8,9 +8,9 @@ function expectUnitsOf(string) {
   return expect(parser.parse(string).units);
 }
 
-function consonant(place, manner, lateral, voiced, ejective) {
-  if (typeof (place) == "string") {
-    place = [place];
+function consonant(places, manner, lateral, voiced, ejective) {
+  if (typeof (places) == "string") {
+    places = [places];
   }
 
   let segment = {
@@ -23,7 +23,7 @@ function consonant(place, manner, lateral, voiced, ejective) {
       "aspirated": false
     },
     "quantity": "short",
-    "place": place,
+    "places": places,
     "manner": manner,
     "ejective": (ejective ? true : false),
     "lateral": (lateral ? true : false),
@@ -40,7 +40,7 @@ fricative = (place, voiced, lateral, ejective) => consonant(place, "fricative", 
 approximant = (place, lateral, ejective) => consonant(place, "approximant", lateral, true, ejective);
 implosive = (place) => consonant(place, "implosive", false, true);
 click = (place, lateral, ejective) => consonant(place, "click", lateral, false, ejective);
-affricate = (place, lateral, ejective) => consonant(place, "affricate", lateral, false, ejective);
+affricate = (place, voiced, lateral, ejective) => consonant(place, "affricate", lateral, voiced, ejective);
 
 describe("ipa-parser : consonant", () => {
   describe("pulmonic consonant", () => {
@@ -93,22 +93,22 @@ describe("ipa-parser : consonant", () => {
       expectUnitsOf("ʒ").to.eql([fricative("postalveolar", true)]);
       expectUnitsOf("ʂ").to.eql([fricative("retroflex", false)]);
       expectUnitsOf("ʐ").to.eql([fricative("retroflex", true)]);
+      expectUnitsOf("ɕ").to.eql([fricative("alveopalatal", false)]);
+      expectUnitsOf("ʑ").to.eql([fricative("alveopalatal", true)]);
       expectUnitsOf("ç").to.eql([fricative("palatal", false)]);
       expectUnitsOf("ʝ").to.eql([fricative("palatal", true)]);
       expectUnitsOf("x").to.eql([fricative("velar", false)]);
       expectUnitsOf("ɣ").to.eql([fricative("velar", true)]);
       expectUnitsOf("χ").to.eql([fricative("uvular", false)]);
       expectUnitsOf("ʁ").to.eql([fricative("uvular", true)]);
-      expectUnitsOf("ħ").to.eql([fricative("pharyngal", false)]);
-      expectUnitsOf("ʕ").to.eql([fricative("pharyngal", true)]);
+      expectUnitsOf("ħ").to.eql([fricative("pharyngeal", false)]);
+      expectUnitsOf("ʕ").to.eql([fricative("pharyngeal", true)]);
       expectUnitsOf("h").to.eql([fricative("glottal", false)]);
       expectUnitsOf("ɦ").to.eql([fricative("glottal", true)]);
       expectUnitsOf("ʜ").to.eql([fricative("epiglottal", false)]);
       expectUnitsOf("ʢ").to.eql([fricative("epiglottal", true)]);
     });
     it("should parse fricative with two place", () => {
-      expectUnitsOf("ɕ").to.eql([fricative(["alveolar", "palatal"], false)]);
-      expectUnitsOf("ʑ").to.eql([fricative(["alveolar", "palatal"], true)]);
       expectUnitsOf("ɧ").to.eql([fricative(["postalveolar", "velar"], false)]);
       expectUnitsOf("ʍ").to.eql([fricative(["bilabial", "velar"], false)]);
     });
@@ -145,10 +145,10 @@ describe("ipa-parser : consonant", () => {
         expectUnitsOf("ʂʼ").to.eql([fricative("retroflex", false, false, true)]);
         expectUnitsOf("ɬʼ").to.eql([fricative("alveolar", false, true, true)]);
       });
-      it("should parse afficate ejective", () => {
-        expectUnitsOf("t\u0361sʼ").to.eql([affricate("alveolar", false, true)]);
-        expectUnitsOf("k\u0361xʼ").to.eql([affricate("velar", false, true)]);
-        expectUnitsOf("t\u0361ɬʼ").to.eql([affricate("alveolar", false, true)]);
+      it("should parse affricate ejective", () => {
+        expectUnitsOf("t\u0361sʼ").to.eql([affricate("alveolar", false, false, true)]);
+        expectUnitsOf("k\u0361xʼ").to.eql([affricate("velar", false, false, true)]);
+        expectUnitsOf("t\u0361ɬʼ").to.eql([affricate("alveolar", false, true, true)]);
       });
     });
     it("should parse click", () => {
@@ -156,9 +156,7 @@ describe("ipa-parser : consonant", () => {
       expectUnitsOf("ǀ").to.eql([click("dental")]);
       expectUnitsOf("ǃ").to.eql([click("alveolar")]);
       expectUnitsOf("ǁ").to.eql([click("alveolar", true)]);
-    });
-    it("should parse click with two place", () => {
-      expectUnitsOf("ǂ").to.eql([click(["alveolar", "palatal"])]);
+      expectUnitsOf("ǂ").to.eql([click("postalveolar")]);
     });
     it("should parse implosive", () => {
       expectUnitsOf("ɓ").to.eql([implosive("bilabial")]);

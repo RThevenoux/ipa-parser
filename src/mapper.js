@@ -28,10 +28,10 @@ module.exports = class Mapper {
         this._add(unicode, data);
     }
 
-    addConsonant(unicode, manner, place, voiced, lateral) {
+    addConsonant(unicode, manner, places, voiced, lateral) {
         let data = {
             "type": "consonant",
-            "place": place,
+            "places": places,
             "voiced": voiced,
             "lateral": lateral,
             "manner": manner

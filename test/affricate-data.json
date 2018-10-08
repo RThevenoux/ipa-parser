@@ -1,0 +1,39 @@
+{
+  "simple": {
+    "p͡ɸ": "voiceless bilabial",
+    "b͡β": "voiced bilabial",
+    "t͡s": "voiceless alveolar",
+    "d͡z": "voiced alveolar",
+    "t͡ɕ": "voiceless alveopalatal",
+    "d͡ʑ": "voiced alveopalatal",
+    "t͡ʃ": "voiceless postalveolar",
+    "d͡ʒ": "voiced postalveolar",
+    "ʈ͡ʂ": "voiceless retroflex",
+    "ɖ͡ʐ": "voiced retroflex",
+    "c͡ç": "voiceless palatal",
+    "ɟ͡ʝ": "voiced palatal",
+    "k͡x": "voiceless velar",
+    "ɡ͡ɣ": "voiced velar",
+    "q͡χ": "voiceless uvular",
+    "ɢ͡ʁ": "voiced uvular",
+    "ʡ͡ħ": "voiceless pharyngeal",
+    "ʡ͡ʕ": "voiced pharyngeal"
+  },
+  "other": {
+    "t̪͡s̪": "voiceless dental",
+    "d̪͡z̪": "voiced dental",
+    "pf": "voiceless bilabial-labiodental",
+    "bv": "voiced bilabial-labiodental",
+    "p̪f": "voiceless labiodental",
+    "b̪v": "voiced labiodental",
+    "t̪θ": "voiceless dental non-sibilant",
+    "d̪ð": "voiced dental non-sibilant",
+    "tɻ̝̊": "voiceless retroflex non-sibilant",
+    "dɻ̝": "voiced retroflex non-sibilant",
+    "tɬ": "voiceless alveolar lateral",
+    "dɮ": "voiced alveolar lateral",
+    "cʎ̥˔": "voiceless palatal lateral",
+    "kʟ̝̊": "voiceless velar lateral",
+    "ɡʟ̝": "voiced velar lateral"
+  }
+}
