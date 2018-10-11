@@ -1,10 +1,5 @@
 var expect = require("chai").expect;
-
-var ipaParser = require("../src/index.js");
-var IpaCharacterError = require("../src/error/ipa-character-error");
-var IpaSyntaxError = require("../src/error/ipa-syntax-error");
-
-var parser = ipaParser.parser;
+var parser = require("../src/index.js").parser
 
 function expectUnitsOf(string) {
   return expect(parser.parse(string).units);

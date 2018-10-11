@@ -1,10 +1,8 @@
 var expect = require("chai").expect;
 
-var ipaParser = require("../src/index.js");
+var parser = require("../src/index.js").parser;
 var IpaCharacterError = require("../src/error/ipa-character-error.js");
 var IpaSyntaxError = require("../src/error/ipa-syntax-error.js");
-
-var parser = ipaParser.parser;
 
 describe('ipa-parser : other', () => {
 

@@ -47,13 +47,11 @@ module.exports = class ConsonantBuilder {
 
   _computeAffricatePlaces(firstPlaces, secondPlaces) {
     if (firstPlaces.length != 1 && secondPlaces.length != 1) {
-      console.log("More than 1 place")
       return "error";
     }
 
     let first = firstPlaces[0];
     let second = secondPlaces[0];
-    console.log(first + " " + second + " coronal?" + coronals.includes(second));
 
     if (first == "alveolar") {
       return (coronals.includes(second) ? [second] : "error");
@@ -76,16 +74,13 @@ module.exports = class ConsonantBuilder {
     if (this.manner == "plosive" && second.manner == "fricative") {
       if (firstVoiced == second.voiced) {
         let affricatePlaces = this._computeAffricatePlaces(this.places, second.places);
-        console.log(" " + affricatePlaces);
         if (affricatePlaces != "error") {
-          console.log(" > update state to " + affricatePlaces + " " + second.lateral);
           this.manner = "affricate";
           this.places = affricatePlaces;
           this.lateral = second.lateral;
           this.state = "double-char";
         } else {
           // Invalid places
-          console.log(" > invalid place");
           this.state = "error";
         }
 
