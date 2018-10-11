@@ -1,21 +1,55 @@
 const SegmentHelper = require("./segment-helper");
+const VoicingHelper = require("./voicing-helper");
+
 const coronals = ["dental",
   "alveolar",
   "postalveolar",
   "retroflex",
   "alveopalatal"];
 
-module.exports = class ConsonantBuilder {
+const places = [
+  "bilabial",
+  "labiodental",
+  "dental",
+  "alveolar",
+  "postalveolar",
+  "retroflex",
+  "alveopalatal",
+  "palatal",
+  "velar",
+  "uvular",
+  "pharyngal",
+  "epiglottal",
+  "glottal"
+];
+
+const placeMap = {};
+for (let i = 0; i < places.length; i++) {
+  placeMap[places[i]] = i;
+}
+function _orderPlace(places) {
+  return places.map((name) => { return { "name": name, "index": placeMap[name] } }).sort((a, b) => a.index - b.index).map(data => data.name);
+}
+
+class Articulation {
   constructor(consonant) {
-    this.segmentHelper = SegmentHelper.createConsonant(consonant);
-
-    this.state = "single-char";
-
-    this.manner = consonant.manner;
-    this.ejective = false;
-
     this.places = consonant.places;
     this.lateral = consonant.lateral;
+    this.manner = consonant.manner;
+    this.voicingHelper = new VoicingHelper(consonant.voiced);
+  }
+
+  updatePhonation(label) {
+    this.voicingHelper.addDiacritic(label);
+  }
+}
+
+module.exports = class ConsonantBuilder {
+  constructor(consonant) {
+    this.segmentHelper = SegmentHelper.createConsonant();
+    this.state = "single-char";
+    this.articulations = [new Articulation(consonant)];
+    this.ejective = false;
   }
 
   addDiacritic(diacritic) {
@@ -23,13 +57,19 @@ module.exports = class ConsonantBuilder {
       case "tone": this.segmentHelper.addTone(diacritic.label); break;
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
-      case "phonation": this.segmentHelper.updatePhonation(diacritic.label); break;
+      case "phonation": this._getCurrentArticulation().updatePhonation(diacritic.label); break;
+      case "articulation": /*TODO*/; break;
+
       case "ejective": this.ejective = true; break;
       case "release": /*TODO*/; break;
-      case "articulation": /*TODO*/; break;
       case "co-articulation": /*TODO*/; break;
+
       default: // InternErr
     }
+  }
+
+  _getCurrentArticulation() {
+    return this.articulations[this.articulations.length - 1];
   }
 
   addTieBar() {
@@ -38,28 +78,10 @@ module.exports = class ConsonantBuilder {
     } else {
       // SyntErr
     }
-
   }
 
   isExpectingConsonant() {
     return this.state === "expecting";
-  }
-
-  _computeAffricatePlaces(firstPlaces, secondPlaces) {
-    if (firstPlaces.length != 1 && secondPlaces.length != 1) {
-      return "error";
-    }
-
-    let first = firstPlaces[0];
-    let second = secondPlaces[0];
-
-    if (first == "alveolar") {
-      return (coronals.includes(second) ? [second] : "error");
-    } else if (first == "epiglottal") {
-      return (second == "pharyngeal" ? [second] : "error");
-    } else {
-      return (second == first ? [second] : "error");
-    }
   }
 
   addConsonant(second) {
@@ -68,42 +90,8 @@ module.exports = class ConsonantBuilder {
       this.state = "error";
       return;
     }
-
-    // Check if affricate
-    let firstVoiced = this.segmentHelper.voicingHelper.voiced;
-    if (this.manner == "plosive" && second.manner == "fricative") {
-      if (firstVoiced == second.voiced) {
-        let affricatePlaces = this._computeAffricatePlaces(this.places, second.places);
-        if (affricatePlaces != "error") {
-          this.manner = "affricate";
-          this.places = affricatePlaces;
-          this.lateral = second.lateral;
-          this.state = "double-char";
-        } else {
-          // Invalid places
-          this.state = "error";
-        }
-
-      } else {
-        // Ad-hoc case for 'ʡ͡ʕ'
-        if (this.places.length == 1 && second.places.length == 1
-          && this.places[0] == "epiglottal" && second.places[0] == "pharyngeal"
-          && firstVoiced == false) {
-          this.manner = "affricate";
-          this.places = ["pharyngeal"];
-          this.lateral = false;
-          this.state = "double-char";
-          this.segmentHelper.updatePhonation("Voiced");
-        } else {
-          // Not same voicing
-          this.state = "error";
-        }
-      }
-
-    } else {
-      // Not Plosive+Fricative
-      this.state = "error";
-    }
+    this.articulations.push(new Articulation(second));
+    this.state = "double-char";
   }
 
   end() {
@@ -111,13 +99,104 @@ module.exports = class ConsonantBuilder {
       // SyntErr
     }
 
-    return this.segmentHelper.buildWithValues(
-      {
-        "manner": this.manner,
-        "ejective": this.ejective,
-        "places": this.places,
-        "lateral": this.lateral
+    let data = this._resolveArticulations();
+    data.ejective = this.ejective;
+    data.places = _orderPlace(data.places);
+
+    return this.segmentHelper.buildWithValues(data);
+  }
+
+  _resolveArticulations() {
+    let first = this.articulations[0];
+
+    if (this.articulations.length == 1) {
+      // If only one articulations
+      return {
+        "voicing": first.voicingHelper.build(),
+        "manner": first.manner,
+        "places": first.places,
+        "lateral": first.lateral
       }
-    );
+    }
+
+    // If two articulations
+    let second = this.articulations[1];
+    if (first.manner === "plosive" && second.manner === "fricative") {
+      return this._resolveAffricate(first, second);
+    } else if (first.manner === second.manner) {
+      return this._resolveCoarticulation(first, second, first.manner);
+    } else if (first.manner === "plosive" && second.manner === "implosive") {
+      return this._resolveCoarticulation(first, second, "implosive");
+    } else {
+      return "error invalid articulations manner " + first.manner + " + " + second.manner;
+    }
+  }
+
+  _resolveAffricate(first, second) {
+    if (first.places.length != 1 && second.places.length != 1) {
+      return "error affricate with more than one place " + first.places + " + " + second.places;
+    }
+
+    let firstPlace = first.places[0];
+    let secondPlace = second.places[0];
+    let firstVoiced = first.voicingHelper.voiced;
+    let secondVoiced = second.voicingHelper.voiced;
+
+    if (firstVoiced == secondVoiced) {
+      let affricatePlace = this._computeAffricatePlace(firstPlace, secondPlace);
+      if (affricatePlace == "error") {
+        return "error invalid affricate place " + firstPlace + " + " + secondPlace;
+      }
+
+      return {
+        "voicing": first.voicingHelper.buildWith(second.voicingHelper),
+        "manner": "affricate",
+        "places": affricatePlace,
+        "lateral": second.lateral,
+      }
+    }
+
+    // Ad-hoc case for 'ʡ͡ʕ'
+    if (firstPlace == "epiglottal" && secondPlace == "pharyngeal"
+      && firstVoiced == false) {
+      return {
+        "voicing": second.voicingHelper.build(),
+        "manner": "affricate",
+        "places": ["pharyngeal"],
+        "lateral": second.lateral,
+      }
+    }
+
+    // Invalid voicing combination
+    return "error invalid voicing for affricate";
+  }
+
+  _computeAffricatePlace(firstPlace, secondPlace) {
+    if (firstPlace == "alveolar") {
+      return (coronals.includes(secondPlace) ? [secondPlace] : "error");
+    } else if (firstPlace == "epiglottal") {
+      return (secondPlace == "pharyngeal" ? [secondPlace] : "error");
+    } else {
+      return (secondPlace == firstPlace ? [secondPlace] : "error");
+    }
+  }
+
+  _resolveCoarticulation(first, second, manner) {
+    let lateral = first.lateral || second.lateral;
+    let places = first.places.concat(second.places);
+
+    let firstVoiced = first.voicingHelper.voiced;
+    let secondVoiced = second.voicingHelper.voiced;
+
+    if (firstVoiced != secondVoiced) {
+      return "error invalid voicing for coarticulation";
+    }
+
+    return {
+      "manner": manner,
+      "voicing": first.voicingHelper.buildWith(second.voicingHelper),
+      "lateral": lateral,
+      "places": places
+    };
   }
 }

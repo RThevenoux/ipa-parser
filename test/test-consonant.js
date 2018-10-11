@@ -23,6 +23,7 @@ describe("ipa-parser : consonnant", () => {
   testData("pulmonic", data.pulmonic);
   testData("non-pulmonic", data["non-pulmonic"]);
   testData("afficate", data.affricate);
+  testData("co-articulated", data["co-articulated"]);
 
   describe("phonation diacritics", () => {
     it("should unvoiced if 'ring below' is present", () => {

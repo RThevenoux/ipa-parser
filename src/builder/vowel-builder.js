@@ -1,11 +1,12 @@
 const SegmentHelper = require("./segment-helper");
+const VoicingHelper = require("./voicing-helper");
 const VowelBackness = require("./../constants").Backness;
 const VowelHeight = require("./../constants").Height;
 
 module.exports = class VowelBuilder {
   constructor(vowel) {
     this.segmentHelper = SegmentHelper.createVowel();
-
+    this.voicingHelper = new VoicingHelper(true);
     this.height = vowel.height;
     this.backness = vowel.backness;
     this.rounded = vowel.rounded;
@@ -13,6 +14,10 @@ module.exports = class VowelBuilder {
     this.nasalized = false;
     this.rhotacized = false;
     this.tongueRoot = "neutral";
+  }
+
+  _updatePhonation(label) {
+    this.voicingHelper.addDiacritic(label);
   }
 
   _centralize() {
@@ -62,7 +67,7 @@ module.exports = class VowelBuilder {
       case "tone": this.segmentHelper.addTone(diacritic.label); break;
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
-      case "phonation": this.segmentHelper.updatePhonation(diacritic.label); break;
+      case "phonation": this._updatePhonation(diacritic.label); break;
       case "articulation": {
         switch (diacritic.label) {
           case "Advanced": this._advance(); break;
@@ -106,6 +111,7 @@ module.exports = class VowelBuilder {
 
   end() {
     return this.segmentHelper.buildWithValues({
+      "voicing": this.voicingHelper.build(),
       "height": this.height,
       "backness": this.backness,
       "rounded": this.rounded,

@@ -1,13 +1,11 @@
 const IpaSyntaxError = require("../error/ipa-syntax-error");
 const ToneMarkHelper = require("./tone-mark-helper");
-const VoicingHelper = require("./voicing-helper");
 
 class SegmentHelper {
-  constructor(category, syllabic, voiced) {
+  constructor(category, syllabic) {
     this.category = category;
     this.quantity = "short";
     this.syllabic = syllabic;
-    this.voicingHelper = new VoicingHelper(voiced);
     this.toneMarkHelper = new ToneMarkHelper();
   }
 
@@ -43,16 +41,11 @@ class SegmentHelper {
     }
   }
 
-  updatePhonation(label) {
-    this.voicingHelper.addDiacritic(label);
-  }
-
   buildWithValues(values) {
     let segment = {
       "segment": true,
       "category": this.category,
       "quantity": this.quantity,
-      "voicing": this.voicingHelper.build(),
       "syllabic": this.syllabic
     }
 
@@ -72,6 +65,6 @@ class SegmentHelper {
 
 // Export two Factory method
 module.exports = {
-  createVowel: () => new SegmentHelper("vowel", true, true),
-  createConsonant: (consonant) => new SegmentHelper("consonant", false, consonant.voiced)
+  createVowel: () => new SegmentHelper("vowel", true),
+  createConsonant: () => new SegmentHelper("consonant", false)
 }
