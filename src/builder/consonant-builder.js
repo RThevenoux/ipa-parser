@@ -42,6 +42,58 @@ class Articulation {
   updatePhonation(label) {
     this.voicingHelper.addDiacritic(label);
   }
+
+  updateArticulation(label) {
+    switch (label) {
+      case "Advanced": this._advance(); break;
+      case "Retracted": this._retracte(); break;
+      case "Raised": this._raise(); break;
+      case "Lowered": this._lower(); break;
+      case "Dental": this._dental(); break;
+      case "Linguolabial": this._lingolabial(); break;
+      case "Apical": this._apical(); break;
+      case "Laminal": this._laminal(); break;
+      case "Centralized": /*err*/; break;
+      case "Mid-centralized": /*err*/; break;
+      default: /*Err*/; break;
+    };
+  }
+
+  _dental() {
+    if (this.places.length > 1) {
+      console.log("More than one place with 'dental' diacrtic");
+    }
+
+    switch (this.places[0]) {
+      case "alveolar": this.places = ["dental"]; break;
+      case "bilabial": this.places = ["labiodental"]; break;
+      default: console.log("'dental' diacritic on invalid place " + this.places[0]);
+    }
+  }
+
+  _lingolabial() {
+    this.places = ["linguolabial"];
+  }
+
+  _apical() {
+    let place = this.places[0];
+    if (place == "bilabial") {
+      this.places = ["linguolabial"];
+      this.tongue = "apical";
+    } else if (coronals.includes(place)) {
+      this.tongue = "apical";
+    } else {
+      // err
+    };
+  }
+
+  _laminal() {
+    if (this.places.length == 1 && coronals.includes(this.places[0])) {
+      this.tongue = "laminal";
+    } else {
+      // err
+    }
+  }
 }
 
 module.exports = class ConsonantBuilder {
@@ -58,12 +110,10 @@ module.exports = class ConsonantBuilder {
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
       case "phonation": this._getCurrentArticulation().updatePhonation(diacritic.label); break;
-      case "articulation": /*TODO*/; break;
-
+      case "articulation": this._getCurrentArticulation().updateArticulation(diacritic.label); break;
       case "ejective": this.ejective = true; break;
       case "release": /*TODO*/; break;
       case "co-articulation": /*TODO*/; break;
-
       default: // InternErr
     }
   }
