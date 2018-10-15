@@ -100,15 +100,17 @@
     "sʼ": "voiceless alveolar ejective fricative",
     "ʂʼ": "voiceless retroflex ejective fricative",
     "ɬʼ": "voiceless alveolar lateral ejective fricative",
-    "t\u0361sʼ": "voiceless alveolar ejective affricate",
-    "k\u0361xʼ": "voiceless velar ejective affricate",
-    "t\u0361ɬʼ": "voiceless alveolar lateral ejective affricate"
+    "t͡sʼ": "voiceless alveolar ejective affricate",
+    "k͡xʼ": "voiceless velar ejective affricate",
+    "t͡ɬʼ": "voiceless alveolar lateral ejective affricate"
   },
   "affricate": {
     "p͡ɸ": "voiceless bilabial affricate",
     "b͡β": "voiced bilabial affricate",
     "p̪͡f": "voiceless labiodental affricate",
     "b̪͡v": "voiced labiodental affricate",
+    "t̪͡s̪": "voiceless dental affricate",
+    "d̪͡z̪": "voiced dental affricate",
     "t͡s": "voiceless alveolar affricate",
     "d͡z": "voiced alveolar affricate",
     "t͡ɬ": "voiceless alveolar lateral affricate",
@@ -130,6 +132,11 @@
     "ʡ͡ħ": "voiceless pharyngeal affricate",
     "ʡ͡ʕ": "voiced pharyngeal affricate",
     "ʔ͡h": "voiceless glottal affricate"
+  },
+  "raised": {
+    "c͡ʎ̥˔": "voiceless palatal lateral affricate",
+    "k͡ʟ̝̊": "voiceless velar lateral affricate",
+    "ɡ͡ʟ̝": "voiced velar lateral affricate"
   },
   "co-articulated": {
     "k͡p": "voiceless bilabial velar plosive",
@@ -158,19 +165,14 @@
       "n̠͡m": "voiced bilabial postalveolar nasal"
     },
     "sibilant / non-sibilant": {
-      "t̪͡s̪": "voiceless dental affricate",
-      "d̪͡z̪": "voiced dental affricate",
-      "t̪θ": "voiceless dental non-sibilant affricate",
-      "d̪ð": "voiced dental non-sibilant affricate",
-      "tɻ̝̊": "voiceless retroflex non-sibilant affricate",
-      "dɻ̝": "voiced retroflex non-sibilant affricate"
+      "t̪͡θ": "voiceless dental non-sibilant affricate",
+      "d̪͡ð": "voiced dental non-sibilant affricate",
+      "t͡ɻ̝̊": "voiceless retroflex non-sibilant affricate",
+      "d͡ɻ̝": "voiced retroflex non-sibilant affricate"
     },
     "unclear": {
-      "pf": "voiceless bilabial-labiodental affricate",
-      "bv": "voiced bilabial-labiodental affricate",
-      "cʎ̥˔": "voiceless palatal lateral affricate",
-      "kʟ̝̊": "voiceless velar lateral affricate",
-      "ɡʟ̝": "voiced velar lateral affricate",
+      "p͡f": "voiceless bilabial-labiodental affricate",
+      "b͡v": "voiced bilabial-labiodental affricate",
       "w": "voiced labial velar approximant",
       "u̯": "voiced labial velar approximant",
       "ʍ": "voiceless labial velar approximant",

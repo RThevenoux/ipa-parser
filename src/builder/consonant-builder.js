@@ -1,100 +1,6 @@
 const SegmentHelper = require("./segment-helper");
-const VoicingHelper = require("./voicing-helper");
-
-const coronals = ["dental",
-  "alveolar",
-  "postalveolar",
-  "retroflex",
-  "alveopalatal"];
-
-const places = [
-  "bilabial",
-  "labiodental",
-  "dental",
-  "alveolar",
-  "postalveolar",
-  "retroflex",
-  "alveopalatal",
-  "palatal",
-  "velar",
-  "uvular",
-  "pharyngal",
-  "epiglottal",
-  "glottal"
-];
-
-const placeMap = {};
-for (let i = 0; i < places.length; i++) {
-  placeMap[places[i]] = i;
-}
-function _orderPlace(places) {
-  return places.map((name) => { return { "name": name, "index": placeMap[name] } }).sort((a, b) => a.index - b.index).map(data => data.name);
-}
-
-class Articulation {
-  constructor(consonant) {
-    this.places = consonant.places;
-    this.lateral = consonant.lateral;
-    this.manner = consonant.manner;
-    this.voicingHelper = new VoicingHelper(consonant.voiced);
-  }
-
-  updatePhonation(label) {
-    this.voicingHelper.addDiacritic(label);
-  }
-
-  updateArticulation(label) {
-    switch (label) {
-      case "Advanced": this._advance(); break;
-      case "Retracted": this._retracte(); break;
-      case "Raised": this._raise(); break;
-      case "Lowered": this._lower(); break;
-      case "Dental": this._dental(); break;
-      case "Linguolabial": this._lingolabial(); break;
-      case "Apical": this._apical(); break;
-      case "Laminal": this._laminal(); break;
-      case "Centralized": /*err*/; break;
-      case "Mid-centralized": /*err*/; break;
-      default: /*Err*/; break;
-    };
-  }
-
-  _dental() {
-    if (this.places.length > 1) {
-      console.log("More than one place with 'dental' diacrtic");
-    }
-
-    switch (this.places[0]) {
-      case "alveolar": this.places = ["dental"]; break;
-      case "bilabial": this.places = ["labiodental"]; break;
-      default: console.log("'dental' diacritic on invalid place " + this.places[0]);
-    }
-  }
-
-  _lingolabial() {
-    this.places = ["linguolabial"];
-  }
-
-  _apical() {
-    let place = this.places[0];
-    if (place == "bilabial") {
-      this.places = ["linguolabial"];
-      this.tongue = "apical";
-    } else if (coronals.includes(place)) {
-      this.tongue = "apical";
-    } else {
-      // err
-    };
-  }
-
-  _laminal() {
-    if (this.places.length == 1 && coronals.includes(this.places[0])) {
-      this.tongue = "laminal";
-    } else {
-      // err
-    }
-  }
-}
+const Articulation = require("./articulation");
+const Place = require("./place");
 
 module.exports = class ConsonantBuilder {
   constructor(consonant) {
@@ -151,7 +57,7 @@ module.exports = class ConsonantBuilder {
 
     let data = this._resolveArticulations();
     data.ejective = this.ejective;
-    data.places = _orderPlace(data.places);
+    data.places = Place.orderPlaces(data.places);
 
     return this.segmentHelper.buildWithValues(data);
   }
@@ -160,7 +66,7 @@ module.exports = class ConsonantBuilder {
     let first = this.articulations[0];
 
     if (this.articulations.length == 1) {
-      // If only one articulations
+      // If there is only one articulation
       return {
         "voicing": first.voicingHelper.build(),
         "manner": first.manner,
@@ -223,7 +129,7 @@ module.exports = class ConsonantBuilder {
 
   _computeAffricatePlace(firstPlace, secondPlace) {
     if (firstPlace == "alveolar") {
-      return (coronals.includes(secondPlace) ? [secondPlace] : "error");
+      return (Place.isCoronal(secondPlace) ? [secondPlace] : "error");
     } else if (firstPlace == "epiglottal") {
       return (secondPlace == "pharyngeal" ? [secondPlace] : "error");
     } else {
