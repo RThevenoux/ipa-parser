@@ -19,7 +19,31 @@ module.exports = class ConsonantBuilder {
       case "articulation": this._getCurrentArticulation().updateArticulation(diacritic.label); break;
       case "ejective": this.ejective = true; break;
       case "release": /*TODO*/; break;
-      case "co-articulation": /*TODO*/; break;
+      case "co-articulation":
+        switch (diacritic.label) {
+
+          case "Nasalized": this._getCurrentArticulation().nasalized(); break;
+
+          case "Velarized or pharyngealized": //
+          case "Labialized": //
+          case "Palatalized": //
+          case "Velarized": //
+          case "Pharyngealized": //
+          case "Labio-palatalized": //
+          case "More rounded":
+          case "Less rounded":
+            //TODO  
+            break;
+
+          case "Advanced tongue root":
+          case "Retracted tongue root":
+          case "Rhotacized":
+            // SyntErr
+            break;
+          default:
+            // InternErr
+            break;
+        }
       default: // InternErr
     }
   }
@@ -71,7 +95,8 @@ module.exports = class ConsonantBuilder {
         "voicing": first.voicingHelper.build(),
         "manner": first.manner,
         "places": first.places,
-        "lateral": first.lateral
+        "lateral": first.lateral,
+        "nasal": first.nasal
       }
     }
 
@@ -109,6 +134,7 @@ module.exports = class ConsonantBuilder {
         "manner": "affricate",
         "places": affricatePlace,
         "lateral": second.lateral,
+        "nasal": second.nasal
       }
     }
 
@@ -120,6 +146,7 @@ module.exports = class ConsonantBuilder {
         "manner": "affricate",
         "places": ["pharyngeal"],
         "lateral": second.lateral,
+        "nasal": second.nasal
       }
     }
 
@@ -139,6 +166,7 @@ module.exports = class ConsonantBuilder {
 
   _resolveCoarticulation(first, second, manner) {
     let lateral = first.lateral || second.lateral;
+    let nasal = first.nasal || second.nasal;
     let places = first.places.concat(second.places);
 
     let firstVoiced = first.voicingHelper.voiced;
@@ -152,6 +180,7 @@ module.exports = class ConsonantBuilder {
       "manner": manner,
       "voicing": first.voicingHelper.buildWith(second.voicingHelper),
       "lateral": lateral,
+      "nasal": nasal,
       "places": places
     };
   }

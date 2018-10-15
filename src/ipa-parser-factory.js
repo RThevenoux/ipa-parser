@@ -53,17 +53,26 @@ module.exports = class IpaParserFactory {
     consonants.combining.forEach(key => mapper.addTieBar(key));
     consonants.ejective.forEach(key => mapper.addDiacritic(key, "ejective", "ejective"));
 
-    for (let manner in consonants.symbol) {
-      let mannerBundle = consonants.symbol[manner];
+    for (let mannerName in consonants.symbol) {
+      let mannerBundle = consonants.symbol[mannerName];
       for (let key in mannerBundle) {
+
         let consonant = mannerBundle[key];
         let lateral = (consonant.lateral ? true : false);
         let places = consonant.place;
+        let nasal = false;
+        let manner = mannerName;
+
+        if (mannerName == "nasal") {
+          manner = "plosive";
+          nasal = true;
+        }
+
         if (typeof (places) == "string") {
           places = [places];
         }
 
-        mapper.addConsonant(key, manner, places, consonant.voiced, lateral);
+        mapper.addConsonant(key, manner, places, consonant.voiced, lateral, nasal);
       }
     }
 

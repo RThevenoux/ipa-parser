@@ -1,7 +1,7 @@
 let fs = require('fs');
 // var parser = require("../src/index").parser;
 
-function consonant(voiced, places, manner, lateral, ejective) {
+function consonant(voiced, places, manner, lateral, ejective, nasal) {
   if (typeof (places) == "string") {
     places = [places];
   }
@@ -18,16 +18,13 @@ function consonant(voiced, places, manner, lateral, ejective) {
     "quantity": "short",
     "places": places,
     "manner": manner,
+    "nasal": nasal,
     "ejective": (ejective ? true : false),
     "lateral": (lateral ? true : false),
   };
 
   return segment;
 }
-
-let nasal = (places, ejective) => consonant(true, places, "nasal", false, ejective);
-let approximant = (places, lateral, ejective) => consonant(true, places, "approximant", lateral, ejective);
-let implosive = (voiced, places) => consonant(voiced, places, "implosive", false, false);
 
 function isVoiced(word) {
   return word == "voiced";
@@ -41,18 +38,24 @@ function parse(description) {
   let ejective = false;
 
   let manner = words[words.length - 1];
+
+  let nasal = false;
+  if (manner == "nasal") {
+    manner = "plosive";
+    nasal = true;
+  }
+
   let voiced = isVoiced(words[0]);
   for (let i = 1; i < words.length - 1; i++) {
     let word = words[i];
-    if (word == "lateral") {
-      lateral = true;
-    } else if (word == "ejective") {
-      ejective = true;
-    } else {
-      places.push(word);
+    switch (word) {
+      case "lateral": lateral = true; break;
+      case "ejective": ejective = true; break;
+      case "nasal": nasal = true; break;
+      default: places.push(word);
     }
   }
-  return consonant(voiced, places, manner, lateral, ejective);
+  return consonant(voiced, places, manner, lateral, ejective, nasal);
 }
 
 module.exports = {

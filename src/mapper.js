@@ -28,13 +28,14 @@ module.exports = class Mapper {
         this._add(unicode, data);
     }
 
-    addConsonant(unicode, manner, places, voiced, lateral) {
+    addConsonant(unicode, manner, places, voiced, lateral, nasal) {
         let data = {
             "type": "consonant",
             "places": places,
             "voiced": voiced,
             "lateral": lateral,
-            "manner": manner
+            "manner": manner,
+            "nasal": nasal
         };
         this._add(unicode, data);
     }
@@ -73,7 +74,7 @@ module.exports = class Mapper {
         this._add(unicode, data);
     }
 
-    addToneLetter(unicode,label){
+    addToneLetter(unicode, label) {
         let data = {
             "type": "tone-letter",
             "label": label

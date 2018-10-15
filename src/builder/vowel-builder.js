@@ -98,7 +98,8 @@ module.exports = class VowelBuilder {
           case "Palatalized": //
           case "Velarized": //
           case "Pharyngealized": //
-          /*SyntErr*/; break;
+            /*SyntErr*/;
+            break;
           default: /*InternErr*/; break;
         }
       }; break;

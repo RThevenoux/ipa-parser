@@ -5,6 +5,7 @@ module.exports = class Articulation {
   constructor(consonant) {
     this.places = consonant.places;
     this.lateral = consonant.lateral;
+    this.nasal = consonant.nasal;
     this.manner = consonant.manner;
     this.voicingHelper = new VoicingHelper(consonant.voiced);
     this.tongue = "unspecified";
@@ -30,32 +31,67 @@ module.exports = class Articulation {
     };
   }
 
+  nasalized() {
+    this.nasal = true;
+  }
+
+  // TODO advance/retracte
+  // see https://en.wikipedia.org/wiki/Relative_articulation#Advanced_and_retracted
   _advance() {
-    // TODO
-    // see https://en.wikipedia.org/wiki/Relative_articulation#Advanced_and_retracted
   }
 
   _retracte() {
-    // TODO
-    // see https://en.wikipedia.org/wiki/Relative_articulation#Advanced_and_retracted
   }
 
 
-  // TODO
+  // TODO : finish lower/raise
   // see https://en.wikipedia.org/wiki/Relative_articulation#Raised_and_lowered
   //
-  // <-raised-[close vowel]-[approximant]-[fricative]-[stop]--lowered->
-  //          [close V + ~]-[approx+~]----[fric+~]----[nasal]
-  //                                      [flap]------[stop]
-  //                        [trill]-------[tril fric]
+  // [close vowel]-[approximant]--[fricative]--[stop]
+  //                        XXX --[flap]-------[stop]
+  //                     [trill]--[tril fric]-- XXX
   //
-  _raise() {
-    // TODO
-
+  _lower() {
+    switch (this.manner) {
+      case "stop": {
+        this.manner = "fricative";
+        // ignore flap case ?
+      }; break;
+      case "fricative": {
+        if (this.trilled) {
+          this.manner = "trill";
+        } else {
+          this.manner = "approximant";
+        }
+      }; break;
+      case "approximant": this.manner = "vowel";
+        break;
+      case "flap":
+      case "trill":
+      default:
+      // err
+    }
   }
 
-  _lower() {
-    // TODO
+  _raise() {
+    switch (this.manner) {
+      case "stop": //err
+        break;
+      case "fricative": {
+        if (this.trilled) {
+          // err ?
+        } else {
+          this.manner = "stop";
+        }
+      }; break;
+      case "approximant": this.manner = "fricative"; break;
+      case "flap": this.manner = "stop";
+        break;
+      case "trill":
+        this.manner = "fricative";
+        this.trilled = true; // !!!!!!!
+        break;
+    }
   }
 
   _dental() {
