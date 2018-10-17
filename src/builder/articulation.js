@@ -40,7 +40,6 @@ module.exports = class Articulation {
   // https://en.wikipedia.org/wiki/Bilabial_flap
   _advance() {
   }
-
   _retracte() {
   }
 

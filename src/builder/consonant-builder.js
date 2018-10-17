@@ -93,8 +93,6 @@ module.exports = class ConsonantBuilder {
 
   _buildVowel(data) {
     // see : https://en.wikipedia.org/wiki/Approximant_consonant#Semivowels
-
-    console.log(data.places);
     let backness;
     if (data.places[data.places.length - 1] == "palatal") {
       backness = 2;

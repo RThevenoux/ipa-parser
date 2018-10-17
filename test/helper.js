@@ -1,4 +1,6 @@
 let fs = require('fs');
+let expect = require("chai").expect;
+let parser = require("../src/index.js").parser;
 var VowelHeight = require('../src/constants').Height;
 var VowelBackness = require('../src/constants').Backness;
 
@@ -56,7 +58,7 @@ function vowel(heigh, backness, round, map) {
   return vowel;
 }
 
-function isVoiced(word) {
+function _isVoiced(word) {
   return word == "voiced";
 }
 
@@ -78,6 +80,11 @@ function _parseVowel(words) {
   for (let i = 3; i < words.length - 1; i++) {
     switch (words[i]) {
       case "nasal": map.nasalized = true; break;
+      case "ATR": map.tongueRoot = "advanced"; break;
+      case "RTR": map.tongueRoot = "retracted"; break;
+      case "less_round": map.roundednessModifier = "less"; break;
+      case "more_round": map.roundednessModifier = "more"; break;
+      case "rhotic": map.rhotacized = true; break;
       default: console.log("unsupported word " + words[i]);
     }
   }
@@ -98,7 +105,7 @@ function _parseConsonant(words) {
     nasal = true;
   }
 
-  let voiced = isVoiced(words[0]);
+  let voiced = _isVoiced(words[0]);
   for (let i = 1; i < words.length - 1; i++) {
     let word = words[i];
     switch (word) {
@@ -111,11 +118,26 @@ function _parseConsonant(words) {
   return consonant(voiced, places, manner, lateral, ejective, nasal);
 }
 
+function _testSuite(testSuiteName, data) {
+  describe(testSuiteName, () => {
+    for (let key in data) {
+      let description = data[key];
+      let parsedDescription = [parse(description)];
+      it("should parse '" + key + "' as " + description, () => {
+        let units = parser.parse(key).units;
+        expect(units).to.eql(parsedDescription);
+      });
+    }
+  });
+}
+
+function testFile(fileName) {
+  let data = JSON.parse(fs.readFileSync(__dirname + fileName, "utf8"))
+  for (let testSuiteName in data) {
+    _testSuite(testSuiteName, data[testSuiteName]);
+  }
+}
+
 module.exports = {
-  loadJson: (path) => {
-    return JSON.parse(fs.readFileSync(__dirname + path, "utf8"));
-  },
-  consonant: consonant,
-  vowel: vowel,
-  parse: parse
+  testFile: testFile
 }

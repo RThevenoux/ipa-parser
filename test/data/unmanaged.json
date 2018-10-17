@@ -1,0 +1,28 @@
+{
+  "trill affricate": {
+    "b͡ʙ": "voiced trilled bilabial affricate",
+    "ʡ͡ʢ": "voiced epiglottal trilled pharyngeal affricate",
+    "ʡ͡ʜ": "voiceless epiglottal trilled pharyngeal affricate",
+    "tʳ": "voiceless alveolar trilled affricate",
+    "dʳ": "voiced alveolar trilled affricate"
+  },
+  "unmanaged diacritic": {
+    "t̠͡p": "voiceless bilabial postalveolar plosive",
+    "d̠͡b": "voiced bilabial postalveolar plosive",
+    "n̠͡m": "voiced bilabial postalveolar nasal"
+  },
+  "sibilant / non-sibilant": {
+    "t̪͡θ": "voiceless dental non-sibilant affricate",
+    "d̪͡ð": "voiced dental non-sibilant affricate",
+    "t͡ɻ̝̊": "voiceless retroflex non-sibilant affricate",
+    "d͡ɻ̝": "voiced retroflex non-sibilant affricate"
+  },
+  "unclear": {
+    "p͡f": "voiceless bilabial-labiodental affricate",
+    "b͡v": "voiced bilabial-labiodental affricate",
+    "w": "voiced labial velar approximant",
+    "u̯": "voiced labial velar approximant",
+    "ʍ": "voiceless labial velar approximant",
+    "w̥": "voiceless labial velar approximant"
+  }
+}

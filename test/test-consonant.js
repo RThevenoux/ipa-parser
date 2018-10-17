@@ -2,28 +2,8 @@ let helper = require('./helper');
 let expect = require("chai").expect;
 let parser = require("../src/index.js").parser;
 
-function expectUnitsOf(string) {
-  return expect(parser.parse(string).units);
-}
-
-function testData(label, data) {
-  describe(label, () => {
-    for (let key in data) {
-      let description = data[key];
-      let parsedDescription = [helper.parse(description)];
-      it("should parse '" + key + "' as " + description, () => {
-        expectUnitsOf(key).to.eql(parsedDescription);
-      });
-    }
-  });
-}
-
-let data = helper.loadJson("/consonant.json");
 describe("ipa-parser : consonnant", () => {
-  testData("pulmonic", data.pulmonic);
-  testData("non-pulmonic", data["non-pulmonic"]);
-  testData("afficate", data.affricate);
-  testData("co-articulated", data["co-articulated"]);
+  helper.testFile("/data/consonant.json");
 
   describe("phonation diacritics", () => {
     it("should unvoiced if 'ring below' is present", () => {
