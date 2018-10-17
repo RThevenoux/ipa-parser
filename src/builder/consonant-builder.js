@@ -4,8 +4,9 @@ const Place = require("./place");
 
 module.exports = class ConsonantBuilder {
   constructor(consonant) {
-    this.segmentHelper = SegmentHelper.createConsonant();
     this.state = "single-char";
+
+    this.segmentHelper = new SegmentHelper();
     this.articulations = [new Articulation(consonant)];
     this.ejective = false;
   }
@@ -80,10 +81,41 @@ module.exports = class ConsonantBuilder {
     }
 
     let data = this._resolveArticulations();
-    data.ejective = this.ejective;
     data.places = Place.orderPlaces(data.places);
 
-    return this.segmentHelper.buildWithValues(data);
+    if (data.manner == "vowel") {
+      return this._buildVowel(data);
+    } else {
+      data.ejective = this.ejective;
+      return this.segmentHelper.buildConsonant(data);
+    }
+  }
+
+  _buildVowel(data) {
+    // see : https://en.wikipedia.org/wiki/Approximant_consonant#Semivowels
+
+    console.log(data.places);
+    let backness;
+    if (data.places[data.places.length - 1] == "palatal") {
+      backness = 2;
+    } else {
+      backness = -2;
+    }
+    let rounded = (data.places[0] == "bilabial");
+
+    let values = {
+      "voicing": data.voicing,
+      "height": 3,
+      "backness": backness,
+      "rounded": rounded,
+      "roundednessModifier": "none",
+      "nasalized": data.nasal,
+      "rhotacized": false,
+      "tongueRoot": "neutral"
+    };
+
+    return this.segmentHelper.buildVowel(values);
+
   }
 
   _resolveArticulations() {

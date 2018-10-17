@@ -1,37 +1,13 @@
 var expect = require("chai").expect;
 var parser = require("../src/index.js").parser
+var helper = require("./helper");
 
 function expectUnitsOf(string) {
   return expect(parser.parse(string).units);
 }
 
 function vowel(heigh, backness, round, map) {
-  let vowel = {
-    "segment": true,
-    "category": "vowel",
-    "syllabic": true,
-    "voicing": {
-      "voiced": true,
-      "phonation": "modal",
-      "aspirated": false
-    },
-    "quantity": "short",
-    "height": heigh,
-    "backness": backness,
-    "rounded": round,
-    "roundednessModifier": "none",
-    "nasalized": false,
-    "rhotacized": false,
-    "tongueRoot": "neutral"
-  };
-
-  if (map) {
-    for (let key in map) {
-      vowel[key] = map[key];
-    }
-  }
-
-  return vowel;
+  return helper.vowel(heigh, backness, round, map);
 }
 
 describe("ipa-parser : vowel", () => {

@@ -1,11 +1,10 @@
 const IpaSyntaxError = require("../error/ipa-syntax-error");
 const ToneMarkHelper = require("./tone-mark-helper");
 
-class SegmentHelper {
-  constructor(category, syllabic) {
-    this.category = category;
+module.exports = class SegmentHelper {
+  constructor() {
     this.quantity = "short";
-    this.syllabic = syllabic;
+    this.syllabicModifier = "none";
     this.toneMarkHelper = new ToneMarkHelper();
   }
 
@@ -34,19 +33,33 @@ class SegmentHelper {
   }
 
   updateSyllabicity(label) {
+    if (this.syllabicModifier != "none") {
+      // SyntaxErr
+    }
+
     switch (label) {
-      case "Syllabic": this.syllabic = true; break;
-      case "Non-syllabic": this.syllabic = false; break;
+      case "Syllabic": this.syllabicModifier = "+syllabic"; break;
+      case "Non-syllabic": this.syllabicModifier = "-syllabic"; break;
       default: // InternErr
     }
   }
 
-  buildWithValues(values) {
+  buildConsonant(values) {
+    return this._build("consonant", false, values);
+  }
+
+  buildVowel(values) {
+    return this._build("vowel", true, values);
+  }
+
+  _build(category, defaultSyllabicity, values) {
+    let syllabic = this._computeSyllabic(defaultSyllabicity);
+
     let segment = {
       "segment": true,
-      "category": this.category,
+      "category": category,
       "quantity": this.quantity,
-      "syllabic": this.syllabic
+      "syllabic": syllabic
     }
 
     for (let key in values) {
@@ -61,10 +74,12 @@ class SegmentHelper {
 
     return result;
   }
-}
 
-// Export two Factory method
-module.exports = {
-  createVowel: () => new SegmentHelper("vowel", true),
-  createConsonant: () => new SegmentHelper("consonant", false)
+  _computeSyllabic(defaultSyllabicity) {
+    switch (this.syllabicModifier) {
+      case "+syllabic": return true;
+      case "-syllabic": return false;
+      default: return defaultSyllabicity;
+    }
+  }
 }

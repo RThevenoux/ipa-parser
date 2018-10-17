@@ -5,7 +5,7 @@ const VowelHeight = require("./../constants").Height;
 
 module.exports = class VowelBuilder {
   constructor(vowel) {
-    this.segmentHelper = SegmentHelper.createVowel();
+    this.segmentHelper = new SegmentHelper();
     this.voicingHelper = new VoicingHelper(true);
     this.height = vowel.height;
     this.backness = vowel.backness;
@@ -111,7 +111,7 @@ module.exports = class VowelBuilder {
   }
 
   end() {
-    return this.segmentHelper.buildWithValues({
+    return this.segmentHelper.buildVowel({
       "voicing": this.voicingHelper.build(),
       "height": this.height,
       "backness": this.backness,

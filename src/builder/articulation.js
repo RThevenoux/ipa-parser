@@ -37,6 +37,7 @@ module.exports = class Articulation {
 
   // TODO advance/retracte
   // see https://en.wikipedia.org/wiki/Relative_articulation#Advanced_and_retracted
+  // https://en.wikipedia.org/wiki/Bilabial_flap
   _advance() {
   }
 
@@ -47,10 +48,17 @@ module.exports = class Articulation {
   // TODO : finish lower/raise
   // see https://en.wikipedia.org/wiki/Relative_articulation#Raised_and_lowered
   //
-  // [close vowel]-[approximant]--[fricative]--[stop]
-  //                        XXX --[flap]-------[stop]
+  // [close vowel]-[approximant]--[fricative]---------[stop]
+  //                              [tap  fric]--[flap]-[stop]
   //                     [trill]--[tril fric]-- XXX
   //
+  // trilled fricative = trill + fricative ? => https://en.wikipedia.org/wiki/Dental,_alveolar_and_postalveolar_trills#Voiced_alveolar_fricative_trill
+  // https://en.wikipedia.org/wiki/Fricative_consonant :
+  //  - fricative trill 
+  //  - fricative flap
+  // https://en.wikipedia.org/wiki/Flap_consonant#Tapped_fricatives
+  // One fricative flap : https://en.wikipedia.org/wiki/Voiced_alveolar_fricative#Voiced_alveolar_non-sibilant_fricative
+  // 
   _lower() {
     switch (this.manner) {
       case "stop": {

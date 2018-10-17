@@ -1,5 +1,6 @@
 let fs = require('fs');
-// var parser = require("../src/index").parser;
+var VowelHeight = require('../src/constants').Height;
+var VowelBackness = require('../src/constants').Backness;
 
 function consonant(voiced, places, manner, lateral, ejective, nasal) {
   if (typeof (places) == "string") {
@@ -26,13 +27,65 @@ function consonant(voiced, places, manner, lateral, ejective, nasal) {
   return segment;
 }
 
+function vowel(heigh, backness, round, map) {
+  let vowel = {
+    "segment": true,
+    "category": "vowel",
+    "syllabic": true,
+    "voicing": {
+      "voiced": true,
+      "phonation": "modal",
+      "aspirated": false
+    },
+    "quantity": "short",
+    "height": heigh,
+    "backness": backness,
+    "rounded": round,
+    "roundednessModifier": "none",
+    "nasalized": false,
+    "rhotacized": false,
+    "tongueRoot": "neutral"
+  };
+
+  if (map) {
+    for (let key in map) {
+      vowel[key] = map[key];
+    }
+  }
+
+  return vowel;
+}
+
 function isVoiced(word) {
   return word == "voiced";
 }
 
 function parse(description) {
   let words = description.split(" ");
+  if (words[words.length - 1] == "vowel") {
+    return _parseVowel(words);
+  } else {
+    return _parseConsonant(words);
+  }
+}
 
+function _parseVowel(words) {
+  let height = VowelHeight[words[0].toUpperCase()];
+  let backness = VowelBackness[words[1].toUpperCase()];
+  let round = (words[2] == "round");
+  let map = {};
+
+  for (let i = 3; i < words.length - 1; i++) {
+    switch (words[i]) {
+      case "nasal": map.nasalized = true; break;
+      default: console.log("unsupported word " + words[i]);
+    }
+  }
+
+  return vowel(height, backness, round, map);
+}
+
+function _parseConsonant(words) {
   let places = [];
   let lateral = false;
   let ejective = false;
@@ -63,5 +116,6 @@ module.exports = {
     return JSON.parse(fs.readFileSync(__dirname + path, "utf8"));
   },
   consonant: consonant,
+  vowel: vowel,
   parse: parse
 }
