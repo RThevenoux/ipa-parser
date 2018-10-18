@@ -1,55 +1,6 @@
-let fs = require('fs');
-let expect = require("chai").expect;
-let parser = require("../src/index.js").parser;
 let VowelHeight = require('../src/constants').Height;
 let VowelBackness = require('../src/constants').Backness;
 let VoicingHelper = require('../src/builder/voicing-helper');
-
-function consonant(voicing, places, manner, lateral, ejective, nasal, syllabic) {
-  if (typeof (places) == "string") {
-    places = [places];
-  }
-
-  let segment = {
-    "segment": true,
-    "category": "consonant",
-    "syllabic": syllabic,
-    "voicing": voicing,
-    "quantity": "short",
-    "places": places,
-    "manner": manner,
-    "nasal": nasal,
-    "ejective": ejective,
-    "lateral": lateral,
-  };
-
-  return segment;
-}
-
-function vowel(heigh, backness, round, map, voicing, syllabic) {
-  let vowel = {
-    "segment": true,
-    "category": "vowel",
-    "syllabic": syllabic,
-    "voicing": voicing,
-    "quantity": "short",
-    "height": heigh,
-    "backness": backness,
-    "rounded": round,
-    "roundednessModifier": "none",
-    "nasalized": false,
-    "rhotacized": false,
-    "tongueRoot": "neutral"
-  };
-
-  if (map) {
-    for (let key in map) {
-      vowel[key] = map[key];
-    }
-  }
-
-  return vowel;
-}
 
 function parse(description) {
   let words = description.split(" ");
@@ -65,20 +16,28 @@ function _parseVowel(words) {
   let backness = VowelBackness[words[1].toUpperCase()];
   let round = (words[2] == "round");
   let syllabic = true;
-  let map = {};
+  let tongueRoot = "neutral";
+  let roundednessModifier = "none";
+  let nasalized = false;
+  let rhotacized = false;
+  let quantity = "short";
 
   let voicing = new VoicingHelper(true);
 
   for (let i = 3; i < words.length - 1; i++) {
     switch (words[i]) {
-      case "nasal": map.nasalized = true; break;
+      case "nasal": nasalized = true; break;
       case "syllabic": syllabic = true; break;
       case "non-syllabic": syllabic = false; break;
-      case "ATR": map.tongueRoot = "advanced"; break;
-      case "RTR": map.tongueRoot = "retracted"; break;
-      case "less_round": map.roundednessModifier = "less"; break;
-      case "more_round": map.roundednessModifier = "more"; break;
-      case "rhotic": map.rhotacized = true; break;
+      case "extra-short": quantity = "extra-short"; break;
+      case "short": quantity = "short"; break;
+      case "half-long": quantity = "half-long"; break;
+      case "long": quantity = "long"; break;
+      case "ATR": tongueRoot = "advanced"; break;
+      case "RTR": tongueRoot = "retracted"; break;
+      case "less_round": roundednessModifier = "less"; break;
+      case "more_round": roundednessModifier = "more"; break;
+      case "rhotic": rhotacized = true; break;
       case "creaky-voiced": voicing.addDiacritic("Creaky voice"); break;
       case "breathy-voiced": voicing.addDiacritic("Breathy voice"); break;
       case "voiceless": ; voicing.addDiacritic("Voiceless"); break;
@@ -87,7 +46,20 @@ function _parseVowel(words) {
     }
   }
 
-  return vowel(height, backness, round, map, voicing.build(), syllabic);
+  return {
+    "segment": true,
+    "category": "vowel",
+    "syllabic": syllabic,
+    "voicing": voicing.build(),
+    "quantity": quantity,
+    "height": height,
+    "backness": backness,
+    "rounded": round,
+    "roundednessModifier": roundednessModifier,
+    "nasalized": nasalized,
+    "rhotacized": rhotacized,
+    "tongueRoot": tongueRoot
+  };
 }
 
 function _parseVoicing(word) {
@@ -114,6 +86,7 @@ function _parseConsonant(words) {
   let ejective = false;
   let nasal = false;
   let syllabic = false;
+  let quantity = "short";
 
   let manner = words[words.length - 1];
   if (manner == "nasal") {
@@ -128,35 +101,32 @@ function _parseConsonant(words) {
       case "nasal": nasal = true; break;
       case "syllabic": syllabic = true; break;
       case "non-syllabic": syllabic = false; break;
+      case "extra-short": quantity = "extra-short"; break;
+      case "short": quantity = "short"; break;
+      case "half-long": quantity = "half-long"; break;
+      case "long": //fallthrough
+      case "geminate": quantity = "long"; break;
       case "lateral": lateral = true; break;
       case "ejective": ejective = true; break;
       case "aspirated": voicing.addDiacritic("Aspirated"); break;
       default: places.push(word);
     }
   }
-  return consonant(voicing.build(), places, manner, lateral, ejective, nasal, syllabic);
-}
 
-function _testSuite(testSuiteName, data) {
-  describe(testSuiteName, () => {
-    for (let key in data) {
-      let description = data[key];
-      let parsedDescription = [parse(description)];
-      it("should parse '" + key + "' as " + description, () => {
-        let units = parser.parse(key).units;
-        expect(units).to.eql(parsedDescription);
-      });
-    }
-  });
-}
-
-function testFile(fileName) {
-  let data = JSON.parse(fs.readFileSync(__dirname + fileName, "utf8"))
-  for (let testSuiteName in data) {
-    _testSuite(testSuiteName, data[testSuiteName]);
-  }
+  return {
+    "segment": true,
+    "category": "consonant",
+    "syllabic": syllabic,
+    "voicing": voicing.build(),
+    "quantity": quantity,
+    "places": places,
+    "manner": manner,
+    "nasal": nasal,
+    "ejective": ejective,
+    "lateral": lateral,
+  };
 }
 
 module.exports = {
-  testFile: testFile
+  parse: parse
 }

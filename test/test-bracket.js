@@ -1,42 +1,37 @@
 var expect = require("chai").expect;
-
 var parser = require("../src/index.js").parser;
 var IpaSyntaxError = require("../src/error/ipa-syntax-error.js");
 
+let testData = {
+  "": "none",
+  "a": "none",
+  "/a/": "phonemic",
+  "[a]": "phonetic"
+};
+let failData = {
+  "data outside of the brackets": ["a[a]", "[a]a", "a[a]a"],
+  "a bracket is not paired": ["[a", "]a", "a[", "a]"],
+  "opening and closing bracket are not matching": ["[a/", "/a]"],
+  "there is more than 2 brackets": ["[a]]", "[[a]", "[[a]]", "[a]a]", "[a[a]", "[a[a]a]"]
+}
+
 describe('ipa-parser : bracket', () => {
-
-  it("should be 'none' if there is no bracket", () => {
-    expect(parser.parse("")).to.have.property('type', 'none');
-    expect(parser.parse("a")).to.have.property('type', 'none');
-  });
-  it("should be 'phonemic' if there is // brackets", () => {
-    expect(parser.parse("/a/")).to.have.property('type', 'phonemic');
-  });
-  it("should be 'phonetic' if there is [] brackets", () => {
-    expect(parser.parse("[a]")).to.have.property('type', 'phonetic');
+  describe('valid brackets', () => {
+    for (let key in testData) {
+      let type = testData[key];
+      it("should parse '" + key + "' with type '" + type + "'", () => {
+        expect(parser.parse(key)).to.have.property('type', type);
+      });
+    }
   });
 
-  it("should fail if data outside of the brackets", () => {
-    expect(() => parser.parse("a[a]")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("[a]a")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("a[a]a")).to.throw(IpaSyntaxError);
-  });
-  it("should fail if a bracket is not paired", () => {
-    expect(() => parser.parse("[a")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("]a")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("a[")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("a]")).to.throw(IpaSyntaxError);
-  });
-  it("should fail if opening and closing bracket are not matching", () => {
-    expect(() => parser.parse("[a/")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("/a]")).to.throw(IpaSyntaxError);
-  });
-  it("should fail if there is more than 2 brackets", () => {
-    expect(() => parser.parse("[a]]")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("[[a]")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("[[a]]")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("[a]a]")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("[a[a]")).to.throw(IpaSyntaxError);
-    expect(() => parser.parse("[a[a]a]")).to.throw(IpaSyntaxError);
+  describe('invalid brackets', () => {
+    for (let label in failData) {
+      it("should fail if " + label, () => {
+        failData[label].forEach(testCase =>
+          expect(() => parser.parse(testCase)).to.throw(IpaSyntaxError)
+        );
+      });
+    }
   });
 });

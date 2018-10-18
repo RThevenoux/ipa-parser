@@ -63,7 +63,10 @@
     "a\u0324": "open front unround breathy-voiced vowel",
     "a\u0330": "open front unround creaky-voiced vowel"
   },
-  "other diacritic":{
-    "a\u032F":"open front unround non-syllabic vowel"
+  "supra diacritic": {
+    "a\u032F": "open front unround non-syllabic vowel",
+    "a\u02D0": "open front unround long vowel",
+    "a\u02D1": "open front unround half-long vowel",
+    "a\u0306": "open front unround extra-short vowel"
   }
 }
