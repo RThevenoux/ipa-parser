@@ -53,11 +53,11 @@
     "ð": "voiced dental fricative",
     "ð̃": "voiced nasal dental fricative",
     "s": "voiceless alveolar fricative",
-    "s̃ ": "voiceless nasal alveolar fricative",
+    "s̃": "voiceless nasal alveolar fricative",
     "z": "voiced alveolar fricative",
     "z̃": "voiced nasal alveolar fricative",
     "ʃ": "voiceless postalveolar fricative",
-    "ʃ̃ ": "voiceless nasal postalveolar fricative",
+    "ʃ̃": "voiceless nasal postalveolar fricative",
     "ʒ": "voiced postalveolar fricative",
     "ʒ̃": "voiced nasal postalveolar fricative",
     "ʂ": "voiceless retroflex fricative",
@@ -159,5 +159,13 @@
     "d͡b": "voiced bilabial alveolar plosive",
     "n͡m": "voiced bilabial alveolar nasal",
     "q͡ʡ": "voiceless uvular epiglottal plosive"
+  },
+  "diacritic": {
+    "n\u0325": "voiceless alveolar nasal",
+    "s\u032C": "voiced alveolar fricative",
+    "t\u02B0": "voiceless alveolar aspirated plosive",
+    "n\u0329": "voiced alveolar syllabic nasal",
+    "t\u0324": "breathy-voiced alveolar plosive",
+    "t\u0330": "creaky-voiced alveolar plosive"
   }
 }

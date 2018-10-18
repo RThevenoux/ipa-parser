@@ -30,33 +30,40 @@
     "ɒ": "open back round vowel"
   },
   "articulation diacritic": {
-      "ə\u031D":"close_mid central unround vowel",
-      "ʊ\u031D":"close near_back round vowel",
-      "ə\u031E":"open_mid central unround vowel",
-      "ʊ\u031E":"close_mid near_back round vowel",
-      "ə\u031F":"mid near_front unround vowel",
-      "ʊ\u031F":"near_close central round vowel",
-      "ə\u0320":"mid near_back unround vowel",
-      "ʊ\u0320":"near_close back round vowel",
-      "ə\u0308":"mid central unround vowel",
-      "ʊ\u0308":"near_close central round vowel",
-      "i\u0308":"close central unround vowel",
-      "ə\u033D":"mid central unround vowel",
-      "ʊ\u033D":"close_mid central round vowel",
-      "i\u033D":"near_close near_front unround vowel",
-      "ɒ\u033D":"near_open near_back round vowel",
-      "i\u031D":"close front unround vowel",
-      "i\u031F":"close front unround vowel",
-      "ɒ\u031E":"open back round vowel",
-      "ɒ\u0320":"open back round vowel"
-      },
-
+    "ə\u031D": "close_mid central unround vowel",
+    "ʊ\u031D": "close near_back round vowel",
+    "ə\u031E": "open_mid central unround vowel",
+    "ʊ\u031E": "close_mid near_back round vowel",
+    "ə\u031F": "mid near_front unround vowel",
+    "ʊ\u031F": "near_close central round vowel",
+    "ə\u0320": "mid near_back unround vowel",
+    "ʊ\u0320": "near_close back round vowel",
+    "ə\u0308": "mid central unround vowel",
+    "ʊ\u0308": "near_close central round vowel",
+    "i\u0308": "close central unround vowel",
+    "ə\u033D": "mid central unround vowel",
+    "ʊ\u033D": "close_mid central round vowel",
+    "i\u033D": "near_close near_front unround vowel",
+    "ɒ\u033D": "near_open near_back round vowel",
+    "i\u031D": "close front unround vowel",
+    "i\u031F": "close front unround vowel",
+    "ɒ\u031E": "open back round vowel",
+    "ɒ\u0320": "open back round vowel"
+  },
   "co-articulation diacritics": {
-      "a\u0318":"open front unround ATR vowel",
-      "a\u0319":"open front unround RTR vowel",
-      "a\u031C":"open front unround less_round vowel",
-      "a\u0339":"open front unround more_round vowel",
-      "a\u0303":"open front unround nasal vowel",
-      "a\u02DE":"open front unround rhotic vowel"
+    "a\u0318": "open front unround ATR vowel",
+    "a\u0319": "open front unround RTR vowel",
+    "a\u031C": "open front unround less_round vowel",
+    "a\u0339": "open front unround more_round vowel",
+    "a\u0303": "open front unround nasal vowel",
+    "a\u02DE": "open front unround rhotic vowel"
+  },
+  "phonation diacritics": {
+    "a\u0325": "open front unround voiceless vowel",
+    "a\u0324": "open front unround breathy-voiced vowel",
+    "a\u0330": "open front unround creaky-voiced vowel"
+  },
+  "other diacritic":{
+    "a\u032F":"open front unround non-syllabic vowel"
   }
 }
