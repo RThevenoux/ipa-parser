@@ -1,5 +1,4 @@
 const VoicingHelper = require("./voicing-helper");
-const Place = require("./place");
 
 module.exports = class Articulation {
   constructor(consonant) {
@@ -8,7 +7,17 @@ module.exports = class Articulation {
     this.nasal = consonant.nasal;
     this.manner = consonant.manner;
     this.voicingHelper = new VoicingHelper(consonant.voiced);
+    this.release = "unaspirated";
     this.coronalType = "unspecified";
+  }
+
+  updateRelease(label) {
+    switch (label) {
+      case "Aspirated": this.release = "aspirated"; break;
+      case "Nasal": this.release = "nasal-release"; break;
+      case "No audible": this.release = "no-audible-release"; break;
+      case "Lateral": this.release = "lateral-release"; break;
+    }
   }
 
   updatePhonation(label) {

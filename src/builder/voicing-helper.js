@@ -2,7 +2,6 @@ module.exports = class VoicingHelper {
   constructor(voiced) {
     this.voiced = voiced;
     this.phonation = voiced ? "modal" : "voiceless";
-    this.aspirated = false;
   }
 
   addDiacritic(label) {
@@ -23,7 +22,6 @@ module.exports = class VoicingHelper {
         this.voiced = true;
         this.phonation = "creaky";
       }; break;
-      case "Aspirated": this.aspirated = true; break;
       default: // InternErr
     }
   }
@@ -32,23 +30,6 @@ module.exports = class VoicingHelper {
     return {
       "voiced": this.voiced,
       "phonation": this.phonation,
-      "aspirated": this.aspirated
     }
   }
-
-  buildWith(second) {
-    if (second.voiced != this.voiced) {
-      return "error";
-    }
-
-    let phonation = (this.phonation == "modal" ? second.phonation : this.phonation);
-
-    return {
-      "voiced": this.voiced,
-      "phonation": phonation,
-      "aspirated": this.aspirated || second.aspirated
-    }
-
-  }
-
 }

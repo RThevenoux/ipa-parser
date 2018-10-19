@@ -89,6 +89,7 @@ function _parseConsonant(words) {
   let nasal = false;
   let syllabic = false;
   let quantity = "short";
+  let release = "unaspirated";
 
   let manner = words[words.length - 1];
   if (manner == "nasal") {
@@ -110,7 +111,11 @@ function _parseConsonant(words) {
       case "geminate": quantity = "long"; break;
       case "lateral": lateral = true; break;
       case "ejective": ejective = true; break;
-      case "aspirated": voicing.addDiacritic("Aspirated"); break;
+      case "aspirated": release = "aspirated"; break;
+      case "unaspirated": release = "unaspirated"; break;
+      case "nasal-release": release = "nasal-release"; break;
+      case "lateral-release": release = "lateral-release"; break;
+      case "no-audible-release": release = "no-audible-release"; break;
       case "laminal": coronalType = "laminal"; break;
       case "apical": coronalType = "apical"; break;
       default: places.push(word);
@@ -128,6 +133,7 @@ function _parseConsonant(words) {
     "nasal": nasal,
     "ejective": ejective,
     "lateral": lateral,
+    "release": release
   };
 
   let isCoronal = places.some(name => place.isCoronal(name));

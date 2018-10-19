@@ -2,6 +2,29 @@ const SegmentHelper = require("./segment-helper");
 const Articulation = require("./articulation");
 const Place = require("./place");
 
+function _mergeRelease(first, second) {
+  if (first == "unaspirated") return second;
+  if (second == "unaspirated") return first;
+  return "error with " + first + " + " + second;
+}
+
+function _mergeVoicing(first, second) {
+  if (second.voiced != first.voiced) {
+    return "error";
+  }
+
+  let phonation = (first.phonation == "modal" ? second.phonation : first.phonation);
+
+  return {
+    "voiced": first.voiced,
+    "phonation": phonation
+  }
+}
+
+function _isSameVoicing(articulation1, articulation2) {
+  return articulation1.voicingHelper.voiced == articulation2.voicingHelper.voiced;
+}
+
 module.exports = class ConsonantBuilder {
   constructor(consonant) {
     this.state = "single-char";
@@ -19,12 +42,10 @@ module.exports = class ConsonantBuilder {
       case "phonation": this._getCurrentArticulation().updatePhonation(diacritic.label); break;
       case "articulation": this._getCurrentArticulation().updateArticulation(diacritic.label); break;
       case "ejective": this.ejective = true; break;
-      case "release": /*TODO*/; break;
+      case "release": this._getCurrentArticulation().updateRelease(diacritic.label); break;
       case "co-articulation":
         switch (diacritic.label) {
-
           case "Nasalized": this._getCurrentArticulation().nasalized(); break;
-
           case "Velarized or pharyngealized": //
           case "Labialized": //
           case "Palatalized": //
@@ -81,6 +102,7 @@ module.exports = class ConsonantBuilder {
     }
 
     let data = this._resolveArticulations();
+
     data.places = Place.orderPlaces(data.places);
 
     if (data.manner == "vowel") {
@@ -127,7 +149,8 @@ module.exports = class ConsonantBuilder {
         "manner": first.manner,
         "places": first.places,
         "lateral": first.lateral,
-        "nasal": first.nasal
+        "nasal": first.nasal,
+        "release": first.release
       }
 
       if (first.places.some(name => Place.isCoronal(name))) {
@@ -157,21 +180,20 @@ module.exports = class ConsonantBuilder {
 
     let firstPlace = first.places[0];
     let secondPlace = second.places[0];
-    let firstVoiced = first.voicingHelper.voiced;
-    let secondVoiced = second.voicingHelper.voiced;
 
-    if (firstVoiced == secondVoiced) {
+    if (_isSameVoicing(first, second)) {
       let affricatePlaces = this._computeAffricatePlaces(firstPlace, secondPlace);
       if (affricatePlaces == "error") {
         return "error invalid affricate place " + firstPlace + " + " + secondPlace;
       }
 
       let result = {
-        "voicing": first.voicingHelper.buildWith(second.voicingHelper),
         "manner": "affricate",
+        "voicing": _mergeVoicing(first.voicingHelper, second.voicingHelper),
         "places": affricatePlaces,
         "lateral": second.lateral,
-        "nasal": second.nasal
+        "nasal": second.nasal,
+        "release": _mergeRelease(first.release, second.release)
       }
 
       if (affricatePlaces.some(name => Place.isCoronal(name))) {
@@ -183,13 +205,14 @@ module.exports = class ConsonantBuilder {
 
     // Ad-hoc case for 'ʡ͡ʕ'
     if (firstPlace == "epiglottal" && secondPlace == "pharyngeal"
-      && firstVoiced == false) {
+      && first.voicingHelper.voiced == false) {
       return {
         "voicing": second.voicingHelper.build(),
         "manner": "affricate",
         "places": ["pharyngeal"],
         "lateral": second.lateral,
-        "nasal": second.nasal
+        "nasal": second.nasal,
+        "release": _mergeRelease(first.release, second.release)
       }
     }
 
@@ -211,23 +234,21 @@ module.exports = class ConsonantBuilder {
   }
 
   _resolveCoarticulation(first, second, manner) {
+    if (!_isSameVoicing(first, second)) {
+      return "error invalid voicing for coarticulation";
+    }
+
     let lateral = first.lateral || second.lateral;
     let nasal = first.nasal || second.nasal;
     let places = first.places.concat(second.places);
 
-    let firstVoiced = first.voicingHelper.voiced;
-    let secondVoiced = second.voicingHelper.voiced;
-
-    if (firstVoiced != secondVoiced) {
-      return "error invalid voicing for coarticulation";
-    }
-
     let result = {
       "manner": manner,
-      "voicing": first.voicingHelper.buildWith(second.voicingHelper),
+      "voicing": _mergeVoicing(first.voicingHelper, second.voicingHelper),
       "lateral": lateral,
       "nasal": nasal,
-      "places": places
+      "places": places,
+      "release": _mergeRelease(first.release, second.release)
     };
 
     if (places.some(name => Place.isCoronal(name))) {

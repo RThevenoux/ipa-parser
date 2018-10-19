@@ -169,6 +169,9 @@
     "t\u0330": "creaky-voiced alveolar plosive",
     "t\u02D0": "voiceless alveolar geminate plosive",
     "t\u033A": "voiceless alveolar apical plosive",
-    "t̻": "voiceless alveolar laminal plosive"
+    "t̻": "voiceless alveolar laminal plosive",
+    "t\u207F": "voiceless alveolar nasal-release plosive",
+    "t\u031A": "voiceless alveolar no-audible-release plosive",
+    "t\u02E1": "voiceless alveolar lateral-release plosive"
   }
 }
