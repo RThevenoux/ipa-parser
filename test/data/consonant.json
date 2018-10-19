@@ -167,6 +167,8 @@
     "n\u0329": "voiced alveolar syllabic nasal",
     "t\u0324": "breathy-voiced alveolar plosive",
     "t\u0330": "creaky-voiced alveolar plosive",
-    "t\u02D0": "voiceless alveolar geminate plosive"
+    "t\u02D0": "voiceless alveolar geminate plosive",
+    "t\u033A": "voiceless alveolar apical plosive",
+    "t̻": "voiceless alveolar laminal plosive"
   }
 }

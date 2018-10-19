@@ -121,13 +121,20 @@ module.exports = class ConsonantBuilder {
 
     if (this.articulations.length == 1) {
       // If there is only one articulation
-      return {
+
+      let result = {
         "voicing": first.voicingHelper.build(),
         "manner": first.manner,
         "places": first.places,
         "lateral": first.lateral,
         "nasal": first.nasal
       }
+
+      if (first.places.some(name => Place.isCoronal(name))) {
+        result.coronalType = first.coronalType;
+      }
+
+      return result;
     }
 
     // If two articulations
@@ -154,18 +161,24 @@ module.exports = class ConsonantBuilder {
     let secondVoiced = second.voicingHelper.voiced;
 
     if (firstVoiced == secondVoiced) {
-      let affricatePlace = this._computeAffricatePlace(firstPlace, secondPlace);
-      if (affricatePlace == "error") {
+      let affricatePlaces = this._computeAffricatePlaces(firstPlace, secondPlace);
+      if (affricatePlaces == "error") {
         return "error invalid affricate place " + firstPlace + " + " + secondPlace;
       }
 
-      return {
+      let result = {
         "voicing": first.voicingHelper.buildWith(second.voicingHelper),
         "manner": "affricate",
-        "places": affricatePlace,
+        "places": affricatePlaces,
         "lateral": second.lateral,
         "nasal": second.nasal
       }
+
+      if (affricatePlaces.some(name => Place.isCoronal(name))) {
+        result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
+      }
+
+      return result;
     }
 
     // Ad-hoc case for 'ʡ͡ʕ'
@@ -184,12 +197,15 @@ module.exports = class ConsonantBuilder {
     return "error invalid voicing for affricate";
   }
 
-  _computeAffricatePlace(firstPlace, secondPlace) {
+  _computeAffricatePlaces(firstPlace, secondPlace) {
     if (firstPlace == "alveolar") {
+      // Specific case for 't' + Coronal
       return (Place.isCoronal(secondPlace) ? [secondPlace] : "error");
     } else if (firstPlace == "epiglottal") {
+      // Specific case for ʡ͡ħ and ʡ͡ʕ
       return (secondPlace == "pharyngeal" ? [secondPlace] : "error");
     } else {
+      // General case
       return (secondPlace == firstPlace ? [secondPlace] : "error");
     }
   }
@@ -206,12 +222,18 @@ module.exports = class ConsonantBuilder {
       return "error invalid voicing for coarticulation";
     }
 
-    return {
+    let result = {
       "manner": manner,
       "voicing": first.voicingHelper.buildWith(second.voicingHelper),
       "lateral": lateral,
       "nasal": nasal,
       "places": places
     };
+
+    if (places.some(name => Place.isCoronal(name))) {
+      result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
+    }
+
+    return result;
   }
 }

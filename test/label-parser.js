@@ -1,6 +1,7 @@
 let VowelHeight = require('../src/constants').Height;
 let VowelBackness = require('../src/constants').Backness;
 let VoicingHelper = require('../src/builder/voicing-helper');
+let place = require('../src/builder/place');
 
 function parse(description) {
   let words = description.split(" ");
@@ -82,6 +83,7 @@ function _parseVoicing(word) {
 
 function _parseConsonant(words) {
   let places = [];
+  let coronalType = "unspecified";
   let lateral = false;
   let ejective = false;
   let nasal = false;
@@ -109,11 +111,13 @@ function _parseConsonant(words) {
       case "lateral": lateral = true; break;
       case "ejective": ejective = true; break;
       case "aspirated": voicing.addDiacritic("Aspirated"); break;
+      case "laminal": coronalType = "laminal"; break;
+      case "apical": coronalType = "apical"; break;
       default: places.push(word);
     }
   }
 
-  return {
+  let unit = {
     "segment": true,
     "category": "consonant",
     "syllabic": syllabic,
@@ -125,6 +129,13 @@ function _parseConsonant(words) {
     "ejective": ejective,
     "lateral": lateral,
   };
+
+  let isCoronal = places.some(name => place.isCoronal(name));
+  if (isCoronal) {
+    unit.coronalType = coronalType;
+  }
+
+  return unit;
 }
 
 module.exports = {

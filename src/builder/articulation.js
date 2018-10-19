@@ -8,7 +8,7 @@ module.exports = class Articulation {
     this.nasal = consonant.nasal;
     this.manner = consonant.manner;
     this.voicingHelper = new VoicingHelper(consonant.voiced);
-    this.tongue = "unspecified";
+    this.coronalType = "unspecified";
   }
 
   updatePhonation(label) {
@@ -118,22 +118,14 @@ module.exports = class Articulation {
   }
 
   _apical() {
-    let place = this.places[0];
-    if (place == "bilabial") {
+    this.coronalType = "apical";
+
+    if (this.places.length == 1 && this.places[0] == "bilabial") {
       this.places = ["linguolabial"];
-      this.tongue = "apical";
-    } else if (Place.isCoronal(place)) {
-      this.tongue = "apical";
-    } else {
-      // err
-    };
+    }
   }
 
   _laminal() {
-    if (this.places.length == 1 && Place.isCoronal(this.places[0])) {
-      this.tongue = "laminal";
-    } else {
-      // err
-    }
+    this.coronalType = "laminal";
   }
 }

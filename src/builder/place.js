@@ -36,7 +36,14 @@ function isCoronal(place) {
   return coronals.includes(place);
 }
 
+function mergeCoronalType(first, second) {
+  if (first == "unspecified") return second;
+  if (second == "unspecified") return first;
+  return "error";
+}
+
 module.exports = {
   orderPlaces: orderPlace,
-  isCoronal: isCoronal
+  isCoronal: isCoronal,
+  mergeCoronalType: mergeCoronalType
 }
