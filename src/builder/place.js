@@ -1,3 +1,5 @@
+const IpaSyntaxtError = require("../error/ipa-syntax-error");
+
 const coronals = ["dental",
   "alveolar",
   "postalveolar",
@@ -39,7 +41,7 @@ function isCoronal(place) {
 function mergeCoronalType(first, second) {
   if (first == "unspecified") return second;
   if (second == "unspecified") return first;
-  return "error";
+  throw new IpaSyntaxtError("Can not merge coronal types: '" + first + "' + '" + second + '"');
 }
 
 module.exports = {

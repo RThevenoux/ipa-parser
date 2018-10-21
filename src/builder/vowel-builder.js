@@ -1,7 +1,8 @@
 const SegmentHelper = require("./segment-helper");
 const VoicingHelper = require("./voicing-helper");
-const VowelBackness = require("./../constants").Backness;
-const VowelHeight = require("./../constants").Height;
+const VowelBackness = require("../constants").Backness;
+const VowelHeight = require("../constants").Height;
+const IpaSyntaxtError = require("../error/ipa-syntax-error");
 
 module.exports = class VowelBuilder {
   constructor(vowel) {
@@ -98,14 +99,14 @@ module.exports = class VowelBuilder {
           case "Palatalized": //
           case "Velarized": //
           case "Pharyngealized": //
-            /*SyntErr*/;
-            break;
+            throw new IpaSyntaxtError("'" + diacritic.label + "' diacritic is not supported by vowel");
           default: /*InternErr*/; break;
         }
       }; break;
 
-      case "release": /*SyntErr*/; break;
-      case "ejective": /*SyntErr*/; break;
+      case "release": //fallthroug
+      case "ejective":
+        throw new IpaSyntaxtError("'" + diacritic.type + "' diacritic is not supported by vowel");
       default: // InternErr
     }
   }

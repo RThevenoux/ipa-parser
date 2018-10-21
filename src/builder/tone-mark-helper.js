@@ -1,3 +1,5 @@
+const IpaSyntaxtError = require("../error/ipa-syntax-error");
+
 const toneHeights = {
   "extra-high": [5],
   "high": [4],
@@ -23,7 +25,7 @@ module.exports = class ToneMarkHelper {
     if (this.label == null) {
       this.label = label;
     } else {
-      //SyntErr
+      throw new IpaSyntaxtError("Do not supported more than one tone mark. Previous: '" + this.label + "' New: '" + label + "'");
     }
   }
 

@@ -7,8 +7,8 @@ function _testSuite(testSuiteName, data) {
   describe(testSuiteName, () => {
     for (let key in data) {
       let description = data[key];
-      let parsedDescription = [labelParser.parse(description)];
       it("should parse '" + key + "' as " + description, () => {
+        let parsedDescription = [labelParser.parse(description)];
         let units = ipaParser.parse(key).units;
         expect(units).to.eql(parsedDescription);
       });

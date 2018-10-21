@@ -1,4 +1,5 @@
 const VoicingHelper = require("./voicing-helper");
+const IpaSyntaxtError = require("../error/ipa-syntax-error");
 
 module.exports = class Articulation {
   constructor(consonant) {
@@ -112,13 +113,13 @@ module.exports = class Articulation {
 
   _dental() {
     if (this.places.length > 1) {
-      console.log("More than one place with 'dental' diacrtic");
+      throw new IpaSyntaxtError("More than one place with 'dental' diacrtic");
     }
 
     switch (this.places[0]) {
       case "alveolar": this.places = ["dental"]; break;
       case "bilabial": this.places = ["labiodental"]; break;
-      default: console.log("'dental' diacritic on invalid place " + this.places[0]);
+      default: throw new IpaSyntaxtError("'dental' diacritic on invalid place: '" + this.places[0] + "'");
     }
   }
 

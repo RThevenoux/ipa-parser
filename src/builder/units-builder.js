@@ -2,7 +2,8 @@ const VowelBuilder = require("./vowel-builder");
 const ConsonantBuilder = require("./consonant-builder");
 const ToneLettersBuilder = require("./tone-letters-builder");
 
-const IpaInternalError = require("./../error/ipa-internal-error");
+const IpaInternalError = require("../error/ipa-internal-error");
+const IpaSyntaxtError = require("../error/ipa-syntax-error");
 
 module.exports = class UnitsBuilder {
   constructor() {
@@ -43,7 +44,7 @@ module.exports = class UnitsBuilder {
         if (this.state === "vowel" || this.state === "consonant") {
           this.currentBuilder.addDiacritic(data.diacritic);
         } else {
-          // ERR
+          throw new IpaSyntaxtError("Diacritic without vowel or consonant");
         }
       }; break;
 
@@ -57,7 +58,7 @@ module.exports = class UnitsBuilder {
         if (this.state === "consonant") {
           this.currentBuilder.addTieBar();
         } else {
-          //ERR
+          throw new IpaSyntaxtError("Tie-Bar without consonant");
         }
       }; break;
 

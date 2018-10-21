@@ -34,7 +34,7 @@ module.exports = class SegmentHelper {
 
   updateSyllabicity(label) {
     if (this.syllabicModifier != "none") {
-      // SyntaxErr
+      throw new IpaSyntaxtError("Do not supported more than one syllabic modifier");
     }
 
     switch (label) {

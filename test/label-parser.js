@@ -4,7 +4,7 @@ let VoicingHelper = require('../src/builder/voicing-helper');
 let place = require('../src/builder/place');
 
 function parse(description) {
-  let words = description.split(" ");
+  let words = description.toLowerCase().split(" ");
   if (words[words.length - 1] == "vowel") {
     return _parseVowel(words);
   } else {
@@ -34,16 +34,16 @@ function _parseVowel(words) {
       case "short": quantity = "short"; break;
       case "half-long": quantity = "half-long"; break;
       case "long": quantity = "long"; break;
-      case "ATR": tongueRoot = "advanced"; break;
-      case "RTR": tongueRoot = "retracted"; break;
+      case "atr": tongueRoot = "advanced"; break;
+      case "rtr": tongueRoot = "retracted"; break;
       case "less_round": roundednessModifier = "less"; break;
       case "more_round": roundednessModifier = "more"; break;
       case "rhotic": rhotacized = true; break;
       case "creaky-voiced": voicing.addDiacritic("Creaky voice"); break;
       case "breathy-voiced": voicing.addDiacritic("Breathy voice"); break;
-      case "voiceless": ; voicing.addDiacritic("Voiceless"); break;
-      case "voiced": ; voicing.addDiacritic("Voiced"); break;
-      default: console.log("unsupported word " + words[i]);
+      case "voiceless": voicing.addDiacritic("Voiceless"); break;
+      case "voiced": voicing.addDiacritic("Voiced"); break;
+      default: throw new Error("Unsupported vowel modifier word: '" + words[i] + "'");
     }
   }
 
@@ -77,7 +77,7 @@ function _parseVoicing(word) {
       voicing.addDiacritic("Breathy voice");
       return voicing;
     };
-    default: console.log("unsupported word " + words[i]);
+    default: throw new Error("Unsupported voicing word: '" + word + "'");
   }
 }
 

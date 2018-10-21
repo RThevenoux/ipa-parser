@@ -1,16 +1,17 @@
 const SegmentHelper = require("./segment-helper");
 const Articulation = require("./articulation");
 const Place = require("./place");
+const IpaSyntaxtError = require("../error/ipa-syntax-error");
 
 function _mergeRelease(first, second) {
   if (first == "unaspirated") return second;
   if (second == "unaspirated") return first;
-  return "error with " + first + " + " + second;
+  throw new IpaSyntaxtError("Can not merge releases : '" + first + "' + '" + second + "'");
 }
 
 function _mergeVoicing(first, second) {
   if (second.voiced != first.voiced) {
-    return "error";
+    throw new IpaSyntaxtError("Can not merge. Not same voicing");
   }
 
   let phonation = (first.phonation == "modal" ? second.phonation : first.phonation);
@@ -78,7 +79,7 @@ module.exports = class ConsonantBuilder {
     if (this.state === "single-char") {
       this.state = "expecting";
     } else {
-      // SyntErr
+      throw new IpaSyntaxtError("Unexpected tie-bar. State=" + this.state);
     }
   }
 
@@ -88,9 +89,7 @@ module.exports = class ConsonantBuilder {
 
   addConsonant(second) {
     if (!this.isExpectingConsonant()) {
-      // SyntErr
-      this.state = "error";
-      return;
+      throw new IpaSyntaxtError("Unexpected second articulation. State=" + this.state);
     }
     this.articulations.push(new Articulation(second));
     this.state = "double-char";
@@ -98,7 +97,7 @@ module.exports = class ConsonantBuilder {
 
   end() {
     if (this.isExpectingConsonant()) {
-      // SyntErr
+      throw new IpaSyntaxtError("Unexpected end of consonant. Expected second articulation. State=" + this.state);
     }
 
     let data = this._resolveArticulations();
@@ -169,34 +168,31 @@ module.exports = class ConsonantBuilder {
     } else if (first.manner === "plosive" && second.manner === "implosive") {
       return this._resolveCoarticulation(first, second, "implosive");
     } else {
-      return "error invalid articulations manner " + first.manner + " + " + second.manner;
+      throw new IpaSyntaxtError("Invalid articulations manner: '" + first.manner + "' + '" + second.manner + "'");
     }
   }
 
   _resolveAffricate(first, second) {
     if (first.places.length != 1 && second.places.length != 1) {
-      return "error affricate with more than one place " + first.places + " + " + second.places;
+      throw new IpaSyntaxtError("Affricate with more than one place: '" + first.places + "' + '" + second.places + "'");
     }
 
     let firstPlace = first.places[0];
     let secondPlace = second.places[0];
 
     if (_isSameVoicing(first, second)) {
-      let affricatePlaces = this._computeAffricatePlaces(firstPlace, secondPlace);
-      if (affricatePlaces == "error") {
-        return "error invalid affricate place " + firstPlace + " + " + secondPlace;
-      }
+      let affricatePlace = this._computeAffricatePlace(firstPlace, secondPlace);
 
       let result = {
         "manner": "affricate",
         "voicing": _mergeVoicing(first.voicingHelper, second.voicingHelper),
-        "places": affricatePlaces,
+        "places": [affricatePlace],
         "lateral": second.lateral,
         "nasal": second.nasal,
         "release": _mergeRelease(first.release, second.release)
       }
 
-      if (affricatePlaces.some(name => Place.isCoronal(name))) {
+      if (Place.isCoronal(affricatePlace)) {
         result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
       }
 
@@ -217,25 +213,25 @@ module.exports = class ConsonantBuilder {
     }
 
     // Invalid voicing combination
-    return "error invalid voicing for affricate";
+    throw new IpaSyntaxtError("Invalid voicing for affricate");
   }
 
-  _computeAffricatePlaces(firstPlace, secondPlace) {
-    if (firstPlace == "alveolar") {
+  _computeAffricatePlace(firstPlace, secondPlace) {
+    switch (firstPlace) {
       // Specific case for 't' + Coronal
-      return (Place.isCoronal(secondPlace) ? [secondPlace] : "error");
-    } else if (firstPlace == "epiglottal") {
+      case "alveolar": if (Place.isCoronal(secondPlace)) return secondPlace; break;
       // Specific case for ʡ͡ħ and ʡ͡ʕ
-      return (secondPlace == "pharyngeal" ? [secondPlace] : "error");
-    } else {
+      case "epiglottal": if (secondPlace == "pharyngeal") return secondPlace; break;
       // General case
-      return (secondPlace == firstPlace ? [secondPlace] : "error");
+      default: if (secondPlace == firstPlace) return secondPlace; break;
     }
+
+    throw new IpaSyntaxtError("Invalid affricate places: '" + firstPlace + "' + '" + secondPlace + "'");
   }
 
   _resolveCoarticulation(first, second, manner) {
     if (!_isSameVoicing(first, second)) {
-      return "error invalid voicing for coarticulation";
+      throw new IpaSyntaxtError("Invalid voicing for coarticulation");
     }
 
     let lateral = first.lateral || second.lateral;
