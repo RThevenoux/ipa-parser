@@ -134,42 +134,53 @@ module.exports = class ConsonantBuilder {
     };
 
     return this.segmentHelper.buildVowel(values);
-
   }
 
   _resolveArticulations() {
     let first = this.articulations[0];
 
     if (this.articulations.length == 1) {
-      // If there is only one articulation
-
-      let result = {
-        "voicing": first.voicingHelper.build(),
-        "manner": first.manner,
-        "places": first.places,
-        "lateral": first.lateral,
-        "nasal": first.nasal,
-        "release": first.release
-      }
-
-      if (first.places.some(name => Place.isCoronal(name))) {
-        result.coronalType = first.coronalType;
-      }
-
-      return result;
+      return this._resolveSingleArticulation(first);
     }
 
     // If two articulations
     let second = this.articulations[1];
-    if (first.manner === "plosive" && second.manner === "fricative") {
-      return this._resolveAffricate(first, second);
-    } else if (first.manner === second.manner) {
+    if (first.manner === second.manner) {
       return this._resolveCoarticulation(first, second, first.manner);
-    } else if (first.manner === "plosive" && second.manner === "implosive") {
-      return this._resolveCoarticulation(first, second, "implosive");
-    } else {
-      throw new IpaSyntaxtError("Invalid articulations manner: '" + first.manner + "' + '" + second.manner + "'");
     }
+    switch (first.manner) {
+      case "plosive": {
+        switch (second.manner) {
+          case "fricative": return this._resolveAffricate(first, second);
+          case "implosive": return this._resolveCoarticulation(first, second, "implosive");
+        }
+      } break;
+      case "flap": {
+        // Ad-hoc case for retroflex trill 'ɽ͡r' & 'ɽ͡r̥' & ...
+        if (second.manner == "trill") {
+          return this._adhocRetroflexTrill(first, second);
+        }
+      }
+    }
+    // If do not match a valid combinaison
+    throw new IpaSyntaxtError("Invalid articulations manner: '" + first.manner + "' + '" + second.manner + "'");
+  }
+
+  _resolveSingleArticulation(articulation) {
+    let result = {
+      "voicing": articulation.voicingHelper.build(),
+      "manner": articulation.manner,
+      "places": articulation.places,
+      "lateral": articulation.lateral,
+      "nasal": articulation.nasal,
+      "release": articulation.release
+    }
+
+    if (articulation.places.some(name => Place.isCoronal(name))) {
+      result.coronalType = articulation.coronalType;
+    }
+
+    return result;
   }
 
   _resolveAffricate(first, second) {
@@ -177,46 +188,29 @@ module.exports = class ConsonantBuilder {
       throw new IpaSyntaxtError("Affricate with more than one place: '" + first.places + "' + '" + second.places + "'");
     }
 
+    let affricatePlace = this._computeAffricatePlace(first, second);
+    let voicing = this._computeAffricateVoicing(first, second);
+
+    let result = {
+      "manner": "affricate",
+      "places": [affricatePlace],
+      "voicing": voicing,
+      "lateral": second.lateral,
+      "nasal": second.nasal,
+      "release": _mergeRelease(first.release, second.release)
+    }
+
+    if (Place.isCoronal(affricatePlace)) {
+      result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
+    }
+
+    return result;
+  }
+
+  _computeAffricatePlace(first, second) {
     let firstPlace = first.places[0];
     let secondPlace = second.places[0];
 
-    if (_isSameVoicing(first, second)) {
-      let affricatePlace = this._computeAffricatePlace(firstPlace, secondPlace);
-
-      let result = {
-        "manner": "affricate",
-        "voicing": _mergeVoicing(first.voicingHelper, second.voicingHelper),
-        "places": [affricatePlace],
-        "lateral": second.lateral,
-        "nasal": second.nasal,
-        "release": _mergeRelease(first.release, second.release)
-      }
-
-      if (Place.isCoronal(affricatePlace)) {
-        result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
-      }
-
-      return result;
-    }
-
-    // Ad-hoc case for 'ʡ͡ʕ'
-    if (firstPlace == "epiglottal" && secondPlace == "pharyngeal"
-      && first.voicingHelper.voiced == false) {
-      return {
-        "voicing": second.voicingHelper.build(),
-        "manner": "affricate",
-        "places": ["pharyngeal"],
-        "lateral": second.lateral,
-        "nasal": second.nasal,
-        "release": _mergeRelease(first.release, second.release)
-      }
-    }
-
-    // Invalid voicing combination
-    throw new IpaSyntaxtError("Invalid voicing for affricate");
-  }
-
-  _computeAffricatePlace(firstPlace, secondPlace) {
     switch (firstPlace) {
       // Specific case for 't' + Coronal
       case "alveolar": if (Place.isCoronal(secondPlace)) return secondPlace; break;
@@ -227,6 +221,23 @@ module.exports = class ConsonantBuilder {
     }
 
     throw new IpaSyntaxtError("Invalid affricate places: '" + firstPlace + "' + '" + secondPlace + "'");
+  }
+
+  _computeAffricateVoicing(first, second) {
+    if (_isSameVoicing(first, second)) {
+      return _mergeVoicing(first.voicingHelper, second.voicingHelper);
+    }
+
+    // Ad-hoc case for 'ʡ͡ʕ'
+    let firstPlace = first.places[0];
+    let secondPlace = second.places[0];
+    if (firstPlace == "epiglottal" && secondPlace == "pharyngeal"
+      && first.voicingHelper.voiced == false) {
+      return second.voicingHelper.build();
+    }
+
+    // Invalid voicing combination
+    throw new IpaSyntaxtError("Invalid voicing for affricate");
   }
 
   _resolveCoarticulation(first, second, manner) {
@@ -249,6 +260,25 @@ module.exports = class ConsonantBuilder {
 
     if (places.some(name => Place.isCoronal(name))) {
       result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
+    }
+
+    return result;
+  }
+
+  _adhocRetroflexTrill(first, second) {
+    if (first.places.length != 1 && second.places.length != 1 &
+      first.places[0] == "retroflex" && second.places[0] == "alveolar") {
+      throw new IpaSyntaxtError("Invalid place for the ad-hoc retroflex trill: '" + first.places + "' + '" + second.places + "'");
+    }
+
+    let result = {
+      "voicing": second.voicingHelper.build(),
+      "manner": "trill",
+      "places": ["retroflex"],
+      "coronalType": first.coronalType,
+      "lateral": false,
+      "nasal": second.nasal,
+      "release": second.release
     }
 
     return result;

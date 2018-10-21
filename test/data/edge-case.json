@@ -5,5 +5,9 @@
     "ɥ̞": "close front round vowel",
     "w̞": "close back round vowel",
     "j̞̃": "close front unround nasal vowel"
+  },
+  "retroflex trill": {
+    "ɽ͡r̥": "voiceless retroflex trill",
+    "ɽ͡r": "voiced retroflex trill"
   }
 }
