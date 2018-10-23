@@ -33,6 +33,7 @@ module.exports = class ConsonantBuilder {
     this.segmentHelper = new SegmentHelper();
     this.articulations = [new Articulation(consonant)];
     this.ejective = false;
+    this.secondary = "none";
   }
 
   addDiacritic(diacritic) {
@@ -47,12 +48,12 @@ module.exports = class ConsonantBuilder {
       case "co-articulation":
         switch (diacritic.label) {
           case "Nasalized": this._getCurrentArticulation().nasalized(); break;
-          case "Velarized or pharyngealized": //
-          case "Labialized": //
-          case "Palatalized": //
-          case "Velarized": //
-          case "Pharyngealized": //
-          case "Labio-palatalized": //
+          case "Velarized or pharyngealized": this.secondary = "velar"; break;
+          case "Labialized": this.secondary = "bilabial"; break;
+          case "Palatalized": this.secondary = "palatal"; break;
+          case "Velarized": this.secondary = "velar"; break;
+          case "Pharyngealized": this.secondary = "pharyngeal"; break;
+          case "Labio-palatalized": this.secondary = "ERROR"; break; // !!! /!\ !!! \\
           case "More rounded":
           case "Less rounded":
             //TODO  
@@ -108,6 +109,7 @@ module.exports = class ConsonantBuilder {
       return this._buildVowel(data);
     } else {
       data.ejective = this.ejective;
+      data.secondary = this.secondary;
       return this.segmentHelper.buildConsonant(data);
     }
   }
@@ -169,8 +171,8 @@ module.exports = class ConsonantBuilder {
   _resolveSingleArticulation(articulation) {
     let result = {
       "voicing": articulation.voicingHelper.build(),
-      "manner": articulation.manner,
       "places": articulation.places,
+      "manner": articulation.manner,
       "lateral": articulation.lateral,
       "nasal": articulation.nasal,
       "release": articulation.release
@@ -192,9 +194,9 @@ module.exports = class ConsonantBuilder {
     let voicing = this._computeAffricateVoicing(first, second);
 
     let result = {
-      "manner": "affricate",
-      "places": [affricatePlace],
       "voicing": voicing,
+      "places": [affricatePlace],
+      "manner": "affricate",
       "lateral": second.lateral,
       "nasal": second.nasal,
       "release": _mergeRelease(first.release, second.release)
@@ -250,11 +252,11 @@ module.exports = class ConsonantBuilder {
     let places = first.places.concat(second.places);
 
     let result = {
-      "manner": manner,
       "voicing": _mergeVoicing(first.voicingHelper, second.voicingHelper),
+      "places": places,
+      "manner": manner,
       "lateral": lateral,
       "nasal": nasal,
-      "places": places,
       "release": _mergeRelease(first.release, second.release)
     };
 
@@ -273,9 +275,9 @@ module.exports = class ConsonantBuilder {
 
     let result = {
       "voicing": second.voicingHelper.build(),
-      "manner": "trill",
       "places": ["retroflex"],
       "coronalType": first.coronalType,
+      "manner": "trill",
       "lateral": false,
       "nasal": second.nasal,
       "release": second.release

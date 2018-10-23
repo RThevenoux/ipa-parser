@@ -7,6 +7,7 @@
   "\u02A5": { "target": "d͡ʑ",           "unicode": "LATIN SMALL LETTER DZ DIGRAPH WITH CURL" },
   "\u025A": { "target": "\u0259\u02DE", "unicode": "LATIN SMALL LETTER SCHWA WITH HOOK" },
   "\u025D": { "target": "\u025C\u02DE", "unicode": "LATIN SMALL LETTER REVERSED OPEN E WITH HOOK" },
+  "\u026B": { "target": "l\u0334"       },
    
   "\u035C": { "target": "\u0361", "unicode": "COMBINING DOUBLE BREVE BELOW",  "target-unicode": "COMBINING DOUBLE INVERTED BREVE" },
   "\u030D": { "target": "\u0329", "unicode": "COMBINING VERTICAL LINE ABOVE", "target-unicode": "COMBINING VERTICAL LINE BELOW" },

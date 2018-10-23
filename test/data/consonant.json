@@ -160,19 +160,31 @@
     "n͡m": "voiced bilabial alveolar nasal",
     "q͡ʡ": "voiceless uvular epiglottal plosive"
   },
-  "diacritic": {
+  "voicing": {
     "n\u0325": "voiceless alveolar nasal",
     "s\u032C": "voiced alveolar fricative",
-    "t\u02B0": "voiceless alveolar aspirated plosive",
-    "t͡s\u02B0": "voiceless alveolar aspirated affricate",
-    "n\u0329": "voiced alveolar syllabic nasal",
     "t\u0324": "breathy-voiced alveolar plosive",
-    "t\u0330": "creaky-voiced alveolar plosive",
-    "t\u02D0": "voiceless alveolar geminate plosive",
-    "t\u033A": "voiceless alveolar apical plosive",
-    "t̻": "voiceless alveolar laminal plosive",
+    "t\u0330": "creaky-voiced alveolar plosive"
+  },
+  "release": {
     "t\u207F": "voiceless alveolar nasal-release plosive",
     "t\u031A": "voiceless alveolar no-audible-release plosive",
     "t\u02E1": "voiceless alveolar lateral-release plosive"
+  },
+  "secondary articlution": {
+    "kʷ": "voiceless velar labialized plosive",
+    "pʲ": "voiceless bilabial palatalized plosive",
+    "lˠ": "voiced alveolar velarized lateral approximant",
+    "\u026B": "voiced alveolar velarized lateral approximant",
+    "l\u0334": "voiced alveolar velarized lateral approximant",
+    "tˤ": "voiceless alveolar pharyngealized plosive"
+  },
+  "other diacritic": {
+    "t\u02B0": "voiceless alveolar aspirated plosive",
+    "t͡s\u02B0": "voiceless alveolar aspirated affricate",
+    "n\u0329": "voiced alveolar syllabic nasal",
+    "t\u02D0": "voiceless alveolar geminate plosive",
+    "t\u033A": "voiceless alveolar apical plosive",
+    "t̻": "voiceless alveolar laminal plosive"
   }
 }

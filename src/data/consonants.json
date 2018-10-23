@@ -62,8 +62,7 @@
     "approximant":{
       "ʋ":{"place":"labiodental",     "voiced":true},
       "ɹ":{"place":"alveolar",        "voiced":true},
-      "l":{"place":"alveolar",        "voiced":true, "lateral":true},
-      "ɫ":{"place":["alveolar","velar"], "voiced":true, "lateral":true},
+      "l":{"place":"alveolar",        "voiced":true, "lateral":true},     
       "ɻ":{"place":"retroflex",       "voiced":true},
       "ɭ":{"place":"retroflex",       "voiced":true, "lateral":true},
       "j":{"place":"palatal",         "voiced":true},

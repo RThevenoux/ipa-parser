@@ -90,6 +90,7 @@ function _parseConsonant(words) {
   let syllabic = false;
   let quantity = "short";
   let release = "unaspirated";
+  let secondary = "none";
 
   let manner = words[words.length - 1];
   if (manner == "nasal") {
@@ -101,23 +102,36 @@ function _parseConsonant(words) {
   for (let i = 1; i < words.length - 1; i++) {
     let word = words[i];
     switch (word) {
+      // 
       case "nasal": nasal = true; break;
+      case "lateral": lateral = true; break;
+      case "ejective": ejective = true; break;
+      // Syllabic
       case "syllabic": syllabic = true; break;
       case "non-syllabic": syllabic = false; break;
+      // Quantity
       case "extra-short": quantity = "extra-short"; break;
       case "short": quantity = "short"; break;
       case "half-long": quantity = "half-long"; break;
       case "long": //fallthrough
       case "geminate": quantity = "long"; break;
-      case "lateral": lateral = true; break;
-      case "ejective": ejective = true; break;
+      // Aspirated
       case "aspirated": release = "aspirated"; break;
       case "unaspirated": release = "unaspirated"; break;
+      // Release
       case "nasal-release": release = "nasal-release"; break;
       case "lateral-release": release = "lateral-release"; break;
       case "no-audible-release": release = "no-audible-release"; break;
+      // Coronal Type
       case "laminal": coronalType = "laminal"; break;
       case "apical": coronalType = "apical"; break;
+      // Secondary articulation
+      case "labialized": secondary = "bilabial"; break;
+      case "palatalized": secondary = "palatal"; break;
+      case "velarized": secondary = "velar"; break;
+      // case "uvularized": secondary = "uvular"; break; NOTA: Uvularization is not defined in IPA-chart. But 'ʶ' (upperscript reversed-R) could be used 
+      case "pharyngealized": secondary = "pharyngeal"; break;
+      // Place
       default: places.push(word);
     }
   }
@@ -130,6 +144,7 @@ function _parseConsonant(words) {
     "quantity": quantity,
     "places": places,
     "manner": manner,
+    "secondary": secondary,
     "nasal": nasal,
     "ejective": ejective,
     "lateral": lateral,
