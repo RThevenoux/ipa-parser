@@ -1,5 +1,5 @@
 const SegmentHelper = require("./segment-helper");
-const VoicingHelper = require("./voicing-helper");
+const Voicing = require("./voicing");
 const VowelBackness = require("../constants").Backness;
 const VowelHeight = require("../constants").Height;
 const IpaSyntaxtError = require("../error/ipa-syntax-error");
@@ -7,7 +7,7 @@ const IpaSyntaxtError = require("../error/ipa-syntax-error");
 module.exports = class VowelBuilder {
   constructor(vowel) {
     this.segmentHelper = new SegmentHelper();
-    this.voicingHelper = new VoicingHelper(true);
+    this.voicing = new Voicing(true);
     this.height = vowel.height;
     this.backness = vowel.backness;
     this.rounded = vowel.rounded;
@@ -18,7 +18,7 @@ module.exports = class VowelBuilder {
   }
 
   _updatePhonation(label) {
-    this.voicingHelper.addDiacritic(label);
+    this.voicing.addDiacritic(label);
   }
 
   _centralize() {
@@ -113,7 +113,7 @@ module.exports = class VowelBuilder {
 
   end() {
     return this.segmentHelper.buildVowel({
-      "voicing": this.voicingHelper.build(),
+      "voicing": this.voicing.build(),
       "height": this.height,
       "backness": this.backness,
       "rounded": this.rounded,

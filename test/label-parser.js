@@ -1,6 +1,6 @@
 let VowelHeight = require('../src/constants').Height;
 let VowelBackness = require('../src/constants').Backness;
-let VoicingHelper = require('../src/builder/voicing-helper');
+let VoicingHelper = require('../src/builder/voicing');
 let place = require('../src/builder/place');
 
 function parse(description) {

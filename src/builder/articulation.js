@@ -1,28 +1,18 @@
-const VoicingHelper = require("./voicing-helper");
+const Voicing = require("./voicing");
 const IpaSyntaxtError = require("../error/ipa-syntax-error");
 
 module.exports = class Articulation {
-  constructor(consonant) {
-    this.places = consonant.places;
+  constructor(consonant, placeIndex) {
+    this.place = consonant.places[placeIndex];
     this.lateral = consonant.lateral;
     this.nasal = consonant.nasal;
     this.manner = consonant.manner;
-    this.voicingHelper = new VoicingHelper(consonant.voiced);
-    this.release = "unaspirated";
+    this.voicing = new Voicing(consonant.voiced);
     this.coronalType = "unspecified";
   }
 
-  updateRelease(label) {
-    switch (label) {
-      case "Aspirated": this.release = "aspirated"; break;
-      case "Nasal": this.release = "nasal-release"; break;
-      case "No audible": this.release = "no-audible-release"; break;
-      case "Lateral": this.release = "lateral-release"; break;
-    }
-  }
-
   updatePhonation(label) {
-    this.voicingHelper.addDiacritic(label);
+    this.voicing.addDiacritic(label);
   }
 
   updateArticulation(label) {
@@ -112,30 +102,30 @@ module.exports = class Articulation {
   }
 
   _dental() {
-    if (this.places.length > 1) {
-      throw new IpaSyntaxtError("More than one place with 'dental' diacrtic");
-    }
-
-    switch (this.places[0]) {
-      case "alveolar": this.places = ["dental"]; break;
-      case "bilabial": this.places = ["labiodental"]; break;
-      default: throw new IpaSyntaxtError("'dental' diacritic on invalid place: '" + this.places[0] + "'");
+    switch (this.place) {
+      case "alveolar": this.place = "dental"; break;
+      case "bilabial": this.place = "labiodental"; break;
+      default: throw new IpaSyntaxtError("'dental' diacritic on invalid place: '" + this.place + "'");
     }
   }
 
   _lingolabial() {
-    this.places = ["linguolabial"];
+    this.place = "linguolabial";
   }
 
   _apical() {
     this.coronalType = "apical";
 
-    if (this.places.length == 1 && this.places[0] == "bilabial") {
-      this.places = ["linguolabial"];
+    if (this.place == "bilabial") {
+      this.place = "linguolabial";
     }
   }
 
   _laminal() {
     this.coronalType = "laminal";
+  }
+
+  isVoiced() {
+    return this.voicing.voiced;
   }
 }

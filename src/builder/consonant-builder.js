@@ -2,38 +2,21 @@ const SegmentHelper = require("./segment-helper");
 const Articulation = require("./articulation");
 const Place = require("./place");
 const IpaSyntaxtError = require("../error/ipa-syntax-error");
-
-function _mergeRelease(first, second) {
-  if (first == "unaspirated") return second;
-  if (second == "unaspirated") return first;
-  throw new IpaSyntaxtError("Can not merge releases : '" + first + "' + '" + second + "'");
-}
-
-function _mergeVoicing(first, second) {
-  if (second.voiced != first.voiced) {
-    throw new IpaSyntaxtError("Can not merge. Not same voicing");
-  }
-
-  let phonation = (first.phonation == "modal" ? second.phonation : first.phonation);
-
-  return {
-    "voiced": first.voiced,
-    "phonation": phonation
-  }
-}
-
-function _isSameVoicing(articulation1, articulation2) {
-  return articulation1.voicingHelper.voiced == articulation2.voicingHelper.voiced;
-}
+const Voicing = require("./voicing");
+const Affricate = require("./affricate");
+const Backness = require("../constants").Backness;
 
 module.exports = class ConsonantBuilder {
-  constructor(consonant) {
+  constructor(consonantDef) {
     this.state = "single-char";
 
     this.segmentHelper = new SegmentHelper();
-    this.articulations = [new Articulation(consonant)];
     this.ejective = false;
+    this.release = "unaspirated";
     this.secondary = "none";
+    this.articulations = [];
+
+    this._addArticulations(consonantDef);
   }
 
   addDiacritic(diacritic) {
@@ -41,19 +24,19 @@ module.exports = class ConsonantBuilder {
       case "tone": this.segmentHelper.addTone(diacritic.label); break;
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
-      case "phonation": this._getCurrentArticulation().updatePhonation(diacritic.label); break;
-      case "articulation": this._getCurrentArticulation().updateArticulation(diacritic.label); break;
       case "ejective": this.ejective = true; break;
-      case "release": this._getCurrentArticulation().updateRelease(diacritic.label); break;
+      case "phonation": this._getCurrentArticulations().forEach(articulation => articulation.updatePhonation(diacritic.label)); break;
+      case "articulation": this._getCurrentArticulations().forEach(articulation => articulation.updateArticulation(diacritic.label)); break;
+      case "release": this._updateRelease(diacritic.label); break;
       case "co-articulation":
         switch (diacritic.label) {
-          case "Nasalized": this._getCurrentArticulation().nasalized(); break;
-          case "Velarized or pharyngealized": this.secondary = "velar"; break;
+          case "Nasalized": this._getCurrentArticulations().forEach(articulation => articulation.nasalized()); break;
           case "Labialized": this.secondary = "bilabial"; break;
           case "Palatalized": this.secondary = "palatal"; break;
           case "Velarized": this.secondary = "velar"; break;
+          case "Velarized or pharyngealized": this.secondary = "velar"; break;
           case "Pharyngealized": this.secondary = "pharyngeal"; break;
-          case "Labio-palatalized": this.secondary = "ERROR"; break; // !!! /!\ !!! \\
+          case "Labio-palatalized": throw new IpaSyntaxtError("Labio-palatization not supported");
           case "More rounded":
           case "Less rounded":
             //TODO  
@@ -72,10 +55,6 @@ module.exports = class ConsonantBuilder {
     }
   }
 
-  _getCurrentArticulation() {
-    return this.articulations[this.articulations.length - 1];
-  }
-
   addTieBar() {
     if (this.state === "single-char") {
       this.state = "expecting";
@@ -92,8 +71,29 @@ module.exports = class ConsonantBuilder {
     if (!this.isExpectingConsonant()) {
       throw new IpaSyntaxtError("Unexpected second articulation. State=" + this.state);
     }
-    this.articulations.push(new Articulation(second));
+    this._addArticulations(second);
     this.state = "double-char";
+  }
+
+  _addArticulations(consonantDef) {
+    this.currentArticulationsLegnth = consonantDef.places.length;
+    for (let placeIndex = 0; placeIndex < consonantDef.places.length; placeIndex++) {
+      this.articulations.push(new Articulation(consonantDef, placeIndex));
+    }
+  }
+
+  _getCurrentArticulations() {
+    let index = this.articulations.length - this.currentArticulationsLegnth;
+    return this.articulations.slice(index);
+  }
+
+  _updateRelease(label) {
+    switch (label) {
+      case "Aspirated": this.release = "aspirated"; break;
+      case "Nasal": this.release = "nasal-release"; break;
+      case "No audible": this.release = "no-audible-release"; break;
+      case "Lateral": this.release = "lateral-release"; break;
+    }
   }
 
   end() {
@@ -110,18 +110,26 @@ module.exports = class ConsonantBuilder {
     } else {
       data.ejective = this.ejective;
       data.secondary = this.secondary;
+      data.release = this.release;
       return this.segmentHelper.buildConsonant(data);
     }
   }
 
   _buildVowel(data) {
     // see : https://en.wikipedia.org/wiki/Approximant_consonant#Semivowels
+
+    // If two place, the first should be bilabial
+    // The last place should defined the backness
+    //  - palatal => Front vowel
+    //  - velar => Back vowel
     let backness;
-    if (data.places[data.places.length - 1] == "palatal") {
-      backness = 2;
-    } else {
-      backness = -2;
+    let backnessPlace = data.places[data.places.length - 1];
+    switch (backnessPlace) {
+      case "palatal": backness = Backness["FRONT"]; break;
+      case "velar": backness = Backness["BACK"]; break;
+      default: throw new IpaSyntaxtError("Unsupported place for lowered approximant : " + backnessPlace);
     }
+
     let rounded = (data.places[0] == "bilabial");
 
     let values = {
@@ -170,15 +178,14 @@ module.exports = class ConsonantBuilder {
 
   _resolveSingleArticulation(articulation) {
     let result = {
-      "voicing": articulation.voicingHelper.build(),
-      "places": articulation.places,
+      "voicing": articulation.voicing.build(),
+      "places": [articulation.place],
       "manner": articulation.manner,
       "lateral": articulation.lateral,
-      "nasal": articulation.nasal,
-      "release": articulation.release
+      "nasal": articulation.nasal
     }
 
-    if (articulation.places.some(name => Place.isCoronal(name))) {
+    if (Place.isCoronal(articulation.place)) {
       result.coronalType = articulation.coronalType;
     }
 
@@ -186,20 +193,15 @@ module.exports = class ConsonantBuilder {
   }
 
   _resolveAffricate(first, second) {
-    if (first.places.length != 1 && second.places.length != 1) {
-      throw new IpaSyntaxtError("Affricate with more than one place: '" + first.places + "' + '" + second.places + "'");
-    }
-
-    let affricatePlace = this._computeAffricatePlace(first, second);
-    let voicing = this._computeAffricateVoicing(first, second);
+    let affricatePlace = Affricate.computeAffricatePlace(first, second);
+    let voicing = Affricate.computeAffricateVoicing(first, second);
 
     let result = {
       "voicing": voicing,
       "places": [affricatePlace],
       "manner": "affricate",
       "lateral": second.lateral,
-      "nasal": second.nasal,
-      "release": _mergeRelease(first.release, second.release)
+      "nasal": second.nasal
     }
 
     if (Place.isCoronal(affricatePlace)) {
@@ -209,55 +211,21 @@ module.exports = class ConsonantBuilder {
     return result;
   }
 
-  _computeAffricatePlace(first, second) {
-    let firstPlace = first.places[0];
-    let secondPlace = second.places[0];
-
-    switch (firstPlace) {
-      // Specific case for 't' + Coronal
-      case "alveolar": if (Place.isCoronal(secondPlace)) return secondPlace; break;
-      // Specific case for ʡ͡ħ and ʡ͡ʕ
-      case "epiglottal": if (secondPlace == "pharyngeal") return secondPlace; break;
-      // General case
-      default: if (secondPlace == firstPlace) return secondPlace; break;
-    }
-
-    throw new IpaSyntaxtError("Invalid affricate places: '" + firstPlace + "' + '" + secondPlace + "'");
-  }
-
-  _computeAffricateVoicing(first, second) {
-    if (_isSameVoicing(first, second)) {
-      return _mergeVoicing(first.voicingHelper, second.voicingHelper);
-    }
-
-    // Ad-hoc case for 'ʡ͡ʕ'
-    let firstPlace = first.places[0];
-    let secondPlace = second.places[0];
-    if (firstPlace == "epiglottal" && secondPlace == "pharyngeal"
-      && first.voicingHelper.voiced == false) {
-      return second.voicingHelper.build();
-    }
-
-    // Invalid voicing combination
-    throw new IpaSyntaxtError("Invalid voicing for affricate");
-  }
-
   _resolveCoarticulation(first, second, manner) {
-    if (!_isSameVoicing(first, second)) {
+    if (first.isVoiced() != second.isVoiced()) {
       throw new IpaSyntaxtError("Invalid voicing for coarticulation");
     }
 
     let lateral = first.lateral || second.lateral;
     let nasal = first.nasal || second.nasal;
-    let places = first.places.concat(second.places);
+    let places = [first.place, second.place];
 
     let result = {
-      "voicing": _mergeVoicing(first.voicingHelper, second.voicingHelper),
+      "voicing": Voicing.merge(first.voicing, second.voicing),
       "places": places,
       "manner": manner,
       "lateral": lateral,
-      "nasal": nasal,
-      "release": _mergeRelease(first.release, second.release)
+      "nasal": nasal
     };
 
     if (places.some(name => Place.isCoronal(name))) {
@@ -268,21 +236,17 @@ module.exports = class ConsonantBuilder {
   }
 
   _adhocRetroflexTrill(first, second) {
-    if (first.places.length != 1 && second.places.length != 1 &
-      first.places[0] == "retroflex" && second.places[0] == "alveolar") {
-      throw new IpaSyntaxtError("Invalid place for the ad-hoc retroflex trill: '" + first.places + "' + '" + second.places + "'");
+    if (first.place != "retroflex" || second.place != "alveolar") {
+      throw new IpaSyntaxtError("Invalid place for the ad-hoc retroflex trill: '" + first.place + "' + '" + second.place + "'");
     }
 
-    let result = {
-      "voicing": second.voicingHelper.build(),
+    return {
+      "voicing": second.voicing.build(),
       "places": ["retroflex"],
       "coronalType": first.coronalType,
       "manner": "trill",
       "lateral": false,
-      "nasal": second.nasal,
-      "release": second.release
+      "nasal": second.nasal
     }
-
-    return result;
   }
 }
