@@ -3,7 +3,6 @@ const Articulation = require("./articulation");
 const Place = require("./place");
 const Voicing = require("./voicing");
 const Affricate = require("./affricate");
-const Backness = require("../constants").Backness;
 const IpaSyntaxtError = require("../error/ipa-syntax-error");
 const IpaInternError = require("../error/ipa-internal-error");
 
@@ -55,6 +54,8 @@ module.exports = class ConsonantBuilder {
   }
 
   _addArticulations(consonantDef) {
+    if (this.articulations.length + consonantDef.places.length > 2) throw new IpaSyntaxtError("Can not manage more than 2 articulations for one consonant.");
+
     this.currentArticulationsLegnth = consonantDef.places.length;
     for (let placeIndex = 0; placeIndex < consonantDef.places.length; placeIndex++) {
       this.articulations.push(new Articulation(consonantDef, placeIndex));
@@ -100,53 +101,42 @@ module.exports = class ConsonantBuilder {
       data.ejective = this.ejective;
       data.secondary = this.secondary;
       data.release = this.release;
+      if (!data.places.some(Place.isCoronal)) {
+        delete data.coronalType;
+      }
+
       return this.segmentHelper.buildConsonant(data);
     }
   }
 
   _buildVowel(data) {
     // see : https://en.wikipedia.org/wiki/Approximant_consonant#Semivowels
-
-    // If two place, the first should be bilabial
-    // The last place should defined the backness
-    //  - palatal => Front vowel
-    //  - velar => Back vowel
-    let backness;
-    let backnessPlace = data.places[data.places.length - 1];
-    switch (backnessPlace) {
-      case "palatal": backness = Backness["FRONT"]; break;
-      case "velar": backness = Backness["BACK"]; break;
-      default: throw new IpaSyntaxtError("Unsupported place for lowered approximant : " + backnessPlace);
-    }
-
-    let rounded = (data.places[0] == "bilabial");
-
+    let placeInfo = Place.approximantToVowel(data.places);
     let values = {
       "voicing": data.voicing,
-      "height": 3,
-      "backness": backness,
-      "rounded": rounded,
+      "height": placeInfo.height,
+      "backness": placeInfo.backness,
+      "rounded": placeInfo.rounded,
       "roundednessModifier": "none",
       "nasalized": data.nasal,
       "rhotacized": false,
       "tongueRoot": "neutral"
     };
-
     return this.segmentHelper.buildVowel(values);
   }
 
   _resolveArticulations() {
-    let first = this.articulations[0];
-
     if (this.articulations.length == 1) {
-      return this._resolveSingleArticulation(first);
+      return this._resolveSingleArticulation(this.articulations[0]);
     }
 
     // If two articulations
+    let first = this.articulations[0];
     let second = this.articulations[1];
-    if (first.manner === second.manner) {
+    if (first.manner == second.manner) {
       return this._resolveCoarticulation(first, second, first.manner);
     }
+    // If two articulation with differents manners
     switch (first.manner) {
       case "plosive": {
         switch (second.manner) {
@@ -166,66 +156,45 @@ module.exports = class ConsonantBuilder {
   }
 
   _resolveSingleArticulation(articulation) {
-    let result = {
+    return {
       "voicing": articulation.voicing.build(),
       "places": [articulation.place],
+      "coronalType": articulation.coronalType,
       "manner": articulation.manner,
       "lateral": articulation.lateral,
       "nasal": articulation.nasal
     }
-
-    if (Place.isCoronal(articulation.place)) {
-      result.coronalType = articulation.coronalType;
-    }
-
-    return result;
   }
 
   _resolveAffricate(first, second) {
     let affricatePlace = Affricate.computeAffricatePlace(first, second);
     let voicing = Affricate.computeAffricateVoicing(first, second);
 
-    let result = {
+    return {
       "voicing": voicing,
       "places": [affricatePlace],
+      "coronalType": Place.mergeCoronalType(first.coronalType, second.coronalType),
       "manner": "affricate",
       "lateral": second.lateral,
       "nasal": second.nasal
     }
-
-    if (Place.isCoronal(affricatePlace)) {
-      result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
-    }
-
-    return result;
   }
 
   _resolveCoarticulation(first, second, manner) {
-    if (first.isVoiced() != second.isVoiced()) {
-      throw new IpaSyntaxtError("Invalid voicing for coarticulation");
-    }
+    if (first.isVoiced() != second.isVoiced()) throw new IpaSyntaxtError("Invalid voicing for coarticulation")
 
-    let lateral = first.lateral || second.lateral;
-    let nasal = first.nasal || second.nasal;
-    let places = [first.place, second.place];
-
-    let result = {
+    return {
       "voicing": Voicing.merge(first.voicing, second.voicing),
-      "places": places,
+      "places": [first.place, second.place],
+      "coronalType": Place.mergeCoronalType(first.coronalType, second.coronalType),
       "manner": manner,
-      "lateral": lateral,
-      "nasal": nasal
+      "lateral": first.lateral || second.lateral,
+      "nasal": first.nasal || second.nasal
     };
-
-    if (places.some(name => Place.isCoronal(name))) {
-      result.coronalType = Place.mergeCoronalType(first.coronalType, second.coronalType);
-    }
-
-    return result;
   }
 
   _adhocRetroflexTrill(first, second) {
-    if (first.place != "retroflex" || second.place != "alveolar") {
+    if (!(first.place == "retroflex" && second.place == "alveolar")) {
       throw new IpaSyntaxtError("Invalid place for the ad-hoc retroflex trill: '" + first.place + "' + '" + second.place + "'");
     }
 
