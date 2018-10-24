@@ -41,7 +41,7 @@ module.exports = class UnitsBuilder {
       }; break;
 
       case "diacritic": {
-        if (this.state === "vowel" || this.state === "consonant") {
+        if (this.state == "vowel" || this.state == "consonant") {
           this.currentBuilder.addDiacritic(data.diacritic);
         } else {
           throw new IpaSyntaxtError("Diacritic without vowel or consonant");
@@ -55,16 +55,13 @@ module.exports = class UnitsBuilder {
       }; break;
 
       case "tie-bar": {
-        if (this.state === "consonant") {
-          this.currentBuilder.addTieBar();
-        } else {
+        if (this.state != "consonant") {
           throw new IpaSyntaxtError("Tie-Bar without consonant");
         }
+        this.currentBuilder.addTieBar();
       }; break;
 
-      default: {
-        throw new IpaInternalError("Invalid data type : '" + data.type + "'");
-      }
+      default: throw new IpaInternalError("Unsupported data type : '" + data.type + "'");
     }
   }
 

@@ -24,7 +24,7 @@ module.exports = class VoicingHelper {
         this.voiced = true;
         this.phonation = "creaky";
       }; break;
-      default: // InternErr
+      default: throw new IpaInternalError("Unsupported voicing label: '" + label + "'");
     }
   }
 

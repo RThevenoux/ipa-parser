@@ -16,29 +16,37 @@
     "\u0330": { "visual":"◌̰", "ipa": "Creaky voice",  "unicode": "COMBINING TILDE BELOW"}
   },
   "articulation":{
-    "\u032A": { "ipa": "Dental",          "unicode": "COMBINING BRIDGE BELOW" }, 
-    "\u033A": { "ipa": "Apical",          "unicode": "COMBINING INVERTED BRIDGE BELOW" },
-    "\u033C": { "ipa": "Linguolabial",    "unicode": "COMBINING SEAGULL BELOW" },
-    "\u033B": { "ipa": "Laminal",         "unicode": "COMBINING SQUARE BELOW" },
-    "\u031F": { "ipa": "Advanced",        "unicode": "COMBINING PLUS SIGN BELOW" },
-    "\u0320": { "ipa": "Retracted",       "unicode": "COMBINING MINUS SIGN BELOW" },
-    "\u0308": { "ipa": "Centralized",     "unicode": "COMBINING DIAERESIS" },
-    "\u033D": { "ipa": "Mid-centralized", "unicode": "COMBINING X ABOVE" },
-    "\u031D": { "ipa": "Raised",          "unicode": "COMBINING UP TACK BELOW" },
-    "\u031E": { "ipa": "Lowered",         "unicode": "COMBINING DOWN TACK BELOW" }
+    "\u032A": { "ipa": "Dental",          "unicode": "COMBINING BRIDGE BELOW"}, 
+    "\u033A": { "ipa": "Apical",          "unicode": "COMBINING INVERTED BRIDGE BELOW"},
+    "\u033C": { "ipa": "Linguolabial",    "unicode": "COMBINING SEAGULL BELOW"},
+    "\u033B": { "ipa": "Laminal",         "unicode": "COMBINING SQUARE BELOW"},
+    "\u031F": { "ipa": "Advanced",        "unicode": "COMBINING PLUS SIGN BELOW"},
+    "\u0320": { "ipa": "Retracted",       "unicode": "COMBINING MINUS SIGN BELOW"},
+    "\u0308": { "ipa": "Centralized",     "unicode": "COMBINING DIAERESIS"},
+    "\u033D": { "ipa": "Mid-centralized", "unicode": "COMBINING X ABOVE"},
+    "\u031D": { "ipa": "Raised",          "unicode": "COMBINING UP TACK BELOW"},
+    "\u031E": { "ipa": "Lowered",         "unicode": "COMBINING DOWN TACK BELOW"}
   },
-  "co-articulation":{
-    "\u0339": { "ipa": "More rounded",          "unicode": "COMBINING RIGHT HALF RING BELOW"},
-    "\u031C": { "ipa": "Less rounded",          "unicode": "COMBINING LEFT HALF RING BELOW"},
+  "secondary-articulation":{
     "\u02B7": { "ipa": "Labialized",            "unicode": "MODIFIER LETTER SMALL W"},
     "\u02B2": { "ipa": "Palatalized",           "unicode": "MODIFIER LETTER SMALL J"},
     "\u1DA3": { "ipa": "Labio-palatalized",     "unicode": "MODIFIER LETTER SMALL TURNED H"},
     "\u02E0": { "ipa": "Velarized",             "unicode": "MODIFIER LETTER SMALL GAMMA"},
     "\u02E4": { "ipa": "Pharyngealized",        "unicode": "MODIFIER LETTER SMALL REVERSED GLOTTAL STOP"},
-    "\u0334": { "ipa": "Velarized or pharyngealized", "unicode": "COMBINING TILDE OVERLAY" },
-    "\u0318": { "ipa": "Advanced tongue root",  "unicode": "COMBINING LEFT TACK BELOW"          },
-    "\u0319": { "ipa": "Retracted tongue root", "unicode": "COMBINING RIGHT TACK BELOW"},
-    "\u02DE": { "ipa": "Rhotacized",            "unicode": "MODIFIER LETTER RHOTIC HOOK"},
+    "\u0334": { "ipa": "Velarized or pharyngealized", "unicode": "COMBINING TILDE OVERLAY"}
+  },
+  "nasalized":{
     "\u0303": { "ipa": "Nasalized",             "unicode": "COMBINING TILDE"}
+  },
+  "rhotacized":{
+    "\u02DE": { "ipa": "Rhotacized",            "unicode": "MODIFIER LETTER RHOTIC HOOK"}
+  },
+  "roundedness":{
+    "\u0339": { "ipa": "More rounded",          "unicode": "COMBINING RIGHT HALF RING BELOW"},
+    "\u031C": { "ipa": "Less rounded",          "unicode": "COMBINING LEFT HALF RING BELOW"}
+  },
+  "tongue-root":{
+    "\u0318": { "ipa": "Advanced tongue root",  "unicode": "COMBINING LEFT TACK BELOW"},
+    "\u0319": { "ipa": "Retracted tongue root", "unicode": "COMBINING RIGHT TACK BELOW"}
   }
 }

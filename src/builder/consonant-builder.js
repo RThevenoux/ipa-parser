@@ -1,10 +1,11 @@
 const SegmentHelper = require("./segment-helper");
 const Articulation = require("./articulation");
 const Place = require("./place");
-const IpaSyntaxtError = require("../error/ipa-syntax-error");
 const Voicing = require("./voicing");
 const Affricate = require("./affricate");
 const Backness = require("../constants").Backness;
+const IpaSyntaxtError = require("../error/ipa-syntax-error");
+const IpaInternError = require("../error/ipa-internal-error");
 
 module.exports = class ConsonantBuilder {
   constructor(consonantDef) {
@@ -25,42 +26,21 @@ module.exports = class ConsonantBuilder {
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
       case "ejective": this.ejective = true; break;
+      case "release": this._updateRelease(diacritic.label); break;
+      case "secondary-articulation": this._updateSecondaryArticulation(diacritic.label); break;
       case "phonation": this._getCurrentArticulations().forEach(articulation => articulation.updatePhonation(diacritic.label)); break;
       case "articulation": this._getCurrentArticulations().forEach(articulation => articulation.updateArticulation(diacritic.label)); break;
-      case "release": this._updateRelease(diacritic.label); break;
-      case "co-articulation":
-        switch (diacritic.label) {
-          case "Nasalized": this._getCurrentArticulations().forEach(articulation => articulation.nasalized()); break;
-          case "Labialized": this.secondary = "bilabial"; break;
-          case "Palatalized": this.secondary = "palatal"; break;
-          case "Velarized": this.secondary = "velar"; break;
-          case "Velarized or pharyngealized": this.secondary = "velar"; break;
-          case "Pharyngealized": this.secondary = "pharyngeal"; break;
-          case "Labio-palatalized": throw new IpaSyntaxtError("Labio-palatization not supported");
-          case "More rounded":
-          case "Less rounded":
-            //TODO  
-            break;
-
-          case "Advanced tongue root":
-          case "Retracted tongue root":
-          case "Rhotacized":
-            // SyntErr
-            break;
-          default:
-            // InternErr
-            break;
-        }
-      default: // InternErr
+      case "nasalized": this._getCurrentArticulations().forEach(articulation => articulation.nasalized()); break;
+      case "roundedness":  /*TODO?*/ break;
+      case "tongue-root": //fallthroug
+      case "rhotacized": throw new IpaSyntaxtError("'" + diacritic.label + "' diacritic is not supported by consonant");
+      default: throw new IpaInternError("Unsupported diacritic type: '" + diacritic.type + "'");
     }
   }
 
   addTieBar() {
-    if (this.state === "single-char") {
-      this.state = "expecting";
-    } else {
-      throw new IpaSyntaxtError("Unexpected tie-bar. State=" + this.state);
-    }
+    if (this.state != "single-char") throw new IpaSyntaxtError("Unexpected tie-bar. State=" + this.state);
+    this.state = "expecting";
   }
 
   isExpectingConsonant() {
@@ -68,9 +48,8 @@ module.exports = class ConsonantBuilder {
   }
 
   addConsonant(second) {
-    if (!this.isExpectingConsonant()) {
-      throw new IpaSyntaxtError("Unexpected second articulation. State=" + this.state);
-    }
+    if (!this.isExpectingConsonant()) throw new IpaSyntaxtError("Unexpected second articulation. State=" + this.state);
+
     this._addArticulations(second);
     this.state = "double-char";
   }
@@ -87,22 +66,32 @@ module.exports = class ConsonantBuilder {
     return this.articulations.slice(index);
   }
 
+  _updateSecondaryArticulation(label) {
+    switch (label) {
+      case "Labialized": this.secondary = "bilabial"; break;
+      case "Palatalized": this.secondary = "palatal"; break;
+      case "Velarized": this.secondary = "velar"; break;
+      case "Velarized or pharyngealized": this.secondary = "velar"; break;
+      case "Pharyngealized": this.secondary = "pharyngeal"; break;
+      case "Labio-palatalized": throw new IpaSyntaxtError("Labio-palatization not supported");
+      default: throw new IpaInternError("Unsupported secondary-articulation label: '" + label + "'");
+    }
+  }
+
   _updateRelease(label) {
     switch (label) {
       case "Aspirated": this.release = "aspirated"; break;
       case "Nasal": this.release = "nasal-release"; break;
       case "No audible": this.release = "no-audible-release"; break;
       case "Lateral": this.release = "lateral-release"; break;
+      default: throw new IpaInternError("Unsupported release label: '" + label + "'");
     }
   }
 
   end() {
-    if (this.isExpectingConsonant()) {
-      throw new IpaSyntaxtError("Unexpected end of consonant. Expected second articulation. State=" + this.state);
-    }
+    if (this.isExpectingConsonant()) throw new IpaSyntaxtError("Unexpected end of consonant. Expected second articulation. State=" + this.state);
 
     let data = this._resolveArticulations();
-
     data.places = Place.orderPlaces(data.places);
 
     if (data.manner == "vowel") {

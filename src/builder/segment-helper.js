@@ -1,5 +1,6 @@
-const IpaSyntaxError = require("../error/ipa-syntax-error");
 const ToneMarkHelper = require("./tone-mark-helper");
+const IpaSyntaxError = require("../error/ipa-syntax-error");
+const IpaInternError = require("../error/ipa-internal-error");
 
 module.exports = class SegmentHelper {
   constructor() {
@@ -14,33 +15,25 @@ module.exports = class SegmentHelper {
 
   updateQuantity(label) {
     switch (this.quantity) {
-      case "extra-short":
-      case "half-long":
-      case "extra-long":
-        throw new IpaSyntaxError("Unexpected quantity symbol: " + label + " current quantity: " + this.quantity);;
+      case "extra-short": //fallthroug
+      case "half-long": //fallthroug
+      case "extra-long": throw new IpaSyntaxError("Unexpected quantity symbol: '" + label + "' current quantity: " + this.quantity);
       case "long":
-        if (label === "long") {
-          this.quantity = "extra-long";
-        } else {
-          throw new IpaSyntaxError("Unexpected quantity symbol: " + label + " current quantity: " + this.quantity);
-        }
+        if (label != "long") throw new IpaSyntaxError("Unexpected quantity symbol: " + label + " current quantity: " + this.quantity);
+        this.quantity = "extra-long";
         break;
-      case "short": {
-        this.quantity = label;
-      }
-      default: // InternErr
+      case "short": this.quantity = label; break;
+      default: throw new IpaInternError("Unsupported quantity label: '" + label + "'");
     }
   }
 
   updateSyllabicity(label) {
-    if (this.syllabicModifier != "none") {
-      throw new IpaSyntaxtError("Do not supported more than one syllabic modifier");
-    }
+    if (this.syllabicModifier != "none") throw new IpaSyntaxtError("Do not supported more than one syllabic modifier");
 
     switch (label) {
       case "Syllabic": this.syllabicModifier = "+syllabic"; break;
       case "Non-syllabic": this.syllabicModifier = "-syllabic"; break;
-      default: // InternErr
+      default: throw new IpaInternError("Unsupported syllabicity label: '" + label + "'");
     }
   }
 

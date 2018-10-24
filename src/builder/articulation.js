@@ -1,5 +1,6 @@
 const Voicing = require("./voicing");
 const IpaSyntaxtError = require("../error/ipa-syntax-error");
+const IpaInternError = require("../error/ipa-internal-error");
 
 module.exports = class Articulation {
   constructor(consonant, placeIndex) {
@@ -27,7 +28,7 @@ module.exports = class Articulation {
       case "Laminal": this._laminal(); break;
       case "Centralized": /*err*/; break;
       case "Mid-centralized": /*err*/; break;
-      default: /*Err*/; break;
+      default: throw new IpaInternError("Unsupported articulation label: '" + label + "'");
     };
   }
 
@@ -98,6 +99,7 @@ module.exports = class Articulation {
         this.manner = "fricative";
         this.trilled = true; // !!!!!!!
         break;
+      default: //Err ?
     }
   }
 

@@ -1,3 +1,5 @@
+const IpaInternError = require("../error/ipa-internal-error");
+
 const map = {
   "extra-low": 1,
   "low": 2,
@@ -62,8 +64,7 @@ module.exports = class ToneLettersBuilder {
           case "falling-rising":
             // do nothing
             break;
-          default:
-          // InternErr
+          default: throw new IpaInternError("Invalid tone-letter-builder state: '" + state + "'");
         }
       } else {
         // fall
@@ -97,7 +98,7 @@ module.exports = class ToneLettersBuilder {
           case "rising-falling":
             // do nothing
             break;
-          default: // InternErr
+          default: throw new IpaInternError("Invalid tone-letter-builder state: '" + state + "'");
         }
       }
     }

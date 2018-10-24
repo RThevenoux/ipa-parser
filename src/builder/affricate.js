@@ -8,8 +8,7 @@ function _computeAffricateVoicing(first, second) {
   }
 
   // Ad-hoc case for 'ʡ͡ʕ'
-  if (first.place == "epiglottal" && second.place == "pharyngeal"
-    && first.voicing.voiced == false) {
+  if (first.place == "epiglottal" && second.place == "pharyngeal" && first.voicing.voiced == false) {
     return second.voicing.build();
   }
 
