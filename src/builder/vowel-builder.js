@@ -12,7 +12,7 @@ module.exports = class VowelBuilder {
     this.backness = vowel.backness;
     this.rounded = vowel.rounded;
     this.roundednessModifier = "none";
-    this.nasalized = false;
+    this.nasal = false;
     this.rhotacized = false;
     this.tongueRoot = "neutral";
   }
@@ -87,7 +87,7 @@ module.exports = class VowelBuilder {
     }
   }
 
-  _updateTongueRoot(label){
+  _updateTongueRoot(label) {
     switch (label) {
       case "Advanced tongue root": this.tongueRoot = "advanced"; break;
       case "Retracted tongue root": this.tongueRoot = "retracted"; break;
@@ -102,7 +102,7 @@ module.exports = class VowelBuilder {
       case "syllabicity": this.segmentHelper.updateSyllabicity(diacritic.label); break;
       case "phonation": this._updatePhonation(diacritic.label); break;
       case "articulation": this._updateArticulation(diacritic.label); break;
-      case "nasalized": this.nasalized = true; break;
+      case "nasalized": this.nasal = true; break;
       case "rhotacized": this.rhotacized = true; break;
       case "roundedness": this._updateRoundedness(diacritic.label); break;
       case "tongue-root": this._updateTongueRoot(diacritic.label); break;
@@ -121,7 +121,7 @@ module.exports = class VowelBuilder {
       "backness": this.backness,
       "rounded": this.rounded,
       "roundednessModifier": this.roundednessModifier,
-      "nasalized": this.nasalized,
+      "nasal": this.nasal,
       "rhotacized": this.rhotacized,
       "tongueRoot": this.tongueRoot
     });

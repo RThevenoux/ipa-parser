@@ -118,7 +118,7 @@ module.exports = class ConsonantBuilder {
       "backness": placeInfo.backness,
       "rounded": placeInfo.rounded,
       "roundednessModifier": "none",
-      "nasalized": data.nasal,
+      "nasal": data.nasal,
       "rhotacized": false,
       "tongueRoot": "neutral"
     };

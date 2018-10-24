@@ -3,6 +3,7 @@ const Place = require("./place");
 const IpaSyntaxtError = require("../error/ipa-syntax-error");
 
 function _computeAffricateVoicing(first, second) {
+  // General case
   if (first.isVoiced() == second.isVoiced()) {
     return Voicing.merge(first.voicing, second.voicing);
   }
@@ -19,14 +20,16 @@ function _computeAffricateVoicing(first, second) {
 }
 
 function _computeAffricatePlace(first, second) {
+  // General case
   if (second.place == first.place) return second.place;
 
+  // Ad-hoc case
   switch (first.place) {
     // Specific case for 't' + Coronal
     case "alveolar": if (Place.isCoronal(second.place)) return second.place; break;
-    // Specific case for ʡ͡ħ and ʡ͡ʕ
+    // Specific case for 'ʡ' + Pharyngeal
     case "epiglottal": if (second.place == "pharyngeal") return second.place; break;
-    // no default case (will throw Error)
+    // no default. Other case will throw Error
   }
 
   throw new IpaSyntaxtError("Invalid affricate places: '" + first.place + "' + '" + second.place + "'");

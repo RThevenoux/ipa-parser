@@ -19,7 +19,7 @@ function _parseVowel(words) {
   let syllabic = true;
   let tongueRoot = "neutral";
   let roundednessModifier = "none";
-  let nasalized = false;
+  let nasal = false;
   let rhotacized = false;
   let quantity = "short";
 
@@ -27,7 +27,7 @@ function _parseVowel(words) {
 
   for (let i = 3; i < words.length - 1; i++) {
     switch (words[i]) {
-      case "nasal": nasalized = true; break;
+      case "nasal": nasal = true; break;
       case "syllabic": syllabic = true; break;
       case "non-syllabic": syllabic = false; break;
       case "extra-short": quantity = "extra-short"; break;
@@ -53,11 +53,11 @@ function _parseVowel(words) {
     "syllabic": syllabic,
     "voicing": voicing.build(),
     "quantity": quantity,
+    "nasal": nasal,
     "height": height,
     "backness": backness,
     "rounded": round,
     "roundednessModifier": roundednessModifier,
-    "nasalized": nasalized,
     "rhotacized": rhotacized,
     "tongueRoot": tongueRoot
   };
@@ -142,10 +142,10 @@ function _parseConsonant(words) {
     "syllabic": syllabic,
     "voicing": voicing.build(),
     "quantity": quantity,
+    "nasal": nasal,
     "places": places,
     "manner": manner,
     "secondary": secondary,
-    "nasal": nasal,
     "ejective": ejective,
     "lateral": lateral,
     "release": release
