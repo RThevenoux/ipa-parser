@@ -9,5 +9,15 @@
   "retroflex trill": {
     "ɽ͡r̥": "voiceless retroflex trill",
     "ɽ͡r": "voiced retroflex trill"
+  },
+  "tapped fricative": {
+    "ɾ̞̊": "voiceless alveolar tapped-fricative"
+  },
+  "trilled fricative": {
+    "ʙ̝": "voiced bilabial trilled-fricative",
+    "r̝̊": "voiceless alveolar trilled-fricative",
+    "r̝": "voiced alveolar trilled-fricative",
+    "ʀ̝̊": "voiceless uvular trilled-fricative",
+    "ʀ̝": "voiced uvular trilled-fricative"
   }
 }

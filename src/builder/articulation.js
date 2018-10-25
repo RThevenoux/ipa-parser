@@ -1,4 +1,5 @@
 const Voicing = require("./voicing");
+const Manner = require("./manner");
 const IpaSyntaxtError = require("../error/ipa-syntax-error");
 const IpaInternError = require("../error/ipa-internal-error");
 
@@ -44,63 +45,12 @@ module.exports = class Articulation {
   _retracte() {
   }
 
-
-  // TODO : finish lower/raise
-  // see https://en.wikipedia.org/wiki/Relative_articulation#Raised_and_lowered
-  //
-  // [close vowel]-[approximant]--[fricative]---------[stop]
-  //                              [tap  fric]--[flap]-[stop]
-  //                     [trill]--[tril fric]-- XXX
-  //
-  // trilled fricative = trill + fricative ? => https://en.wikipedia.org/wiki/Dental,_alveolar_and_postalveolar_trills#Voiced_alveolar_fricative_trill
-  // https://en.wikipedia.org/wiki/Fricative_consonant :
-  //  - fricative trill 
-  //  - fricative flap
-  // https://en.wikipedia.org/wiki/Flap_consonant#Tapped_fricatives
-  // One fricative flap : https://en.wikipedia.org/wiki/Voiced_alveolar_fricative#Voiced_alveolar_non-sibilant_fricative
-  // 
   _lower() {
-    switch (this.manner) {
-      case "stop": {
-        this.manner = "fricative";
-        // ignore flap case ?
-      }; break;
-      case "fricative": {
-        if (this.trilled) {
-          this.manner = "trill";
-        } else {
-          this.manner = "approximant";
-        }
-      }; break;
-      case "approximant": this.manner = "vowel";
-        break;
-      case "flap":
-      case "trill":
-      default:
-      // err
-    }
+    this.manner = Manner.lower(this.manner);
   }
 
   _raise() {
-    switch (this.manner) {
-      case "stop": //err
-        break;
-      case "fricative": {
-        if (this.trilled) {
-          // err ?
-        } else {
-          this.manner = "stop";
-        }
-      }; break;
-      case "approximant": this.manner = "fricative"; break;
-      case "flap": this.manner = "stop";
-        break;
-      case "trill":
-        this.manner = "fricative";
-        this.trilled = true; // !!!!!!!
-        break;
-      default: //Err ?
-    }
+    this.manner = Manner.raise(this.manner);
   }
 
   _dental() {
