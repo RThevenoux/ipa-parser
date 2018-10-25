@@ -141,6 +141,7 @@ module.exports = class ConsonantBuilder {
       case "plosive": {
         switch (second.manner) {
           case "fricative": return this._resolveAffricate(first, second);
+          case "trill": return this._resolveTrilledAffricate(first, second);
           case "implosive": return this._resolveCoarticulation(first, second, "implosive");
         }
       } break;
@@ -175,6 +176,20 @@ module.exports = class ConsonantBuilder {
       "places": [affricatePlace],
       "coronalType": Place.mergeCoronalType(first.coronalType, second.coronalType),
       "manner": "affricate",
+      "lateral": second.lateral,
+      "nasal": second.nasal
+    }
+  }
+
+  _resolveTrilledAffricate(first, second) {
+    let affricatePlace = Affricate.computeTrilledAffricatePlace(first, second);
+    let voicing = Affricate.computeTrilledAffricateVoicing(first, second);
+
+    return {
+      "voicing": voicing,
+      "places": [affricatePlace],
+      "coronalType": Place.mergeCoronalType(first.coronalType, second.coronalType),
+      "manner": "trilled-affricate",
       "lateral": second.lateral,
       "nasal": second.nasal
     }

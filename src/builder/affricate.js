@@ -19,6 +19,13 @@ function _computeAffricateVoicing(first, second) {
   throw new IpaSyntaxtError("Invalid voicing for affricate");
 }
 
+function _computeTrilledAffricateVoicing(first, second) {
+  if (first.isVoiced() == second.isVoiced()) {
+    return Voicing.merge(first.voicing, second.voicing);
+  }
+  throw new IpaSyntaxtError("Invalid voicing for trilled affricate");
+}
+
 function _computeAffricatePlace(first, second) {
   // General case
   if (second.place == first.place) return second.place;
@@ -35,7 +42,14 @@ function _computeAffricatePlace(first, second) {
   throw new IpaSyntaxtError("Invalid affricate places: '" + first.place + "' + '" + second.place + "'");
 }
 
+function _computeTrilledAffricatePlace(first, second) {
+  if (second.place == first.place) return second.place;
+  throw new IpaSyntaxtError("Invalid trilled affricate places: '" + first.place + "' + '" + second.place + "'");
+}
+
 module.exports = {
   computeAffricateVoicing: _computeAffricateVoicing,
-  computeAffricatePlace: _computeAffricatePlace
+  computeTrilledAffricateVoicing: _computeTrilledAffricateVoicing,
+  computeAffricatePlace: _computeAffricatePlace,
+  computeTrilledAffricatePlace: _computeTrilledAffricatePlace
 }

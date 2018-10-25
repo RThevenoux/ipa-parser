@@ -1,5 +1,5 @@
 {
-  "base": {
+  "vowel": {
     "i": "close front unround vowel",
     "y": "close front round vowel",
     "ɨ": "close central unround vowel",
@@ -29,7 +29,7 @@
     "ɑ": "open back unround vowel",
     "ɒ": "open back round vowel"
   },
-  "articulation diacritic": {
+  "vowel with articulation diacritic": {
     "ə\u031D": "close_mid central unround vowel",
     "ʊ\u031D": "close near_back round vowel",
     "ə\u031E": "open_mid central unround vowel",
@@ -50,7 +50,7 @@
     "ɒ\u031E": "open back round vowel",
     "ɒ\u0320": "open back round vowel"
   },
-  "co-articulation diacritics": {
+  "vowel co-articulation diacritics": {
     "a\u0318": "open front unround ATR vowel",
     "a\u0319": "open front unround RTR vowel",
     "a\u031C": "open front unround less_round vowel",
@@ -58,12 +58,12 @@
     "a\u0303": "open front unround nasal vowel",
     "a\u02DE": "open front unround rhotic vowel"
   },
-  "phonation diacritics": {
+  "vowel phonation diacritics": {
     "a\u0325": "open front unround voiceless vowel",
     "a\u0324": "open front unround breathy-voiced vowel",
     "a\u0330": "open front unround creaky-voiced vowel"
   },
-  "supra diacritic": {
+  "other vowel diacritic": {
     "a\u032F": "open front unround non-syllabic vowel",
     "a\u02D0": "open front unround long vowel",
     "a\u02D1": "open front unround half-long vowel",

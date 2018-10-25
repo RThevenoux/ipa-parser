@@ -1,5 +1,5 @@
 {
-  "pulmonic": {
+  "pulmonic consonant": {
     "p": "voiceless bilabial plosive",
     "b": "voiced bilabial plosive",
     "p̪": "voiceless labiodental plosive",
@@ -95,7 +95,7 @@
     "ʎ": "voiced palatal lateral approximant",
     "ʟ": "voiced velar lateral approximant"
   },
-  "non-pulmonic": {
+  "non-pulmonic consonant": {
     "ʘ": "voiceless bilabial click",
     "ǀ": "voiceless dental click",
     "ǃ": "voiceless alveolar click",
@@ -149,7 +149,13 @@
     "ʡ͡ʜ": "voiceless epiglottal affricate",
     "ʔ͡h": "voiceless glottal affricate"
   },
-  "co-articulated": {
+  "trilled-affricate": {
+    "p͡ʙ̥": "voiceless bilabial trilled-affricate",
+    "b͡ʙ": "voiced bilabial trilled-affricate",
+    "t͜r̊": "voiceless alveolar trilled-affricate",
+    "d͜r": "voiced alveolar trilled-affricate"
+  },
+  "co-articulated consonant": {
     "k͡p": "voiceless bilabial velar plosive",
     "ɡ͡b": "voiced bilabial velar plosive",
     "k͡pʼ": "voiceless bilabial velar ejective plosive",
@@ -162,18 +168,18 @@
     "n͡m": "voiced bilabial alveolar nasal",
     "q͡ʡ": "voiceless uvular epiglottal plosive"
   },
-  "voicing": {
+  "consonant voicing": {
     "n\u0325": "voiceless alveolar nasal",
     "s\u032C": "voiced alveolar fricative",
     "t\u0324": "breathy-voiced alveolar plosive",
     "t\u0330": "creaky-voiced alveolar plosive"
   },
-  "release": {
+  "plosive release": {
     "t\u207F": "voiceless alveolar nasal-release plosive",
     "t\u031A": "voiceless alveolar no-audible-release plosive",
     "t\u02E1": "voiceless alveolar lateral-release plosive"
   },
-  "secondary articlution": {
+  "consonant secondary articlution": {
     "kʷ": "voiceless velar labialized plosive",
     "pʲ": "voiceless bilabial palatalized plosive",
     "lˠ": "voiced alveolar velarized lateral approximant",
@@ -181,7 +187,7 @@
     "l\u0334": "voiced alveolar velarized lateral approximant",
     "tˤ": "voiceless alveolar pharyngealized plosive"
   },
-  "other diacritic": {
+  "other consonant diacritic": {
     "t\u02B0": "voiceless alveolar aspirated plosive",
     "t͡s\u02B0": "voiceless alveolar aspirated affricate",
     "n\u0329": "voiced alveolar syllabic nasal",
