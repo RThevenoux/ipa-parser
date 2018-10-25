@@ -2,7 +2,7 @@
   "name": "ipa-parser",
   "version": "1.0.0",
   "description": "A parser for International Phonetic Alphabet (IPA)",
-  "main": "src/ipa.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "mocha"
   },
