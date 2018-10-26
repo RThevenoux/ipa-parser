@@ -10,8 +10,8 @@ npm install ipa-parser --save
 ```
 
 ``` js
-const parser = require("ipa-parser");
-let result = parser.parse("hɛˈləʊ");
+const parser = require("ipa-parser").parser;
+let result = parser.parse("/hɛˈləʊ/");
 ```
 
 Result format :
@@ -69,32 +69,39 @@ Vowel and consonant have common properties :
 
 | name     | type    |           |
 | ---      | ---     | ---       |
-|`quantity`| object  | see below |
+|`quantity`| String  | `extra-short`, `short`, `half-long`, `long` or `extra-long` |
 |`syllabic`| boolean |           |
-|`voiced`  | boolean |           |
+|`voicing` | object  | see below |
+|`nasal`   | boolean |           |
 
 *Vowel* specifics properties :
 
-| name     | type    |           |
-| ---      | ---     | ---       |
-|`height`  | number  | -3 (open) ... 3 (close) |
-|`backness`| number  | -2 (back) ... 2 (front) |
-|`round`   | boolean | |
+| name                | type    |           |
+| ---                 | ---     | ---       |
+|`height`             | number  | -3 (open) ... 3 (close) |
+|`backness`           | number  | -2 (back) ... 2 (front) |
+|`rounded`            | boolean | |
+|`roundednessModifier`| String  | `none`, `more` or `less`|
+|`rhotacized`         | boolean | |
+|`tongueRoot`         | String  | `neutral`, `advanced` or `retracted`|
 
 *Consonant* specifics properties :
 
-| name     | type    |           |
-| ---      | ---     | ---       |
-| `manner` | string  |       | 
-| `place`  | string  |       | 
-| `lateral`| boolean |       |
+| name          | type     |                    |
+| ---           | ---      | ---                |
+| `manner`      | String   | `stop`, `fricative`, `approximant`, `flap`, `tapped-fricative`, `trill`, `trilled-fricative` or `vowel`|
+| `secondary`   | String   | `none`, `bilabial`, `palatal`, `velar` or `pharyngeal`| 
+| `places`      | Arrays  of String | `bilabial`, `labiodental`, `dental`, `alveolar`, `postalveolar`, `retroflex`, `alveopalatal`, `palatal`, `velar`, `uvular`, `pharyngal`, `epiglottal` and `glottal` |
+| `coronalType` | String   | `unspecified`,`laminal` or `apical` |
+| `lateral`     | boolean  |                    |
+| `ejective`    | boolean  |                    |
+| `release`     | String   |`unaspirated`, `aspirated`, `nasal-release`, `lateral-release` or `no-audible-release`|
 
-TODO :
- - `base` : the base symbol in IPA (i.e. without diacritic) (?)
- - `coarticulation` : a list of coarticulation
-
-### Quantity 
-TODO
+### Voicing
+| name      | values    |
+|---        |---        |
+|`voiced`   | boolean   |
+|`phonation`|`voiceless`, `modal`, `breathy` or `creaky`|
 
 ### Diphtong, Triphtong
 Not define in IPA chart, not supported by this parser.
