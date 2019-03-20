@@ -1,13 +1,12 @@
-var fs = require('fs');
-var Mapper = require('./mapper');
-var VowelHeight = require('./constants').Height;
-var VowelBackness = require('./constants').Backness;
-var IpaParser = require('./ipa-parser');
+var Mapper = require("./mapper");
+var VowelHeight = require("./constants").Height;
+var VowelBackness = require("./constants").Backness;
+var IpaParser = require("./ipa-parser");
 
 module.exports = class IpaParserFactory {
   get() {
     // -- Normalization
-    var alternatives = JSON.parse(fs.readFileSync(__dirname + "/data/alternatives.json", "utf8"));
+    var alternatives = require("./data/alternatives.json");
     let normalization = {};
     for (let key in alternatives) {
       normalization[key] = alternatives[key].target;
@@ -17,7 +16,7 @@ module.exports = class IpaParserFactory {
     let mapper = new Mapper();
 
     // Diacritics
-    let diacritics = JSON.parse(fs.readFileSync(__dirname + "/data/diacritics.json", "utf8"));
+    let diacritics = require("./data/diacritics.json");
     for (let type in diacritics) {
       let typeBundle = diacritics[type];
       for (let key in typeBundle) {
@@ -27,7 +26,7 @@ module.exports = class IpaParserFactory {
     }
 
     // Vowels
-    let vowels = JSON.parse(fs.readFileSync(__dirname + "/data/vowels.json", "utf8"));
+    let vowels = require("./data/vowels.json");
     for (let heightLabel in vowels) {
       let heightBundle = vowels[heightLabel];
       for (let backnessLabel in heightBundle) {
@@ -48,17 +47,18 @@ module.exports = class IpaParserFactory {
     }
 
     // Consonants
-    let consonants = JSON.parse(fs.readFileSync(__dirname + "/data/consonants.json", "utf8"));
+    let consonants = require("./data/consonants.json");
     // Combining
     consonants.combining.forEach(key => mapper.addTieBar(key));
-    consonants.ejective.forEach(key => mapper.addDiacritic(key, "ejective", "ejective"));
+    consonants.ejective.forEach(key =>
+      mapper.addDiacritic(key, "ejective", "ejective")
+    );
 
     for (let mannerName in consonants.symbol) {
       let mannerBundle = consonants.symbol[mannerName];
       for (let key in mannerBundle) {
-
         let consonant = mannerBundle[key];
-        let lateral = (consonant.lateral ? true : false);
+        let lateral = consonant.lateral ? true : false;
         let places = consonant.place;
         let nasal = false;
         let manner = mannerName;
@@ -68,20 +68,29 @@ module.exports = class IpaParserFactory {
           nasal = true;
         }
 
-        if (typeof (places) == "string") {
+        if (typeof places == "string") {
           places = [places];
         }
 
-        mapper.addConsonant(key, manner, places, consonant.voiced, lateral, nasal);
+        mapper.addConsonant(
+          key,
+          manner,
+          places,
+          consonant.voiced,
+          lateral,
+          nasal
+        );
       }
     }
 
     // Brackets
-    let brackets = JSON.parse(fs.readFileSync(__dirname + "/data/brackets.json", "utf8"));
-    brackets.forEach(info => mapper.addBrackets(info.type, info.start, info.end));
+    let brackets = require("./data/brackets.json");
+    brackets.forEach(info =>
+      mapper.addBrackets(info.type, info.start, info.end)
+    );
 
     // Supra
-    let supra = JSON.parse(fs.readFileSync(__dirname + "/data/supra.json", "utf8"));
+    let supra = require("./data/supra.json");
     for (let type in supra["diacritic"]) {
       let bundle = supra["diacritic"][type];
       for (let key in bundle) {
@@ -99,4 +108,4 @@ module.exports = class IpaParserFactory {
     }
     return new IpaParser(mapper, normalization);
   }
-}
+};
